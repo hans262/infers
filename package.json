@@ -10,7 +10,9 @@
     "login": "npm login",
     "pub": "npm publish",
     "n-registry": "npm config set registry https://registry.npmjs.org",
-    "t-registry": "npm config set registry https://registry.npm.taobao.org"
+    "t-registry": "npm config set registry https://registry.npm.taobao.org",
+    "add-remote": "git remote add gitee https://gitee.com/badgua/infers.git",
+    "push-gitee": "git push gitee main"
   },
   "repository": {
     "type": "git",
