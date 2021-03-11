@@ -1,0 +1,21 @@
+{
+  "name": "infers",
+  "version": "1.0.3",
+  "description": "Matrix operation and machine learning library.",
+  "main": "./build/src/index.js",
+  "scripts": {
+    "watch": "tsc -w",
+    "build": "tsc",
+    "get-registry": "npm get registry",
+    "login": "npm login",
+    "pub": "npm publish",
+    "n-registry": "npm config set registry https://registry.npmjs.org",
+    "t-registry": "npm config set registry https://registry.npm.taobao.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ounana/infers.git"
+  },
+  "author": "ounana",
+  "license": "MIT"
+}
