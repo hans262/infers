@@ -2,7 +2,7 @@ export type MatrixShape = [number, number]
 
 export class Matrix {
   shape = [1, 1]
-  self = [[0]]
+  private self = [[0]]
   constructor(data: number[][]) {
     let m = data.find((d, i) => data[i - 1] && d.length !== data[i - 1].length)
     if (m) throw new Error('矩阵列不正确')
@@ -11,11 +11,55 @@ export class Matrix {
     this.self = data
   }
   /**
-   * 根据索引获取每一行
+   * 生成矩阵
+   * @param row 
+   * @param col 
+   * @param f 
+   * @returns 
+   */
+  static generate(row: number, col: number, f: number) {
+    let n = []
+    for (let i = 0; i < row; i++) {
+      let m = []
+      for (let j = 0; j < col; j++) {
+        m.push(f)
+      }
+      n.push(m)
+    }
+    return new Matrix(n)
+  }
+  /**
+   * 根据位置上的值
+   * @param row 
+   * @param col 
+   * @param val 
+   */
+  update(row: number, col: number, val: number) {
+    this.self[row][col] = val
+  }
+  //向矩阵左边添加一列
+  expansion(n: number) {
+    let m = []
+    for (let i = 0; i < this.shape[0]; i++) {
+      m.push([n, ...this.getLine(i)])
+    }
+    return new Matrix(m)
+  }
+  /**
+   * 根据索引获取位置元素
+   * @param i 
+   * @param j 
+   * @returns 
+   */
+  get(i: number, j: number) {
+    return this.self[i][j]
+  }
+  /**
+   * 根据索引获取行
    * @param i 
    * @returns 
    */
-  get(i: number) {
+  getLine(i: number) {
     return this.self[i]
   }
   /**
@@ -32,8 +76,8 @@ export class Matrix {
       let m = 0
       //按照第一行的余因子展开来计算
       for (let i = 0; i < this.shape[1]; i++) {
-        if (this.get(0)[i] !== 0) {
-          m += this.get(0)[i] * (-1) ** (i + 2) * this.cominor(1, i + 1).det()
+        if (this.get(0, i) !== 0) {
+          m += this.get(0, i) * (-1) ** (i + 2) * this.cominor(1, i + 1).det()
         }
       }
       return m

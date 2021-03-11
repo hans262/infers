@@ -12,7 +12,31 @@ class Matrix {
         this.shape[1] = data[0].length;
         this.self = data;
     }
-    get(i) {
+    static generate(row, col, f) {
+        let n = [];
+        for (let i = 0; i < row; i++) {
+            let m = [];
+            for (let j = 0; j < col; j++) {
+                m.push(f);
+            }
+            n.push(m);
+        }
+        return new Matrix(n);
+    }
+    update(row, col, val) {
+        this.self[row][col] = val;
+    }
+    expansion(n) {
+        let m = [];
+        for (let i = 0; i < this.shape[0]; i++) {
+            m.push([n, ...this.getLine(i)]);
+        }
+        return new Matrix(m);
+    }
+    get(i, j) {
+        return this.self[i][j];
+    }
+    getLine(i) {
         return this.self[i];
     }
     det() {
@@ -25,8 +49,8 @@ class Matrix {
         else {
             let m = 0;
             for (let i = 0; i < this.shape[1]; i++) {
-                if (this.get(0)[i] !== 0) {
-                    m += this.get(0)[i] * (-1) ** (i + 2) * this.cominor(1, i + 1).det();
+                if (this.get(0, i) !== 0) {
+                    m += this.get(0, i) * (-1) ** (i + 2) * this.cominor(1, i + 1).det();
                 }
             }
             return m;

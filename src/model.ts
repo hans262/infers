@@ -1,29 +1,29 @@
 import { Matrix } from "./matrix"
 
 export class Model {
-  weights: number[]
+  weights: Matrix
   inputs: Matrix
   outputs: Matrix
-  normal: Matrix
   M: number
   rate = 0.01
   constructor(inputs: Matrix, outputs: Matrix) {
-    this.inputs = inputs
+    //左侧加入一个默认特征1
+    this.inputs = inputs.expansion(1)
     this.outputs = outputs
-    this.M = inputs.shape[0]
+
+    this.M = this.inputs.shape[0]
     this.weights = this.initWeights()
-    this.normal = this.inputs.normalization()
   }
   setRate(rate: number) {
     this.rate = rate
   }
   /**
-   * 初始化权重 = 特征个数 + 1
+   * 初始化权重 = 特征个数
    * @returns 
    */
   initWeights() {
-    const f = this.inputs.shape[1]
-    return new Array(f + 1).fill(0)
+    const F = this.inputs.shape[1]
+    return Matrix.generate(F, 1, 0)
   }
 
   /**
@@ -33,11 +33,7 @@ export class Model {
    * @returns Matrix
    */
   hypothetical(xs: Matrix) {
-    let m = xs.self.map(x => {
-      x = [1, ...x]
-      return [this.weights.reduce((p, c, i) => p + c * x[i], 0)]
-    })
-    return new Matrix(m)
+    return xs.multiply(this.weights)
   }
 
   /**
@@ -48,11 +44,13 @@ export class Model {
   cost(): number {
     const M = this.M
     let h = this.hypothetical(this.inputs)
-    const sum = h.self.reduce((p, c, i) => {
-      return p + (c[0] - this.outputs.get(i)[0]) ** 2
-    }, 0)
+    let sum = 0
+    for (let i = 0; i < h.shape[0]; i++) {
+      sum += (h.get(i, 0) - this.outputs.get(i, 0)) ** 2
+    }
     return (1 / (2 * M)) * sum
   }
+
   /**
    * 梯度下降  
    * `X[i][0] = 0`  
@@ -61,21 +59,19 @@ export class Model {
    */
   gradientDescent() {
     const M = this.M
-    const F = this.weights.length
+    const F = this.weights.shape[0]
     const temps = this.initWeights()
     for (let i = 0; i < F; i++) {
-      temps[i] = 0
       let h = this.hypothetical(this.inputs)
-      let sum = h.self.reduce((p, c, j) => {
-        let xs = this.inputs.get(j)
-        xs = [1, ...xs]
-        return p + (c[0] - this.outputs.get(j)[0]) * xs[i]
-      }, 0)
-      temps[i] = this.weights[i] - this.rate * (1 / M) * sum
+      let sum = 0;
+      for (let j = 0; j < h.shape[0]; j++) {
+        sum += (h.get(j, 0) - this.outputs.get(j, 0)) * this.inputs.get(j, i)
+      }
+      temps.update(i, 0,
+        this.weights.get(i, 0) - this.rate * (1 / M) * sum
+      )
     }
-    for (let k = 0; k < F; k++) {
-      this.weights[k] = temps[k]
-    }
+    this.weights = temps
   }
 
   fit(batch: number, callback?: (batch: number) => void) {
@@ -84,7 +80,8 @@ export class Model {
       if (callback) { callback(i) }
     }
   }
+  
   predict(xs: Matrix) {
-    return this.hypothetical(xs)
+    return this.hypothetical(xs.expansion(1))
   }
 }

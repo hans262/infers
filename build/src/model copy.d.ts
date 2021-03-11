@@ -1,13 +1,14 @@
 import { Matrix } from "./matrix";
 export declare class Model {
-    weights: Matrix;
+    weights: number[][];
     inputs: Matrix;
     outputs: Matrix;
+    normal: Matrix;
     M: number;
     rate: number;
     constructor(inputs: Matrix, outputs: Matrix);
     setRate(rate: number): void;
-    initWeights(): Matrix;
+    initWeights(): number[][];
     hypothetical(xs: Matrix): Matrix;
     cost(): number;
     gradientDescent(): void;
