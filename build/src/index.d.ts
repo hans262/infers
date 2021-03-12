@@ -1,3 +1,4 @@
 export * from './model';
 export * from './matrix';
-export * from './osov';
+export * from './graphical';
+export * from './common';

@@ -1,4 +1,5 @@
 import { toFixed } from '../src'
+
 describe('test -> 工具函数', () => {
   test('toFixed', () => {
     expect(toFixed(3.1415926, 0)).toBe(3)
