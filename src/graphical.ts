@@ -51,31 +51,7 @@ export class Edge {
     }
     return false
   }
-  //测试边相交
-  testIntersectEdge(edge2: Edge) {
-    const [p1, p2] = [this.start, this.end]
-    const [q1, q2] = [edge2.start, edge2.end]
-    //如果两个矩形都不想交，那么线段肯定不想交
-    if (
-      !(
-        Math.min(p1.X, p2.X) <= Math.max(q1.X, q1.X) &&
-        Math.min(q1.X, q2.X) <= Math.max(p1.X, p2.X) &&
-        Math.min(p1.Y, p2.Y) <= Math.max(q1.Y, q1.Y) &&
-        Math.min(q1.Y, q2.Y) <= Math.max(p1.Y, p2.Y)
-      )
-    ) return false
-    const c1 = ((p1.X - q1.X) * (q2.Y - q1.Y) - (p1.Y - q1.Y) * (q2.X - q1.X)) * ((q2.X - q1.X) * (p2.Y - q1.Y) - (q2.Y - q1.Y) * (p2.X - q1.X))
-    const c2 = ((q1.X - p1.X) * (p1.Y - p2.Y) - (q1.Y - p1.Y) * (p2.X - p1.X)) * ((p2.X - p1.X) * (q2.Y - p1.Y) - (p2.Y - p1.Y) * (q2.X - p1.X))
-    if (
-      c1 > 0 &&
-      c2 > 0
-    ) {
-      return true
-    }
-    return false
-  }
 }
-
 
 
 export class Path {
@@ -114,33 +90,8 @@ export class Polygon {
       throw new Error('所有点不能在一条线上')
     }
   }
-  /**
-   * 测试点在多边形内部
-   * 
-   * 引射线法
-   * 从目标点，水平向右发出一条射线，
-   * 该射线与多边形相交点的个数为奇数，则目标点在对变形内部，反之在外。
-   * 
-   * 排除几种情况
-   * 1. 点在多边形构成的矩形外部
-   * 3. 点在多边形边上
-   * 
-   * 4. 射线经过多边形顶点
-   * 5. 射线进过多边形的边
-   * 
-   */
-  testPointInsidePolygon(pt: Point): number {
-    //判断一个点是否在一个多边形里面
-    /**
-     * 算法
-     * 引射线法：从目标点出发引一条射线，
-     * 看这条射线和多边形所有边的交点数目。
-     * 如果有奇数个交点，则说明在内部，如果有偶数个交点，则说明在外部。
-     */
-    //returns 0 if false, +1 if true, -1 if pt ON polygon boundary
-    //See "The Point in Polygon Problem for Arbitrary Polygons" by Hormann & Agathos
-    //http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.88.5498&rep=rep1&type=pdf
 
+  testPointInsidePolygon(pt: Point): number {
     let polygon = this.pts
     var result = 0,
       cnt = polygon.length;

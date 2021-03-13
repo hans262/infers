@@ -35,8 +35,17 @@ export namespace TestMatrix {
     a.update(2, 0, 100)
     a.print()
   }
+
   export function run() {
-    generate()
+    let a = new Matrix([
+      [1, 4, 7],
+      [2, 24, -7],
+      [99, 23, -7],
+      [100, 6, 9]
+    ])
+    let [b, c] = a.normalization()
+    b.print()
+    c.print()
   }
 }
 

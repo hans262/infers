@@ -1,6 +1,6 @@
 {
   "name": "infers",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Matrix operation and machine learning library.",
   "main": "./build/src/index.js",
   "scripts": {

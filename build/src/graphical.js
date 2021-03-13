@@ -45,22 +45,6 @@ class Edge {
         }
         return false;
     }
-    testIntersectEdge(edge2) {
-        const [p1, p2] = [this.start, this.end];
-        const [q1, q2] = [edge2.start, edge2.end];
-        if (!(Math.min(p1.X, p2.X) <= Math.max(q1.X, q1.X) &&
-            Math.min(q1.X, q2.X) <= Math.max(p1.X, p2.X) &&
-            Math.min(p1.Y, p2.Y) <= Math.max(q1.Y, q1.Y) &&
-            Math.min(q1.Y, q2.Y) <= Math.max(p1.Y, p2.Y)))
-            return false;
-        const c1 = ((p1.X - q1.X) * (q2.Y - q1.Y) - (p1.Y - q1.Y) * (q2.X - q1.X)) * ((q2.X - q1.X) * (p2.Y - q1.Y) - (q2.Y - q1.Y) * (p2.X - q1.X));
-        const c2 = ((q1.X - p1.X) * (p1.Y - p2.Y) - (q1.Y - p1.Y) * (p2.X - p1.X)) * ((p2.X - p1.X) * (q2.Y - p1.Y) - (p2.Y - p1.Y) * (q2.X - p1.X));
-        if (c1 > 0 &&
-            c2 > 0) {
-            return true;
-        }
-        return false;
-    }
 }
 exports.Edge = Edge;
 class Path {

@@ -12,7 +12,6 @@ export declare class Edge {
     maxXY(): Point;
     testPointIn(pt: Point): boolean;
     testPointInside(pt: Point): boolean;
-    testIntersectEdge(edge2: Edge): boolean;
 }
 export declare class Path {
     pts: Point[];

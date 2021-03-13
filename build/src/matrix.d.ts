@@ -17,6 +17,6 @@ export declare class Matrix {
     multiply(b: Matrix): Matrix;
     private scale;
     transposition(): Matrix;
-    normalization(): Matrix;
+    normalization(): Matrix[];
     print(): void;
 }

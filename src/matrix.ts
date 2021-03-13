@@ -195,14 +195,19 @@ export class Matrix {
    */
   normalization() {
     let t = this.transposition()
+    let n = []
     for (let i = 0; i < t.shape[0]; i++) {
-      const range = Math.max(...t.self[i]) - Math.min(...t.self[i])
-      const average = t.self[i].reduce((a, b) => a + b) / t.shape[1]
+      const max = Math.max(...t.self[i])
+      const min = Math.min(...t.self[i])
+      const range = max - min
+      const average = min + (range / 2)
+      n.push([average, range])
       for (let j = 0; j < t.shape[1]; j++) {
         t.self[i][j] = (t.self[i][j] - average) / range
       }
     }
-    return t.transposition()
+    //返回两个矩阵：归一化的矩阵、缩放比矩阵
+    return [t.transposition(), new Matrix(n).transposition()]
   }
   /**
    * 打印
