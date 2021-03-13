@@ -9,7 +9,7 @@ $ npm install infers@latest
 
 在项目中使用：
 ```ts
-import { Model, Matrix } from 'infers'
+import { Matrix } from 'infers'
 let a = new Matrix([
   [3, -7, 8, 9, -6],
   [0, 2, -5, 7, 3],
