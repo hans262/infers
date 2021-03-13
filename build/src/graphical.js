@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Polygon = exports.Path = exports.Edge = exports.Point = void 0;
 class Point {
     constructor(X, Y) {
         this.X = X;

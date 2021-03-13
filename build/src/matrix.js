@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Matrix = void 0;
 class Matrix {
     constructor(data) {
         this.shape = [1, 1];

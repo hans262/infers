@@ -44,7 +44,7 @@ export namespace TestModel {
     const model = new LogisticModel(xs, ys)
     model.setRate(0.01)
     model.fit(1000000, (batch) => {
-      if (batch % 50 === 0) {
+      if (batch % 1000 === 0) {
         console.log(batch, model.cost())
       }
     })
@@ -53,7 +53,7 @@ export namespace TestModel {
   }
 
   export function run() {
-    logisticModel()
+    logisticModel2()
   }
 }
 

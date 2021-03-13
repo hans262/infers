@@ -119,6 +119,7 @@ export class LogisticModel {
   M: number
   constructor(xs: Matrix, ys: Matrix) {
     this.inputs = xs.expansion(1)
+    //要检测标签的值是否都是1 ，0
     this.outputs = ys
     this.weights = this.initWeights()
     this.M = this.inputs.shape[0]
@@ -145,10 +146,10 @@ export class LogisticModel {
     for (let i = 0; i < h.shape[0]; i++) {
       let y = this.outputs.get(i, 0)
       let hy = h.get(i, 0)
-      if (y === 1 && hy !== 0) {
+      if (y === 1) {
         sum += -Math.log(hy)
       }
-      if (y === 0 && hy !== 1) {
+      if (y === 0) {
         sum += -Math.log(1 - hy)
       }
     }

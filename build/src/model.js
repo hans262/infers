@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LogisticModel = exports.RegressionModel = void 0;
 const matrix_1 = require("./matrix");
 class RegressionModel {
     constructor(inputs, outputs) {
@@ -92,10 +91,10 @@ class LogisticModel {
         for (let i = 0; i < h.shape[0]; i++) {
             let y = this.outputs.get(i, 0);
             let hy = h.get(i, 0);
-            if (y === 1 && hy !== 0) {
+            if (y === 1) {
                 sum += -Math.log(hy);
             }
-            if (y === 0 && hy !== 1) {
+            if (y === 0) {
                 sum += -Math.log(1 - hy);
             }
         }
