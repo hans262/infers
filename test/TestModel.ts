@@ -40,7 +40,7 @@ export namespace TestModel {
       [48, 0],
       [52, 0]
     ])
-    const ys = new Matrix([[0], [1], [0], [1]])
+    const ys = new Matrix([[0, 1], [1, 0], [0, 1], [1, 0]])
     const model = new LogisticModel(xs, ys)
     model.setRate(0.01)
     model.fit(1000000, (batch) => {
@@ -52,8 +52,31 @@ export namespace TestModel {
     model.predict(xs2).print()
   }
 
+  export function logisticModel3() {
+    const xs = new Matrix([
+      [-2], [-1], [1], [2], [3], [4]
+    ])
+    const ys = new Matrix([
+      [1, 0, 0],
+      [1, 0, 0],
+      [0, 1, 0],
+      [0, 1, 0],
+      [0, 0, 1],
+      [0, 0, 1]
+    ])
+    const model = new LogisticModel(xs, ys)
+    model.setRate(0.01)
+    model.fit(100000, (batch) => {
+      if (batch % 500 === 0) {
+        console.log(batch, model.cost())
+      }
+    })
+    const xs2 = new Matrix([[-18], [1.5], [3.5]])
+    model.predict(xs2).print()
+  }
+
   export function run() {
-    logisticModel2()
+    logisticModel3()
   }
 }
 

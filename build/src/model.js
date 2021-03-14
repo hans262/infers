@@ -1,13 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LogisticModel = exports.RegressionModel = void 0;
 const matrix_1 = require("./matrix");
-class RegressionModel {
-    constructor(inputs, outputs) {
+class Model {
+    constructor(xs, ys) {
         this.rate = 0.01;
-        const [inp, scalem] = inputs.normalization();
+        if (xs.shape[1] !== ys.shape[1]) {
+            throw new Error('输入输出矩阵行数不统一');
+        }
+        const [inp, scalem] = xs.normalization();
         this.scalem = scalem;
         this.inputs = inp.expansion(1);
-        this.outputs = outputs;
+        this.outputs = ys;
         this.M = this.inputs.shape[0];
         this.weights = this.initWeights();
     }
@@ -16,7 +20,8 @@ class RegressionModel {
     }
     initWeights() {
         const F = this.inputs.shape[1];
-        return matrix_1.Matrix.generate(F, 1, 0);
+        const y = this.outputs.shape[1];
+        return matrix_1.Matrix.generate(F, y, 0);
     }
     hypothetical(xs) {
         return xs.multiply(this.weights);
@@ -24,23 +29,29 @@ class RegressionModel {
     cost() {
         const M = this.M;
         let h = this.hypothetical(this.inputs);
-        let sum = 0;
-        for (let i = 0; i < h.shape[0]; i++) {
-            sum += (h.get(i, 0) - this.outputs.get(i, 0)) ** 2;
+        let n = [];
+        for (let i = 0; i < h.shape[1]; i++) {
+            let sum = 0;
+            for (let j = 0; j < h.shape[0]; j++) {
+                sum += (h.get(j, i) - this.outputs.get(j, i)) ** 2;
+            }
+            n.push((1 / (2 * M)) * sum);
         }
-        return (1 / (2 * M)) * sum;
+        return n;
     }
     gradientDescent() {
         const M = this.M;
-        const F = this.weights.shape[0];
+        let h = this.hypothetical(this.inputs);
         const temps = this.initWeights();
-        for (let i = 0; i < F; i++) {
-            let h = this.hypothetical(this.inputs);
-            let sum = 0;
-            for (let j = 0; j < h.shape[0]; j++) {
-                sum += (h.get(j, 0) - this.outputs.get(j, 0)) * this.inputs.get(j, i);
+        for (let i = 0; i < temps.shape[0]; i++) {
+            for (let j = 0; j < temps.shape[1]; j++) {
+                let sum = 0;
+                for (let k = 0; k < h.shape[0]; k++) {
+                    sum += (h.get(k, j) - this.outputs.get(k, j)) * this.inputs.get(k, i);
+                }
+                let nw = this.weights.get(i, j) - this.rate * (1 / M) * sum;
+                temps.update(i, j, nw);
             }
-            temps.update(i, 0, this.weights.get(i, 0) - this.rate * (1 / M) * sum);
         }
         this.weights = temps;
     }
@@ -68,59 +79,43 @@ class RegressionModel {
         return this.hypothetical(a.expansion(1));
     }
 }
+class RegressionModel extends Model {
+}
 exports.RegressionModel = RegressionModel;
-class LogisticModel {
+class LogisticModel extends Model {
     constructor(xs, ys) {
-        this.rate = 0.01;
-        this.inputs = xs.expansion(1);
-        this.outputs = ys;
-        this.weights = this.initWeights();
-        this.M = this.inputs.shape[0];
+        super(xs, ys);
+        this.verifYs(ys);
     }
-    setRate(rate) {
-        this.rate = rate;
-    }
-    initWeights() {
-        const F = this.inputs.shape[1];
-        return matrix_1.Matrix.generate(F, 1, 0);
+    verifYs(ys) {
+        for (let i = 0; i < ys.shape[0]; i++) {
+            if (ys.getLine(i).reduce((p, c) => p + c) !== 1)
+                throw new Error('输出矩阵每行和必须等0');
+            for (let j = 0; j < ys.shape[1]; j++) {
+                if (ys.get(i, j) !== 0 && ys.get(i, j) !== 1)
+                    throw new Error('输出矩阵属于域 ∈ (0, 1)');
+            }
+        }
     }
     cost() {
         const M = this.M;
         let h = this.hypothetical(this.inputs);
-        let sum = 0;
-        for (let i = 0; i < h.shape[0]; i++) {
-            let y = this.outputs.get(i, 0);
-            let hy = h.get(i, 0);
-            if (y === 1) {
-                sum += -Math.log(hy);
-            }
-            if (y === 0) {
-                sum += -Math.log(1 - hy);
-            }
-        }
-        return (1 / M) * sum;
-    }
-    gradientDescent() {
-        const M = this.M;
-        const F = this.weights.shape[0];
-        const temps = this.initWeights();
-        for (let i = 0; i < F; i++) {
-            let h = this.hypothetical(this.inputs);
+        let n = [];
+        for (let j = 0; j < h.shape[1]; j++) {
             let sum = 0;
-            for (let j = 0; j < h.shape[0]; j++) {
-                sum += (h.get(j, 0) - this.outputs.get(j, 0)) * this.inputs.get(j, i);
+            for (let i = 0; i < h.shape[0]; i++) {
+                let y = this.outputs.get(i, 0);
+                let hy = h.get(i, 0);
+                if (y === 1) {
+                    sum += -Math.log(hy);
+                }
+                if (y === 0) {
+                    sum += -Math.log(1 - hy);
+                }
             }
-            temps.update(i, 0, this.weights.get(i, 0) - this.rate * (1 / M) * sum);
+            n.push((1 / M) * sum);
         }
-        this.weights = temps;
-    }
-    fit(batch, callback) {
-        for (let i = 0; i < batch; i++) {
-            this.gradientDescent();
-            if (callback) {
-                callback(i);
-            }
-        }
+        return n;
     }
     sigmoid(x) {
         return 1 / (1 + Math.E ** -x);
@@ -136,9 +131,6 @@ class LogisticModel {
             n.push(m);
         }
         return new matrix_1.Matrix(n);
-    }
-    predict(xs) {
-        return this.hypothetical(xs.expansion(1));
     }
 }
 exports.LogisticModel = LogisticModel;

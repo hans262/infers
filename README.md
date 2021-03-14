@@ -10,16 +10,14 @@ $ npm install infers@latest
 在项目中使用：
 ```ts
 import { Matrix } from 'infers'
-let a = new Matrix([
-  [3, -7, 8, 9, -6],
-  [0, 2, -5, 7, 3],
-  [0, 0, 1, 5, 0],
-  [0, 0, 2, 4, -1],
-  [0, 0, 0, -2, 0]
+let m = new Matrix([
+  [1, 5, 0],
+  [2, 4 ,-1],
+  [0, -2, 0]
 ])
-a.print()
+m.print()
 // solving det
-console.log(a.det())
+console.log(m.det())
 ```
 线性回归模型：
 ```ts
@@ -53,6 +51,23 @@ model.fit(50000, (batch) => {
 const xs2 = new Matrix([[20], [30], [-2], [0], [3], [2]])
 model.predict(xs2).print()
 ```
+多分类：
+```ts
+const xs = new Matrix([
+  [-2], [-1], [1], [2], [3], [4]
+])
+const ys = new Matrix([
+  [1, 0, 0],
+  [1, 0, 0],
+  [0, 1, 0],
+  [0, 1, 0],
+  [0, 0, 1],
+  [0, 0, 1]
+])
+const model = new LogisticModel(xs, ys)
+// ...
+```
+学习率和训练次数的设定，要根据代价函数的每次求解来判定，每种模型需要的学习率和训练次数各不相同，学习率越低也就需要相对较多的训练次数才能达到代价函数最优，学习率过高也可能造成跨度太大越过最优解，最后损失值趋近于正无穷，造成模型无法收敛的问题。
 
 ## Export
 - class Matrix
