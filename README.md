@@ -1,5 +1,5 @@
 # infers
-Matrix operation and machine learning library.
+Matrix operation and machine learning library by TypesScript.
 
 ## Installed
 使用npm的方式安装到项目中，可切换淘宝源下载。
