@@ -5,7 +5,7 @@ export declare class Matrix {
     constructor(data: number[][]);
     static generate(row: number, col: number, f: number): Matrix;
     update(row: number, col: number, val: number): void;
-    expansion(n: number): Matrix;
+    expansion(n: number, position: 'L' | 'R'): Matrix;
     get(i: number, j: number): number;
     getLine(i: number): number[];
     det(): number;

@@ -37,14 +37,25 @@ export class Matrix {
   update(row: number, col: number, val: number) {
     this.self[row][col] = val
   }
-  //向矩阵左边添加一列
-  expansion(n: number) {
+
+  /**
+   * 向矩阵左右添加一列
+   * @param n 
+   * @param position 
+   * @returns 
+   */
+  expansion(n: number, position: 'L' | 'R') {
     let m = []
     for (let i = 0; i < this.shape[0]; i++) {
-      m.push([n, ...this.getLine(i)])
+      if (position === 'L') {
+        m.push([n, ...this.getLine(i)])
+      } else {
+        m.push([...this.getLine(i), n])
+      }
     }
     return new Matrix(m)
   }
+
   /**
    * 根据索引获取位置元素
    * @param i 
@@ -203,7 +214,7 @@ export class Matrix {
       const average = min + (range / 2)
       n.push([average, range])
       for (let j = 0; j < t.shape[1]; j++) {
-        t.self[i][j] = (t.self[i][j] - average) / range
+        t.self[i][j] = range === 0 ? 0 : (t.self[i][j] - average) / range
       }
     }
     //返回两个矩阵：归一化的矩阵、缩放比矩阵

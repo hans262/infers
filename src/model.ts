@@ -9,7 +9,7 @@ class Model {
   M: number
   rate = 0.01
   constructor(xs: Matrix, ys: Matrix) {
-    if (xs.shape[1] !== ys.shape[1]) {
+    if (xs.shape[0] !== ys.shape[0]) {
       throw new Error('输入输出矩阵行数不统一')
     }
 
@@ -18,7 +18,7 @@ class Model {
     this.scalem = scalem
 
     //特征新增一列 X0 = 1
-    this.inputs = inp.expansion(1)
+    this.inputs = inp.expansion(1, 'L')
     this.outputs = ys
     this.M = this.inputs.shape[0]
     this.weights = this.initWeights()
@@ -112,9 +112,8 @@ class Model {
     for (let i = 0; i < xs.shape[0]; i++) {
       let m = []
       for (let j = 0; j < xs.shape[1]; j++) {
-        m.push(
-          (xs.get(i, j) - this.scalem.get(0, j)) / this.scalem.get(1, j)
-        )
+        let r = this.scalem.get(1, j) === 0 ? 0 : (xs.get(i, j) - this.scalem.get(0, j)) / this.scalem.get(1, j)
+        m.push(r)
       }
       n.push(m)
     }
@@ -123,7 +122,7 @@ class Model {
 
   predict(xs: Matrix) {
     let a = this.reductionScale(xs)
-    return this.hypothetical(a.expansion(1))
+    return this.hypothetical(a.expansion(1, 'L'))
   }
 }
 
@@ -147,7 +146,7 @@ export class LogisticModel extends Model {
    */
   verifYs(ys: Matrix) {
     for (let i = 0; i < ys.shape[0]; i++) {
-      if (ys.getLine(i).reduce((p, c) => p + c) !== 1)
+      if (ys.shape[1] > 1 && ys.getLine(i).reduce((p, c) => p + c) !== 1)
         throw new Error('输出矩阵每行和必须等0')
       for (let j = 0; j < ys.shape[1]; j++) {
         if (ys.get(i, j) !== 0 && ys.get(i, j) !== 1)

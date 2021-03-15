@@ -11,7 +11,7 @@ export namespace TestModel {
     // fit
     model.fit(5000, (batch) => {
       if (batch % 500 === 0) {
-        console.log(batch, model.cost())
+        console.log(batch, model.cost()[0])
       }
     })
     // predict
@@ -26,7 +26,7 @@ export namespace TestModel {
     model.setRate(0.01)
     model.fit(50000, (batch) => {
       if (batch % 500 === 0) {
-        console.log(batch, model.cost())
+        console.log(batch, model.cost()[0])
       }
     })
     const xs2 = new Matrix([[20], [30], [-2], [0], [3], [2]])
@@ -45,7 +45,7 @@ export namespace TestModel {
     model.setRate(0.01)
     model.fit(1000000, (batch) => {
       if (batch % 1000 === 0) {
-        console.log(batch, model.cost())
+        console.log(batch, model.cost()[0])
       }
     })
     const xs2 = new Matrix([[45, 1], [66, 1], [23, 0], [55, 0]])
@@ -68,15 +68,33 @@ export namespace TestModel {
     model.setRate(0.01)
     model.fit(100000, (batch) => {
       if (batch % 500 === 0) {
-        console.log(batch, model.cost())
+        console.log(batch, model.cost()[0])
       }
     })
     const xs2 = new Matrix([[-18], [1.5], [3.5]])
     model.predict(xs2).print()
   }
-
+  export function logisticModel4() {
+    const xs = new Matrix([
+      [0, 1],
+      [1, 0],
+      [0, 0],
+      [1, 1]
+    ])
+    const ys = new Matrix([[1], [1], [0], [1]])
+    const model = new LogisticModel(xs, ys)
+    model.setRate(0.01)
+    model.fit(20000, (batch) => {
+      if (batch % 500 === 0) {
+        console.log(batch, model.cost()[0])
+      }
+    })
+    const xs2 = new Matrix([[1, 1], [0, 1], [0, 0]])
+    model.predict(xs2).print()
+    model.weights.print()
+  }
   export function run() {
-    logisticModel3()
+    logisticModel4()
   }
 }
 

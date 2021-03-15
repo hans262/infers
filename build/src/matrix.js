@@ -26,10 +26,15 @@ class Matrix {
     update(row, col, val) {
         this.self[row][col] = val;
     }
-    expansion(n) {
+    expansion(n, position) {
         let m = [];
         for (let i = 0; i < this.shape[0]; i++) {
-            m.push([n, ...this.getLine(i)]);
+            if (position === 'L') {
+                m.push([n, ...this.getLine(i)]);
+            }
+            else {
+                m.push([...this.getLine(i), n]);
+            }
         }
         return new Matrix(m);
     }
@@ -140,7 +145,7 @@ class Matrix {
             const average = min + (range / 2);
             n.push([average, range]);
             for (let j = 0; j < t.shape[1]; j++) {
-                t.self[i][j] = (t.self[i][j] - average) / range;
+                t.self[i][j] = range === 0 ? 0 : (t.self[i][j] - average) / range;
             }
         }
         return [t.transposition(), new Matrix(n).transposition()];
