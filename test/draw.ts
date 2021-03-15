@@ -16,49 +16,27 @@ function drawPoint(ctx: CanvasRenderingContext2D, point: Point) {
   ctx.fill()
 }
 
-/**
- * 外扩路径
- * @param path 源
- * @param scale 缩放比例
- * 
- * void AddPath(Path path, JoinType jointype, EndType endtype);
- * JoinType 0 - 2
- * EndType  0 - 4
- */
-// const scaleOut = (path: ClipperPath, scale: number): ClipperPath => {
-//   var ret = new ClipperLib.Paths()
-//   var co = new ClipperLib.ClipperOffset()
-//   co.ArcTolerance = 0.25
-//   co.AddPath(path, 1, 4)
-//   co.Execute(ret, scale)
-//   return ret[0]
-// }
-
 function main() {
-  const canvas = document.querySelector('#canvas') as HTMLCanvasElement
-  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+  const canvas = document.querySelector<HTMLCanvasElement>('#canvas')!
+  const ctx = canvas.getContext('2d')!
   canvas.width = 800
   canvas.height = 400
-
   // drawPath(ctx, [
   //   [100, 100], [200, 100],
   //   [200, 200], [100, 200]
   // ])
   // drawPoint(ctx, [100, 200])
-
   // drawPath(ctx, [
   //   [10, 8], [200, 75]
   // ])
-
   // drawPath(ctx, [
   //   [100, 20], [167, 200]
   // ])
-
   drawPath(ctx, [
     [100, 90], [300, 80],
     [350, 200], [250, 180],
     [180, 270], [100, 190]
   ])
-
 }
+
 main()

@@ -1,4 +1,4 @@
-import { Point, Edge } from '../src'
+import { Point, Edge, Polygon } from '../src'
 
 describe('test -> edge', () => {
   test('点在边的斜率上', () => {
@@ -26,38 +26,16 @@ describe('test -> edge', () => {
   })
 })
 
-
-
-// describe('test -> testIntersectEdge', () => {
-//   test('不相交的边', () => {
-//     const edge: Edge = [[10, 8], [200, 75]]
-//     const edge2: Edge = [[100, 50], [167, 200]]
-//     expect(testIntersectEdge(edge, edge2)).toBeFalsy()
-//   })
-//   test('相交的边', () => {
-//     const edge: Edge = [[10, 8], [200, 75]]
-//     const edge2: Edge = [[100, 20], [167, 200]]
-//     expect(testIntersectEdge(edge, edge2)).toBeTruthy()
-//   })
-// })
-
-// describe('test -> polygon', () => {
-//   test('正多边形点包含关系', () => {
-//     const polygon: Polygon = [
-//       [100, 100], [200, 100],
-//       [200, 200], [100, 200]
-//     ]
-//     const points: Point[] = [
-//       [100, 150], //在多边形边界上
-//       [100, 201], //不在多边形内
-//       [50, 150], //不在多边形内
-//       [150, 150], //在多边形内
-//       [101, 199], //在多边形内
-//     ]
-//     expect(testPointInsidePolygon(points[0], polygon)).toBe(-1)
-//     expect(testPointInsidePolygon(points[1], polygon)).toBe(0)
-//     expect(testPointInsidePolygon(points[2], polygon)).toBe(0)
-//     expect(testPointInsidePolygon(points[3], polygon)).toBe(1)
-//     expect(testPointInsidePolygon(points[4], polygon)).toBe(1)
-//   })
-// })
+describe('test -> polygon', () => {
+  test('多边形点包含测试', () => {
+    const p = new Polygon( [
+      [100, 100], [200, 100],
+      [200, 200], [100, 200]
+    ])
+    expect(p.testPointInsidePolygon(new Point(100, 150))).toBe(-1)
+    expect(p.testPointInsidePolygon(new Point(100, 201))).toBe(0)
+    expect(p.testPointInsidePolygon(new Point(50, 150))).toBe(0)
+    expect(p.testPointInsidePolygon(new Point(150, 150))).toBe(1)
+    expect(p.testPointInsidePolygon(new Point(101, 199))).toBe(1)
+  })
+})

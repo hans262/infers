@@ -1,22 +1,25 @@
-export declare type MatrixShape = [number, number];
 export declare class Matrix {
-    shape: number[];
+    shape: [number, number];
     private self;
     constructor(data: number[][]);
-    static generate(row: number, col: number, f: number): Matrix;
+    dataSync(): number[][];
+    equalsShape(b: Matrix): boolean;
+    equals(b: Matrix): boolean;
+    static generate(row: number, col: number, f?: number): Matrix;
     update(row: number, col: number, val: number): void;
-    expansion(n: number, position: 'L' | 'R'): Matrix;
+    expand(n: number, position: 'L' | 'R'): Matrix;
     get(i: number, j: number): number;
-    getLine(i: number): number[];
+    getRow(i: number): number[];
+    getCol(k: number): number[];
     det(): number;
     cominor(rowi: number, coli: number): Matrix;
+    atomicOperation(callback: (item: number, row: number, col: number) => number): Matrix;
     coLocationOperation(b: Matrix, oper: 'add' | 'sub'): Matrix;
     subtraction(b: Matrix): Matrix;
     addition(b: Matrix): Matrix;
     numberMultiply(b: number): Matrix;
     multiply(b: Matrix): Matrix;
-    private scale;
-    transposition(): Matrix;
+    get T(): Matrix;
     normalization(): Matrix[];
     print(): void;
 }

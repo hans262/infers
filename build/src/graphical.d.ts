@@ -18,7 +18,13 @@ export declare class Path {
     constructor(pts: Point[]);
 }
 export declare class Polygon {
-    pts: Point[];
-    constructor(pts: Point[]);
+    points: Point[];
+    constructor(pts: [number, number][]);
     testPointInsidePolygon(pt: Point): number;
 }
+interface Rect {
+    point: Point;
+    width: number;
+    height: number;
+}
+export type { Rect };

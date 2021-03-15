@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>infers - v1.0.8</title>
-	<meta name="description" content="Documentation for infers - v1.0.8">
+	<title>infers - v1.0.9</title>
+	<meta name="description" content="Documentation for infers - v1.0.9">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 	<script async src="assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">infers - v1.0.8</a>
+					<a href="index.html" class="title">infers - v1.0.9</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<h1>infers - v1.0.8</h1>
+			<h1>infers - v1.0.9</h1>
 		</div>
 	</div>
 </header>
@@ -61,29 +61,28 @@
 				<a href="#infers" id="infers" style="color: inherit; text-decoration: none;">
 					<h1>infers</h1>
 				</a>
-				<p>Matrix operation and machine learning library.</p>
+				<p>Matrix operation and machine learning library by TypesScript.</p>
 				<a href="#installed" id="installed" style="color: inherit; text-decoration: none;">
 					<h2>Installed</h2>
 				</a>
-				<p>使用npm的方式安装到项目中，可切换淘宝源下载。</p>
+				<p>确保npm已经安装，切换到项目目录执行以下命令。</p>
 				<pre><code class="language-shell"><span style="color: #000000">$ npm install infers@latest</span>
 </code></pre>
-				<p>在项目中使用：</p>
+				<p>在项目中引用：</p>
 				<pre><code class="language-ts"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Matrix</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;infers&#039;</span>
 <span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">m</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([</span>
 <span style="color: #000000">  [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">],</span>
 <span style="color: #000000">  [</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">4</span><span style="color: #000000"> ,-</span><span style="color: #098658">1</span><span style="color: #000000">],</span>
 <span style="color: #000000">  [</span><span style="color: #098658">0</span><span style="color: #000000">, -</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">]</span>
 <span style="color: #000000">])</span>
-<span style="color: #001080">m</span><span style="color: #000000">.</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
-<span style="color: #008000">// solving det</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">m</span><span style="color: #000000">.</span><span style="color: #795E26">det</span><span style="color: #000000">())</span>
+<span style="color: #008000">//transposition</span>
+<span style="color: #001080">m</span><span style="color: #000000">.</span><span style="color: #0070C1">T</span><span style="color: #000000">.</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
 </code></pre>
 				<p>线性回归模型：</p>
-				<pre><code class="language-ts"><span style="color: #008000">// data</span>
+				<pre><code class="language-ts"><span style="color: #008000">// sample</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">xs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">2</span><span style="color: #000000">], [</span><span style="color: #098658">3</span><span style="color: #000000">], [</span><span style="color: #098658">4</span><span style="color: #000000">]])</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">ys</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">3</span><span style="color: #000000">], [</span><span style="color: #098658">5</span><span style="color: #000000">], [</span><span style="color: #098658">7</span><span style="color: #000000">]])</span>
-<span style="color: #008000">// create</span>
+<span style="color: #008000">// create model</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">RegressionModel</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">)</span>
 <span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">setRate</span><span style="color: #000000">(</span><span style="color: #098658">0.01</span><span style="color: #000000">)</span>
 <span style="color: #008000">// fit</span>
@@ -96,7 +95,7 @@
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">xs2</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">5</span><span style="color: #000000">], [</span><span style="color: #098658">20</span><span style="color: #000000">]])</span>
 <span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #001080">xs2</span><span style="color: #000000">).</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
 </code></pre>
-				<p>分类模型：</p>
+				<p>逻辑分类模型：</p>
 				<pre><code class="language-ts"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">xs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">2</span><span style="color: #000000">], [</span><span style="color: #098658">3</span><span style="color: #000000">], [</span><span style="color: #098658">4</span><span style="color: #000000">]])</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">ys</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">]])</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">LogisticModel</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">)</span>
@@ -124,14 +123,14 @@
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">LogisticModel</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">)</span>
 <span style="color: #008000">// ...</span>
 </code></pre>
-				<p>学习率和训练次数的设定，要根据代价函数的每次求解来判定，每种模型需要的学习率和训练次数各不相同，学习率越低也就需要相对较多的训练次数才能达到代价函数最优，学习率过高也可能造成跨度太大越过最优解，最后损失值趋近于正无穷，造成模型无法收敛的问题。</p>
+				<p>学习率和训练次数的选择，需根据代价函数的每次求解来判定，每种模型所需要的学习率和训练次数各不相同，越低的学习率也就需要相对较多的训练次数才能达到代价函数最优，过高也可能造成跨度太大而越过最优点，造成损失值趋近于正无穷模型无法收敛的问题。</p>
 				<a href="#export" id="export" style="color: inherit; text-decoration: none;">
 					<h2>Export</h2>
 				</a>
 				<ul>
 					<li>class Matrix<ul>
 							<li>加法、乘法、数乘、转置</li>
-							<li>行列式</li>
+							<li>行列式、归一化</li>
 						</ul>
 					</li>
 					<li>class Model<ul>
@@ -176,9 +175,6 @@
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/rect.html" class="tsd-kind-icon">Rect</a>
 					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#matrixshape" class="tsd-kind-icon">Matrix<wbr>Shape</a>
-					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#tofixed" class="tsd-kind-icon">to<wbr>Fixed</a>
 					</li>
@@ -197,11 +193,10 @@
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>

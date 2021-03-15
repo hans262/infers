@@ -19,8 +19,9 @@ export namespace TestMatrix {
       [0, -2, 0]
     ])
     a.print()
-    a.expansion(1).print()
+    a.expand(1, 'L').print()
   }
+
   export function generate() {
     let a = Matrix.generate(3, 2, 1)
     a.print()
@@ -35,17 +36,14 @@ export namespace TestMatrix {
     a.update(2, 0, 100)
     a.print()
   }
-
+  
   export function run() {
-    let a = new Matrix([
-      [1, 4, 7],
-      [2, 24, -7],
-      [99, 23, -7],
-      [100, 6, 9]
+    let m = new Matrix([
+      [1, 5, 0],
+      [2, 4, -1],
+      [0, -2, 0]
     ])
-    let [b, c] = a.normalization()
-    b.print()
-    c.print()
+    m.cominor(1, 2).print()
   }
 }
 

@@ -13,14 +13,14 @@ declare class Model {
     cost(): number[];
     gradientDescent(): void;
     fit(batch: number, callback?: (batch: number) => void): void;
-    reductionScale(xs: Matrix): Matrix;
+    zoomScale(xs: Matrix): Matrix;
     predict(xs: Matrix): Matrix;
 }
 export declare class RegressionModel extends Model {
 }
 export declare class LogisticModel extends Model {
     constructor(xs: Matrix, ys: Matrix);
-    verifYs(ys: Matrix): void;
+    verifOutput(ys: Matrix): void;
     cost(): number[];
     sigmoid(x: number): number;
     hypothetical(xs: Matrix): Matrix;

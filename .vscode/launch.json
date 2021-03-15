@@ -4,15 +4,6 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "TEST",
-      "program": "${workspaceFolder}/test/index.ts",
-      "outFiles": [
-        "${workspaceFolder}/build/**/*.js"
-      ]
-    },
-    {
-      "type": "node",
-      "request": "launch",
       "name": "TestMatrix",
       "program": "${workspaceFolder}/test/TestMatrix.ts",
       "outFiles": [

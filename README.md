@@ -2,12 +2,12 @@
 Matrix operation and machine learning library by TypesScript.
 
 ## Installed
-使用npm的方式安装到项目中，可切换淘宝源下载。
+确保npm已经安装，切换到项目目录执行以下命令。
 ```shell
 $ npm install infers@latest
 ```
 
-在项目中使用：
+在项目中引用：
 ```ts
 import { Matrix } from 'infers'
 let m = new Matrix([
@@ -15,16 +15,15 @@ let m = new Matrix([
   [2, 4 ,-1],
   [0, -2, 0]
 ])
-m.print()
-// solving det
-console.log(m.det())
+//transposition
+m.T.print()
 ```
 线性回归模型：
 ```ts
-// data
+// sample
 const xs = new Matrix([[1], [2], [3], [4]])
 const ys = new Matrix([[1], [3], [5], [7]])
-// create
+// create model
 const model = new RegressionModel(xs, ys)
 model.setRate(0.01)
 // fit
@@ -37,7 +36,7 @@ model.fit(5000, (batch) => {
 const xs2 = new Matrix([[5], [20]])
 model.predict(xs2).print()
 ```
-分类模型：
+逻辑分类模型：
 ```ts
 const xs = new Matrix([[1], [2], [3], [4]])
 const ys = new Matrix([[0], [0], [1], [1]])
@@ -67,12 +66,12 @@ const ys = new Matrix([
 const model = new LogisticModel(xs, ys)
 // ...
 ```
-学习率和训练次数的设定，要根据代价函数的每次求解来判定，每种模型需要的学习率和训练次数各不相同，学习率越低也就需要相对较多的训练次数才能达到代价函数最优，学习率过高也可能造成跨度太大越过最优解，最后损失值趋近于正无穷，造成模型无法收敛的问题。
+学习率和训练次数的选择，需根据代价函数的每次求解来判定，每种模型所需要的学习率和训练次数各不相同，越低的学习率也就需要相对较多的训练次数才能达到代价函数最优，过高也可能造成跨度太大而越过最优点，造成损失值趋近于正无穷模型无法收敛的问题。
 
 ## Export
 - class Matrix
   - 加法、乘法、数乘、转置
-  - 行列式
+  - 行列式、归一化
 - class Model
   - 线性回归模型
   - 分类模型

@@ -2,19 +2,15 @@ import { RegressionModel, Matrix, LogisticModel } from '../src'
 
 export namespace TestModel {
   export function regressionModel() {
-    // data
     const xs = new Matrix([[1], [2], [3], [4]])
     const ys = new Matrix([[1], [3], [5], [7]])
-    // create
     const model = new RegressionModel(xs, ys)
     model.setRate(0.01)
-    // fit
     model.fit(5000, (batch) => {
       if (batch % 500 === 0) {
         console.log(batch, model.cost()[0])
       }
     })
-    // predict
     const xs2 = new Matrix([[5], [20]])
     model.predict(xs2).print()
   }
@@ -43,7 +39,7 @@ export namespace TestModel {
     const ys = new Matrix([[0, 1], [1, 0], [0, 1], [1, 0]])
     const model = new LogisticModel(xs, ys)
     model.setRate(0.01)
-    model.fit(1000000, (batch) => {
+    model.fit(100000, (batch) => {
       if (batch % 1000 === 0) {
         console.log(batch, model.cost()[0])
       }
@@ -74,27 +70,9 @@ export namespace TestModel {
     const xs2 = new Matrix([[-18], [1.5], [3.5]])
     model.predict(xs2).print()
   }
-  export function logisticModel4() {
-    const xs = new Matrix([
-      [0, 1],
-      [1, 0],
-      [0, 0],
-      [1, 1]
-    ])
-    const ys = new Matrix([[1], [1], [0], [1]])
-    const model = new LogisticModel(xs, ys)
-    model.setRate(0.01)
-    model.fit(20000, (batch) => {
-      if (batch % 500 === 0) {
-        console.log(batch, model.cost()[0])
-      }
-    })
-    const xs2 = new Matrix([[1, 1], [0, 1], [0, 0]])
-    model.predict(xs2).print()
-    model.weights.print()
-  }
+
   export function run() {
-    logisticModel4()
+    regressionModel()
   }
 }
 

@@ -67,17 +67,20 @@ class Path {
 exports.Path = Path;
 class Polygon {
     constructor(pts) {
-        this.pts = pts;
-        if (pts.length < 3) {
+        this.points = [];
+        for (let i = 0; i < pts.length; i++) {
+            this.points.push(new Point(pts[i][0], pts[i][1]));
+        }
+        if (this.points.length < 3) {
             throw new Error('至少三个点');
         }
-        const r0 = pts.map(p => p.X.toString() + p.Y.toString()).sort();
+        const r0 = this.points.map(p => p.X.toString() + p.Y.toString()).sort();
         const r1 = r0.find((x, i) => x === r0[i + 1]);
         if (r1) {
             throw new Error('不能有相同的点');
         }
-        const first = pts[0];
-        const r3 = pts.slice(1);
+        const first = this.points[0];
+        const r3 = this.points.slice(1);
         let m = r3.map(p => p.X === first.X ? Infinity
             : (p.Y - first.Y) / (p.X - first.X));
         if (new Set(m).size === 1) {
@@ -85,7 +88,7 @@ class Polygon {
         }
     }
     testPointInsidePolygon(pt) {
-        let polygon = this.pts;
+        let polygon = this.points;
         var result = 0, cnt = polygon.length;
         if (cnt < 3)
             return 0;
