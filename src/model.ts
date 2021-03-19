@@ -6,7 +6,8 @@ class Model {
   outputs: Matrix
   /** 缩放比例*/
   scalem: Matrix
-  M: number
+  /** 样本数 */
+  m: number
   rate = 0.01
   constructor(xs: Matrix, ys: Matrix) {
     if (xs.shape[0] !== ys.shape[0]) {
@@ -19,7 +20,7 @@ class Model {
     //左侧扩增一列 X0 = 1
     this.inputs = inputs.expand(1, 'L')
     this.outputs = ys
-    this.M = this.inputs.shape[0]
+    this.m = this.inputs.shape[0]
     this.weights = this.initWeights()
   }
 
@@ -37,9 +38,9 @@ class Model {
    * - col = 输出个数
    */
   initWeights() {
-    const F = this.inputs.shape[1]
+    const f = this.inputs.shape[1]
     const y = this.outputs.shape[1]
-    return Matrix.generate(F, y)
+    return Matrix.generate(f, y)
   }
 
   /**
@@ -57,15 +58,9 @@ class Model {
    * @returns 多输出拥有多个损失值
    */
   cost() {
-    const M = this.M
-    let hy = this.hypothetical(this.inputs)
-    let sub = hy.subtraction(this.outputs).atomicOperation(item => item ** 2)
-    let n = []
-    for (let i = 0; i < sub.shape[1]; i++) {
-      let sum = sub.getCol(i).reduce((p, c) => p + c)
-      n.push((1 / (2 * M)) * sum)
-    }
-    return n
+    let h = this.hypothetical(this.inputs)
+    let sub = h.subtraction(this.outputs).atomicOperation(item => item ** 2).columnSum()
+    return sub.getRow(0).map(v => (1 / (2 * this.m)) * v)
   }
 
   /**
@@ -74,7 +69,6 @@ class Model {
    * - θj = θj - rate * 1 / m * ∑m(H(X[i]) - Y[i]) * X[i][j]
    */
   gradientDescent() {
-    const M = this.M
     let h = this.hypothetical(this.inputs)
     const temps = this.initWeights()
     let hsub = h.subtraction(this.outputs)
@@ -84,7 +78,7 @@ class Model {
         for (let k = 0; k < hsub.shape[0]; k++) {
           sum += hsub.get(k, j) * this.inputs.get(k, i)
         }
-        let nw = this.weights.get(i, j) - this.rate * (1 / M) * sum
+        let nw = this.weights.get(i, j) - this.rate * (1 / this.m) * sum
         temps.update(i, j, nw)
       }
     }
@@ -99,20 +93,13 @@ class Model {
   }
 
   /**
-   * 对新的特征进行归一化
+   * 特征按均值空间缩放
    * @param xs 
    */
   zoomScale(xs: Matrix) {
-    let n = []
-    for (let i = 0; i < xs.shape[0]; i++) {
-      let m = []
-      for (let j = 0; j < xs.shape[1]; j++) {
-        let r = this.scalem.get(1, j) === 0 ? 0 : (xs.get(i, j) - this.scalem.get(0, j)) / this.scalem.get(1, j)
-        m.push(r)
-      }
-      n.push(m)
-    }
-    return new Matrix(n)
+    return xs.atomicOperation((item, _, j) => {
+      return this.scalem.get(1, j) === 0 ? 0 : (item - this.scalem.get(0, j)) / this.scalem.get(1, j)
+    })
   }
 
   predict(xs: Matrix) {
@@ -155,20 +142,19 @@ export class LogisticModel extends Model {
    * @returns 多输出拥有多个损失值
    */
   cost() {
-    const M = this.M
-    let hy = this.hypothetical(this.inputs)
-    let t = hy.atomicOperation((item, i, j) => {
+    let h = this.hypothetical(this.inputs)
+    let t = h.atomicOperation((hy, i, j) => {
       let y = this.outputs.get(i, j)
-      return y === 1 ? -Math.log(item) : -Math.log(1 - item)
-    })
-    let n = []
-    for (let i = 0; i < t.shape[1]; i++) {
-      let sum = t.getCol(i).reduce((p, c) => p + c)
-      n.push((1 / M) * sum)
-    }
-    return n
+      return y === 1 ? -Math.log(hy) : -Math.log(1 - hy)
+    }).columnSum()
+    return t.getRow(0).map(v => (1 / this.m) * v)
   }
 
+  /**
+   * 激活函数
+   * @param x 
+   * @returns 
+   */
   sigmoid(x: number) {
     return 1 / (1 + Math.E ** -x)
   }

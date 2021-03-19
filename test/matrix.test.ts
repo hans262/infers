@@ -93,4 +93,15 @@ describe('test -> Matrix', () => {
     expect(a.addition(b).equals(ab)).toBeTruthy()
   })
 
+  test('列求和', () => {
+    let a = new Matrix([
+      [1, 2, 3],
+      [4, 5, 6]
+    ])
+    let ab = new Matrix([
+      [5, 7, 9]
+    ])
+    expect(a.columnSum().equals(ab)).toBeTruthy()
+  })
+  
 })

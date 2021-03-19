@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Matrix = void 0;
 class Matrix {
     constructor(data) {
         let t = data.find((d, i) => data[i - 1] && d.length !== data[i - 1].length);
@@ -8,6 +7,13 @@ class Matrix {
             throw new Error('矩阵列不正确');
         this.shape = [data.length, data[0].length];
         this.self = data;
+    }
+    columnSum() {
+        let n = [];
+        for (let i = 0; i < this.shape[1]; i++) {
+            n.push(this.getCol(i).reduce((p, c) => p + c));
+        }
+        return new Matrix([n]);
     }
     dataSync() {
         let n = [];

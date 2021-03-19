@@ -72,7 +72,7 @@ export namespace TestModel {
   }
 
   export function run() {
-    regressionModel()
+    logisticModel3()
   }
 }
 

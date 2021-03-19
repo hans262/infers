@@ -4,7 +4,7 @@ declare class Model {
     inputs: Matrix;
     outputs: Matrix;
     scalem: Matrix;
-    M: number;
+    m: number;
     rate: number;
     constructor(xs: Matrix, ys: Matrix);
     setRate(rate: number): void;

@@ -10,6 +10,18 @@ export class Matrix {
   }
 
   /**
+   * 矩阵mxn每列求和
+   * @returns Matrix 1 x n
+   */
+  columnSum() {
+    let n = []
+    for (let i = 0; i < this.shape[1]; i++) {
+      n.push(this.getCol(i).reduce((p, c) => p + c))
+    }
+    return new Matrix([n])
+  }
+  
+  /**
    * 返回拷贝后的二维数组
    */
   dataSync() {

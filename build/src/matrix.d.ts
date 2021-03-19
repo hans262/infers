@@ -2,6 +2,7 @@ export declare class Matrix {
     shape: [number, number];
     private self;
     constructor(data: number[][]);
+    columnSum(): Matrix;
     dataSync(): number[][];
     equalsShape(b: Matrix): boolean;
     equals(b: Matrix): boolean;
