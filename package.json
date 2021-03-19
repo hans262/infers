@@ -5,7 +5,6 @@
   "main": "./build/src/index.js",
   "keywords": [
     "machine-learning",
-    "neural-network",
     "infers"
   ],
   "scripts": {
