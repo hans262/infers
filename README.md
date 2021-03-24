@@ -18,7 +18,7 @@ let m = new Matrix([
 //transposition
 m.T.print()
 ```
-BP网络
+BP神经网络
 ```ts
 let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
 let ys = new Matrix([[1], [1], [0], [0]])
@@ -95,3 +95,4 @@ const model = new LogisticModel(xs, ys)
 - class Model
   - 线性回归模型
   - 分类模型
+  - NeuralNetwork BP神经网络

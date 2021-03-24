@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>infers - v1.1.1</title>
-	<meta name="description" content="Documentation for infers - v1.1.1">
+	<title>infers - v1.1.2</title>
+	<meta name="description" content="Documentation for infers - v1.1.2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 	<script async src="assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">infers - v1.1.1</a>
+					<a href="index.html" class="title">infers - v1.1.2</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<h1>infers - v1.1.1</h1>
+			<h1>infers - v1.1.2</h1>
 		</div>
 	</div>
 </header>
@@ -77,6 +77,24 @@
 <span style="color: #000000">])</span>
 <span style="color: #008000">//transposition</span>
 <span style="color: #001080">m</span><span style="color: #000000">.</span><span style="color: #0070C1">T</span><span style="color: #000000">.</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
+</code></pre>
+				<p>BP神经网络</p>
+				<pre><code class="language-ts"><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">xs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">]])</span>
+<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">ys</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">]])</span>
+<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">NeuralNetwork</span><span style="color: #000000">([</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">3</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">])</span>
+<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">fit</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">, </span><span style="color: #098658">50000</span><span style="color: #000000">, (</span><span style="color: #001080">batch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">batch</span><span style="color: #000000"> % </span><span style="color: #098658">1000</span><span style="color: #000000"> === </span><span style="color: #098658">0</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">batch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">)</span>
+<span style="color: #000000">  }</span>
+<span style="color: #000000">})</span>
+<span style="color: #008000">//打印最后一层的输出</span>
+<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">)[</span><span style="color: #098658">2</span><span style="color: #000000">].</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
+<span style="color: #008000">// Matrix 4x1 [</span>
+<span style="color: #008000">//  0.9862025352830867, </span>
+<span style="color: #008000">//  0.986128496195502, </span>
+<span style="color: #008000">//  0.01443800549676924, </span>
+<span style="color: #008000">//  0.014425871504885788, </span>
+<span style="color: #008000">// ]</span>
 </code></pre>
 				<p>线性回归模型：</p>
 				<pre><code class="language-ts"><span style="color: #008000">// sample</span>
@@ -136,6 +154,7 @@
 					<li>class Model<ul>
 							<li>线性回归模型</li>
 							<li>分类模型</li>
+							<li>NeuralNetwork BP神经网络</li>
 						</ul>
 					</li>
 				</ul>
@@ -159,6 +178,9 @@
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/matrix.html" class="tsd-kind-icon">Matrix</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/neuralnetwork.html" class="tsd-kind-icon">Neural<wbr>Network</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/path.html" class="tsd-kind-icon">Path</a>
