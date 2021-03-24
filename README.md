@@ -18,6 +18,26 @@ let m = new Matrix([
 //transposition
 m.T.print()
 ```
+BP网络
+```ts
+let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
+let ys = new Matrix([[1], [1], [0], [0]])
+let model = new NeuralNetwork([2, 3, 1])
+model.fit(xs, ys, 50000, (batch, loss) => {
+  if (batch % 1000 === 0) {
+    console.log(batch, loss)
+  }
+})
+//打印最后一层的输出
+model.predict(xs)[2].print()
+// Matrix 4x1 [
+//  0.9862025352830867, 
+//  0.986128496195502, 
+//  0.01443800549676924, 
+//  0.014425871504885788, 
+// ]
+```
+
 线性回归模型：
 ```ts
 // sample

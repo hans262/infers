@@ -7,4 +7,5 @@ __export(require("./model"));
 __export(require("./matrix"));
 __export(require("./graphical"));
 __export(require("./common"));
+__export(require("./NeuralNetwork"));
 //# sourceMappingURL=index.js.map

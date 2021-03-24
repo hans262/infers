@@ -1,4 +1,4 @@
-import { RegressionModel, Matrix, LogisticModel } from '../src'
+import { RegressionModel, Matrix, LogisticModel, NeuralNetwork } from '../src'
 
 export namespace TestModel {
   export function regressionModel() {
@@ -71,8 +71,21 @@ export namespace TestModel {
     model.predict(xs2).print()
   }
 
+  function neuralNetwork() {
+    let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
+    let ys = new Matrix([[1], [1], [0], [0]])
+    let model = new NeuralNetwork([2, 3, 1])
+    model.fit(xs, ys, 50000, (batch, loss) => {
+      if (batch % 1000 === 0) {
+        console.log(batch, loss)
+      }
+    })
+    //打印最后一层的输出
+    model.predict(xs)[2].print()
+  }
+  
   export function run() {
-    logisticModel3()
+    neuralNetwork()
   }
 }
 
