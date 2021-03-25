@@ -105,4 +105,7 @@ const model = new LogisticModel(xs, ys)
 - class Model
   - 线性回归模型
   - 分类模型
-  - NeuralNetwork BP神经网络
+- class BPNet
+  - 多层神经网络
+  - 多激活函数
+  - 分类和回归支持
