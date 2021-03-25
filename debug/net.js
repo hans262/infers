@@ -11,8 +11,7 @@ class BPNet {
     //输出函数
     if (!fn) {
       this.fn = function (x) {
-        // return 1.0 / (1.0 + Math.exp(-x))
-        return x
+        return 1.0 / (1.0 + Math.exp(-x))
       }
     } else {
       this.fn = fn

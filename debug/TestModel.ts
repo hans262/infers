@@ -1,4 +1,4 @@
-import { RegressionModel, Matrix, LogisticModel, NeuralNetwork } from '../src'
+import { RegressionModel, Matrix, LogisticModel, BPNet } from '../src'
 
 export namespace TestModel {
   export function regressionModel() {
@@ -71,21 +71,31 @@ export namespace TestModel {
     model.predict(xs2).print()
   }
 
-  function neuralNetwork() {
+  function bpNet1() {
     let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
     let ys = new Matrix([[1], [1], [0], [0]])
-    let model = new NeuralNetwork([2, 3, 1])
-    model.fit(xs, ys, 50000, (batch, loss) => {
-      if (batch % 1000 === 0) {
-        console.log(batch, loss)
-      }
+    let model = new BPNet([2, 3, 1], 'Sigmoid')
+    model.setRate(0.5)
+    model.fit(xs, ys, 10000, (batch, loss) => {
+      if (batch % 500 === 0) console.log(batch, loss)
     })
-    //打印最后一层的输出
     model.predict(xs)[2].print()
   }
-  
+
+  function bpNet2() {
+    let xs = new Matrix([[1, 4], [3, 2], [6, 5], [4, 7]])
+    let ys = new Matrix([[5], [5], [11], [11]])
+    let model = new BPNet([2, 5, 3, 1])
+    model.setRate(0.001)
+    model.fit(xs, ys, 1000, (batch, loss) => {
+      if (batch % 10 === 0) console.log(batch, loss)
+    })
+    let xs2 = new Matrix([[5, 8], [22, 6]])
+    model.predict(xs2)[3].print()
+  }
+
   export function run() {
-    neuralNetwork()
+    bpNet2()
   }
 }
 

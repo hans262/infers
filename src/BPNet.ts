@@ -1,44 +1,71 @@
 import { Matrix } from "./matrix"
 
-export class NeuralNetwork {
-  w: number[][][] = [] //权值矩阵
-  b: number[][] = [] //偏值矩阵
-  readonly shape: number[] //网络形状
-  layerNum: number //层数
-  rate = 0.5 //学习率
-  esp = 0.0001 //误差阈值
-  constructor(shape: number[]) {
+/**激活函数类型*/
+type ActivationFunction = 'Sigmoid' | 'Relu'
+
+export class BPNet {
+  w: Matrix[] //权值矩阵
+  b: Matrix[] //偏值矩阵
+  layerNum: number
+  rate = 0.001 //学习率
+  constructor(
+    /**网络形状*/
+    public readonly shape: number[],
+    /**激活函数类型*/
+    public readonly af?: ActivationFunction
+  ) {
     if (shape.length < 3) {
       throw new Error('网络至少三层')
     }
-    if (shape[0] < 2) {
-      throw new Error('输入层至少两个特征')
-    }
-
-    this.shape = shape
     this.layerNum = shape.length
-
-    // 初始化权值、偏值
-    for (let l = 1; l < this.layerNum; l++) {
-      let witem = []
-      let bitem = []
-      for (let j = 0; j < shape[l]; j++) {
-        let n = []
-        for (let i = 0; i < shape[l - 1]; i++) {
-          n.push(0.5 - Math.random())
-        }
-        witem.push(n)
-        bitem.push(0.5 - Math.random())
-      }
-      this.w[l] = witem
-      this.b[l] = bitem
-    }
+    const [w, b] = this.initwb(shape)
+    this.w = w
+    this.b = b
   }
+  /**
+   * 初始化权值、偏值
+   * @param shape 
+   * @returns [w, b]
+   */
+  initwb(shape: number[]) {
+    let w: Matrix[] = []
+    let b: Matrix[] = []
+    for (let l = 1; l < shape.length; l++) {
+      w[l] = Matrix.generate(shape[l], shape[l - 1])
+      b[l] = Matrix.generate(1, shape[l])
+    }
+    return [w, b]
+  }
+  /**
+   * 更新学习率
+   * @param rate 
+   */
   setRate(rate: number) {
     this.rate = rate
   }
-  sigmoid(x: number) {
-    return 1 / (1 + Math.exp(-x))
+  /**
+   * 激活函数
+   * @param x 
+   */
+  afn(x: number) {
+    switch (this.af) {
+      case 'Sigmoid':
+        return 1 / (1 + Math.exp(-x))
+      default:
+        return x
+    }
+  }
+  /**
+   * 激活函数对应求导
+   * @param x 
+   */
+  afd(x: number) {
+    switch (this.af) {
+      case 'Sigmoid':
+        return x * (1 - x)
+      default:
+        return 1
+    }
   }
 
   predict(xs: Matrix) {
@@ -51,16 +78,16 @@ export class NeuralNetwork {
         ys[l] = xs
         continue;
       }
-      let w = new Matrix(this.w[l]).T
-      let b = new Matrix([this.b[l]])
+      let w = this.w[l].T
+      let b = this.b[l]
       ys[l] = ys[l - 1].multiply(w).atomicOperation((item, _, j) =>
-        this.sigmoid(item + b.get(0, j))
+        this.afn(item + b.get(0, j))
       )
     }
     return ys
   }
 
-  //计算单组特征 输出网络
+  //计算单组特征
   calcNetwork(xs: number[]) {
     let ys: number[][] = []
     for (let l = 0; l < this.layerNum; l++) {
@@ -72,10 +99,10 @@ export class NeuralNetwork {
       for (let j = 0; j < this.shape[l]; j++) {
         let u = 0
         for (let i = 0; i < this.shape[l - 1]; i++) {
-          u += this.w[l][j][i] * ys[l - 1][i]
+          u += this.w[l].get(j, i) * ys[l - 1][i]
         }
-        u += this.b[l][j]
-        ys[l][j] = this.sigmoid(u)
+        u += this.b[l].get(0, j)
+        ys[l][j] = this.afn(u)
       }
     }
     return ys
@@ -88,7 +115,7 @@ export class NeuralNetwork {
       if (l === this.layerNum - 1) {
         let n = []
         for (let j = 0; j < this.shape[l]; j++) {
-          n[j] = (ys[j] - hy[l][j]) * hy[l][j] * (1 - hy[l][j])
+          n[j] = (ys[j] - hy[l][j]) * this.afd(hy[l][j])
         }
         delta[l] = n
         continue;
@@ -97,9 +124,9 @@ export class NeuralNetwork {
       for (let j = 0; j < this.shape[l]; j++) {
         n[j] = 0
         for (let i = 0; i < this.shape[l + 1]; i++) {
-          n[j] += delta[l + 1][i] * this.w[l + 1][i][j]
+          n[j] += delta[l + 1][i] * this.w[l + 1].get(i, j)
         }
-        n[j] *= hy[l][j] * (1 - hy[l][j])
+        n[j] *= this.afd(hy[l][j])
       }
       delta[l] = n
     }
@@ -111,8 +138,8 @@ export class NeuralNetwork {
     for (let l = 1; l < this.layerNum; l++) {
       for (let j = 0; j < this.shape[l]; j++) {
         for (let i = 0; i < this.shape[l - 1]; i++) {
-          this.w[l][j][i] += this.rate * delta[l][j] * hy[l - 1][i]
-          this.b[l][j] += this.rate * delta[l][j]
+          this.w[l].update(j, i, this.w[l].get(j, i) + this.rate * delta[l][j] * hy[l - 1][i])
+          this.b[l].update(0, j, this.b[l].get(0, j) + this.rate * delta[l][j])
         }
       }
     }
@@ -128,12 +155,9 @@ export class NeuralNetwork {
     for (let p = 0; p < batch; p++) {
       let loss = 0
       for (let i = 0; i < xs.shape[0]; i++) {
-        //正向求值
         let hy = this.calcNetwork(xs.getRow(i))
-        //反向求误差
         let delta = this.calcdelta(ys.getRow(i), hy)
         this.update(hy, delta)
-        //求损失平方和
         let n = 0
         let l1 = this.layerNum - 1
         for (let l = 0; l < this.shape[l1]; l++) {
@@ -143,7 +167,6 @@ export class NeuralNetwork {
       }
       loss = loss / (2 * xs.shape[0])
       if (callback) callback(p, loss)
-      if (loss < this.esp) break;
     }
   }
 }

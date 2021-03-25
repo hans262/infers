@@ -6,29 +6,28 @@ Matrix operation and machine learning library by TypesScript.
 ```shell
 $ npm install infers@latest
 ```
-
-在项目中引用：
+然后在项目中引用：
 ```ts
-import { Matrix } from 'infers'
+import { Matrix, BPNet } from 'infers'
+```
+计算矩阵转置：
+```ts
 let m = new Matrix([
   [1, 5, 0],
-  [2, 4 ,-1],
+  [2, 4 , -1],
   [0, -2, 0]
 ])
-//transposition
 m.T.print()
 ```
-BP神经网络
+BP神经网络XOR例子，三层网络：
 ```ts
 let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
 let ys = new Matrix([[1], [1], [0], [0]])
-let model = new NeuralNetwork([2, 3, 1])
-model.fit(xs, ys, 50000, (batch, loss) => {
-  if (batch % 1000 === 0) {
-    console.log(batch, loss)
-  }
+let model = new BPNet([2, 3, 1], 'Sigmoid')
+model.setRate(0.5)
+model.fit(xs, ys, 10000, (batch, loss) => {
+  if (batch % 500 === 0) console.log(batch, loss)
 })
-//打印最后一层的输出
 model.predict(xs)[2].print()
 // Matrix 4x1 [
 //  0.9862025352830867, 
@@ -37,22 +36,33 @@ model.predict(xs)[2].print()
 //  0.014425871504885788, 
 // ]
 ```
-
+BP神经网络加法例子，四层网络：
+```ts
+let xs = new Matrix([[1, 4], [3, 2], [6, 5], [4, 7]])
+let ys = new Matrix([[5], [5], [11], [11]])
+let model = new BPNet([2, 5, 3, 1])
+model.setRate(0.001)
+model.fit(xs, ys, 1000, (batch, loss) => {
+  if (batch % 10 === 0) console.log(batch, loss)
+})
+let xs2 = new Matrix([[5, 8], [22, 6]])
+model.predict(xs2)[3].print()
+// Matrix 2x1 [
+//  12.994745740521667, 
+//  27.99134620596921, 
+// ]
+```
 线性回归模型：
 ```ts
-// sample
 const xs = new Matrix([[1], [2], [3], [4]])
 const ys = new Matrix([[1], [3], [5], [7]])
-// create model
 const model = new RegressionModel(xs, ys)
 model.setRate(0.01)
-// fit
 model.fit(5000, (batch) => {
   if (batch % 500 === 0) {
     console.log(batch, model.cost())
   }
 })
-// predict
 const xs2 = new Matrix([[5], [20]])
 model.predict(xs2).print()
 ```
