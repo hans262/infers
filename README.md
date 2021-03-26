@@ -8,9 +8,9 @@ $ npm install infers@latest
 ```
 然后在项目中引用：
 ```ts
-import { Matrix, BPNet } from 'infers'
+import { Matrix, BPNet, SeqModel } from 'infers'
 ```
-计算矩阵转置：
+矩阵转置：
 ```ts
 let m = new Matrix([
   [1, 5, 0],
@@ -19,12 +19,12 @@ let m = new Matrix([
 ])
 m.T.print()
 ```
-BP神经网络XOR例子，三层网络：
+BP神经网络XOR示例，三层网络：
 ```ts
 let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
 let ys = new Matrix([[1], [1], [0], [0]])
-let model = new BPNet([2, 3, 1], 'Sigmoid')
-model.setRate(0.5)
+let model = new BPNet([2, 4, 1], 'Sigmoid')
+model.setRate(0.1)
 model.fit(xs, ys, 10000, (batch, loss) => {
   if (batch % 500 === 0) console.log(batch, loss)
 })
@@ -36,76 +36,50 @@ model.predict(xs)[2].print()
 //  0.014425871504885788, 
 // ]
 ```
-BP神经网络加法例子，四层网络：
+BP神经网络加法示例，四层网络：
 ```ts
 let xs = new Matrix([[1, 4], [3, 2], [6, 5], [4, 7]])
 let ys = new Matrix([[5], [5], [11], [11]])
-let model = new BPNet([2, 5, 3, 1])
+let model = new BPNet([2, 5, 4, 1])
 model.setRate(0.001)
 model.fit(xs, ys, 1000, (batch, loss) => {
   if (batch % 10 === 0) console.log(batch, loss)
 })
-let xs2 = new Matrix([[5, 8], [22, 6]])
+let xs2 = new Matrix([[5, 8], [22, 6], [-5, 9]])
 model.predict(xs2)[3].print()
 // Matrix 2x1 [
 //  12.994745740521667, 
 //  27.99134620596921, 
+//  3.9987224114576856, 
 // ]
 ```
-线性回归模型：
+序列模型，该模型只有输入层和输出层两层，支持线性回归和逻辑分类。
 ```ts
 const xs = new Matrix([[1], [2], [3], [4]])
 const ys = new Matrix([[1], [3], [5], [7]])
-const model = new RegressionModel(xs, ys)
+const model = new SeqModel([1, 1])
 model.setRate(0.01)
-model.fit(5000, (batch) => {
-  if (batch % 500 === 0) {
-    console.log(batch, model.cost())
-  }
+model.fit(xs, ys, 5000, (batch, loss) => {
+  if (batch % 500 === 0) console.log(batch, loss)
 })
 const xs2 = new Matrix([[5], [20]])
 model.predict(xs2).print()
 ```
-逻辑分类模型：
-```ts
-const xs = new Matrix([[1], [2], [3], [4]])
-const ys = new Matrix([[0], [0], [1], [1]])
-const model = new LogisticModel(xs, ys)
-model.setRate(0.01)
-model.fit(50000, (batch) => {
-  if (batch % 500 === 0) {
-    console.log(batch, model.cost())
-  }
-})
-const xs2 = new Matrix([[20], [30], [-2], [0], [3], [2]])
-model.predict(xs2).print()
-```
-多分类：
-```ts
-const xs = new Matrix([
-  [-2], [-1], [1], [2], [3], [4]
-])
-const ys = new Matrix([
-  [1, 0, 0],
-  [1, 0, 0],
-  [0, 1, 0],
-  [0, 1, 0],
-  [0, 0, 1],
-  [0, 0, 1]
-])
-const model = new LogisticModel(xs, ys)
-// ...
-```
-学习率和训练次数的选择，需根据代价函数的每次求解来判定，每种模型所需要的学习率和训练次数各不相同，越低的学习率也就需要相对较多的训练次数才能达到代价函数最优，过高也可能造成跨度太大而越过最优点，造成损失值趋近于正无穷模型无法收敛的问题。
+参数影响
+ - **shape**: 模型的网络层次结构，结构越复杂单次训练的计算量就相对较大，且容易造成过拟合。
+ - **rate**: 步长学习率，越低的学习率也就需要相对较多的训练次数才能达到代价函数最优，过大则可能因跨度太大而越过最优点造成损失值趋近于正无穷模型无法收敛的问题。
+ - **batch**：训练集全部数据迭代一次的过程。
+
+以上参数的选择也是就是模型的调优的过程，需根据代价函数的每次求解来判定，每种模型所需要的学习率、训练次数、模型结构各不相同。
 
 ## Export
 - class Matrix
   - 加法、乘法、数乘、转置
   - 行列式、归一化
-- class Model
-  - 线性回归模型
-  - 分类模型
+- class SeqModel
+  - 两层模型
+  - 线性回归、逻辑分类
 - class BPNet
-  - 多层神经网络
-  - 多激活函数
-  - 分类和回归支持
+  - 多层网络模型
+  - 支持多种激活函数
+  - 支持分类和回归
