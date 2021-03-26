@@ -7,13 +7,13 @@ export declare class SeqModel {
     rate: number;
     constructor(shape: number[], af?: "Sigmoid" | undefined);
     setRate(rate: number): void;
-    initWeights(): Matrix;
+    initw(): Matrix;
     hypothetical(xs: Matrix): Matrix;
     cost(hys: Matrix, ys: Matrix): number[];
     sigmoidCost(hys: Matrix, ys: Matrix): number[];
     fit(xs: Matrix, ys: Matrix, batch: number, callback?: (batch: number, loss: number) => void): void;
     sigmoid(x: number): number;
     verifOutput(ys: Matrix): void;
-    zoomScale(xs: Matrix): Matrix;
+    zoomScalem(xs: Matrix): Matrix;
     predict(xs: Matrix): Matrix;
 }

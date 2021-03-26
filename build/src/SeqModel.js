@@ -7,14 +7,14 @@ class SeqModel {
         this.af = af;
         this.rate = 0.01;
         if (shape.length !== 2) {
-            throw new Error('该模型只有输入层和输出层，总共2层');
+            throw new Error('该模型只支持两层结构');
         }
-        this.weights = this.initWeights();
+        this.weights = this.initw();
     }
     setRate(rate) {
         this.rate = rate;
     }
-    initWeights() {
+    initw() {
         const f = this.shape[0] + 1;
         const y = this.shape[1];
         return matrix_1.Matrix.generate(f, y);
@@ -55,7 +55,7 @@ class SeqModel {
         let m = xs.shape[0];
         for (let i = 0; i < batch; i++) {
             let hys = this.hypothetical(xs);
-            const temps = this.initWeights();
+            const temps = this.initw();
             let hsub = hys.subtraction(ys);
             for (let i = 0; i < temps.shape[0]; i++) {
                 for (let j = 0; j < temps.shape[1]; j++) {
@@ -86,7 +86,7 @@ class SeqModel {
             }
         }
     }
-    zoomScale(xs) {
+    zoomScalem(xs) {
         return xs.atomicOperation((item, _, j) => {
             if (!this.scalem)
                 return item;
@@ -97,9 +97,9 @@ class SeqModel {
         if (xs.shape[1] !== this.shape[0]) {
             throw new Error('与预期特征数不符合');
         }
-        let inputs = this.zoomScale(xs).expand(1, 'L');
+        let inputs = this.zoomScalem(xs).expand(1, 'L');
         return this.hypothetical(inputs);
     }
 }
 exports.SeqModel = SeqModel;
-//# sourceMappingURL=model.js.map
+//# sourceMappingURL=SeqModel.js.map

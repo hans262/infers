@@ -7,7 +7,7 @@ export declare class Matrix {
     equalsShape(b: Matrix): boolean;
     equals(b: Matrix): boolean;
     static generate(row: number, col: number, f?: number): Matrix;
-    update(row: number, col: number, val: number): void;
+    update(row: number, col: number, val: number, oper?: '+=' | '-=' | '*=' | '/='): void;
     expand(n: number, position: 'L' | 'R'): Matrix;
     get(i: number, j: number): number;
     getRow(i: number): number[];

@@ -1,21 +1,22 @@
 import { Matrix } from "./matrix";
-declare type ActivationFunction = 'Sigmoid' | 'Relu';
+export declare type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh';
 export declare class BPNet {
     readonly shape: number[];
-    readonly af?: ActivationFunction | undefined;
+    readonly af?: "Sigmoid" | "Relu" | "Tanh" | undefined;
     w: Matrix[];
     b: Matrix[];
-    layerNum: number;
+    nlayer: number;
     rate: number;
-    constructor(shape: number[], af?: ActivationFunction | undefined);
+    scalem?: Matrix;
+    constructor(shape: number[], af?: "Sigmoid" | "Relu" | "Tanh" | undefined);
     initwb(shape: number[]): Matrix[][];
     setRate(rate: number): void;
     afn(x: number): number;
     afd(x: number): number;
+    calcnet(xs: Matrix): Matrix[];
+    zoomScalem(xs: Matrix): Matrix;
     predict(xs: Matrix): Matrix[];
-    calcNetwork(xs: number[]): number[][];
-    calcdelta(ys: number[], hy: number[][]): number[][];
-    update(hy: number[][], delta: number[][]): void;
+    calcDerivative(ys: number[], hy: Matrix[]): number[][];
+    update(dy: number[][], hy: Matrix[]): void;
     fit(xs: Matrix, ys: Matrix, batch: number, callback?: (batch: number, loss: number) => void): void;
 }
-export {};

@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Matrix = void 0;
 class Matrix {
     constructor(data) {
         let t = data.find((d, i) => data[i - 1] && d.length !== data[i - 1].length);
@@ -53,8 +52,23 @@ class Matrix {
         }
         return new Matrix(n);
     }
-    update(row, col, val) {
-        this.self[row][col] = val;
+    update(row, col, val, oper) {
+        switch (oper) {
+            case '+=':
+                this.self[row][col] += val;
+                break;
+            case '-=':
+                this.self[row][col] -= val;
+                break;
+            case '*=':
+                this.self[row][col] *= val;
+                break;
+            case '/=':
+                this.self[row][col] /= val;
+                break;
+            default:
+                this.self[row][col] = val;
+        }
     }
     expand(n, position) {
         let m = [];

@@ -1,7 +1,6 @@
 export class Matrix {
   shape: [number, number]
   private self: number[][]
-
   constructor(data: number[][]) {
     let t = data.find((d, i) => data[i - 1] && d.length !== data[i - 1].length)
     if (t) throw new Error('矩阵列不正确')
@@ -20,7 +19,7 @@ export class Matrix {
     }
     return new Matrix([n])
   }
-  
+
   /**
    * 返回拷贝后的二维数组
    */
@@ -83,9 +82,25 @@ export class Matrix {
    * @param row 
    * @param col 
    * @param val 
+   * @param oper 
    */
-  update(row: number, col: number, val: number) {
-    this.self[row][col] = val
+  update(row: number, col: number, val: number, oper?: '+=' | '-=' | '*=' | '/=') {
+    switch(oper){
+      case '+=':
+        this.self[row][col] += val
+        break
+      case '-=':
+        this.self[row][col] -= val
+        break
+      case '*=':
+        this.self[row][col] *= val
+        break
+      case '/=':
+        this.self[row][col] /= val
+        break
+      default:
+        this.self[row][col] = val
+    }
   }
 
   /**
