@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BPNet = void 0;
 const matrix_1 = require("./matrix");
 class BPNet {
     constructor(shape, af) {
@@ -7,19 +8,19 @@ class BPNet {
         this.af = af;
         this.rate = 0.001;
         if (shape.length < 3) {
-            throw new Error('网络至少三层');
+            throw new Error('BP网络至少有三层结构');
         }
         this.nlayer = shape.length;
-        const [w, b] = this.initwb(shape);
+        const [w, b] = this.initwb();
         this.w = w;
         this.b = b;
     }
-    initwb(shape) {
+    initwb(v) {
         let w = [];
         let b = [];
-        for (let l = 1; l < shape.length; l++) {
-            w[l] = matrix_1.Matrix.generate(shape[l], shape[l - 1]);
-            b[l] = matrix_1.Matrix.generate(1, shape[l]);
+        for (let l = 1; l < this.shape.length; l++) {
+            w[l] = matrix_1.Matrix.generate(this.shape[l], this.shape[l - 1], v);
+            b[l] = matrix_1.Matrix.generate(1, this.shape[l], v);
         }
         return [w, b];
     }
@@ -51,20 +52,17 @@ class BPNet {
         }
     }
     calcnet(xs) {
-        if (xs.shape[1] !== this.shape[0]) {
-            throw new Error(`特征与网络输入不符合，input num -> ${this.shape[0]}`);
-        }
-        let ys = [];
+        let hy = [];
         for (let l = 0; l < this.nlayer; l++) {
             if (l === 0) {
-                ys[l] = xs;
+                hy[l] = xs;
                 continue;
             }
             let w = this.w[l].T;
             let b = this.b[l];
-            ys[l] = ys[l - 1].multiply(w).atomicOperation((item, _, j) => this.afn(item + b.get(0, j)));
+            hy[l] = hy[l - 1].multiply(w).atomicOperation((item, _, j) => this.afn(item + b.get(0, j)));
         }
-        return ys;
+        return hy;
     }
     zoomScalem(xs) {
         return xs.atomicOperation((item, _, j) => {
@@ -74,39 +72,40 @@ class BPNet {
         });
     }
     predict(xs) {
+        if (xs.shape[1] !== this.shape[0]) {
+            throw new Error(`特征与网络输入不符合，input num -> ${this.shape[0]}`);
+        }
         return this.calcnet(this.zoomScalem(xs));
     }
     calcDerivative(ys, hy) {
-        let dy = [];
+        const [dw, dy] = this.initwb(0);
         for (let l = this.nlayer - 1; l > 0; l--) {
             if (l === this.nlayer - 1) {
-                let n = [];
                 for (let j = 0; j < this.shape[l]; j++) {
-                    n[j] = (hy[l].get(0, j) - ys[j]) * this.afd(hy[l].get(0, j));
+                    let n = (hy[l].get(0, j) - ys[j]) * this.afd(hy[l].get(0, j));
+                    dy[l].update(0, j, n);
+                    for (let k = 0; k < this.shape[l - 1]; k++) {
+                        dw[l].update(j, k, hy[l - 1].get(0, k) * n);
+                    }
                 }
-                dy[l] = n;
                 continue;
             }
-            let n = [];
             for (let j = 0; j < this.shape[l]; j++) {
-                n[j] = 0;
                 for (let i = 0; i < this.shape[l + 1]; i++) {
-                    n[j] += dy[l + 1][i] * this.w[l + 1].get(i, j);
+                    dy[l].update(0, j, dy[l + 1].get(0, i) * this.w[l + 1].get(i, j), '+=');
                 }
-                n[j] *= this.afd(hy[l].get(0, j));
+                dy[l].update(0, j, this.afd(hy[l].get(0, j)), '*=');
+                for (let k = 0; k < this.shape[l - 1]; k++) {
+                    dw[l].update(j, k, hy[l - 1].get(0, k) * dy[l].get(0, j));
+                }
             }
-            dy[l] = n;
         }
-        return dy;
+        return { dy, dw };
     }
-    update(dy, hy) {
+    update(dy, dw) {
         for (let l = 1; l < this.nlayer; l++) {
-            for (let j = 0; j < this.shape[l]; j++) {
-                for (let i = 0; i < this.shape[l - 1]; i++) {
-                    this.w[l].update(j, i, this.rate * dy[l][j] * hy[l - 1].get(0, i), '-=');
-                    this.b[l].update(0, j, this.rate * dy[l][j], '-=');
-                }
-            }
+            this.w[l] = this.w[l].atomicOperation((w, i, j) => w - this.rate * dw[l].get(i, j));
+            this.b[l] = this.b[l].atomicOperation((b, i, j) => b - this.rate * dy[l].get(i, j));
         }
     }
     fit(xs, ys, batch, callback) {
@@ -127,16 +126,16 @@ class BPNet {
             for (let n = 0; n < xs.shape[0]; n++) {
                 let xss = new matrix_1.Matrix([xs.getRow(n)]);
                 let hy = this.calcnet(xss);
-                let dys = this.calcDerivative(ys.getRow(n), hy);
-                this.update(dys, hy);
+                const { dy, dw } = this.calcDerivative(ys.getRow(n), hy);
+                this.update(dy, dw);
                 let e = 0;
                 let l = this.nlayer - 1;
                 for (let j = 0; j < this.shape[l]; j++) {
-                    e += ((ys.get(n, j) - hy[l].get(0, j)) ** 2);
+                    e += ((ys.get(n, j) - hy[l].get(0, j)) ** 2) / 2;
                 }
                 loss += e / this.shape[l];
             }
-            loss = loss / (2 * xs.shape[0]);
+            loss = loss / xs.shape[0];
             if (callback)
                 callback(p, loss);
         }

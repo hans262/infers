@@ -16,31 +16,29 @@ export class BPNet {
     public readonly af?: ActivationFunction
   ) {
     if (shape.length < 3) {
-      throw new Error('网络至少三层')
+      throw new Error('BP网络至少有三层结构')
     }
     this.nlayer = shape.length
-    const [w, b] = this.initwb(shape)
+    const [w, b] = this.initwb()
     this.w = w
     this.b = b
   }
+
   /**
    * 初始化权值、偏值
    * @param shape 
    * @returns [w, b]
    */
-  initwb(shape: number[]) {
+  initwb(v?: number) {
     let w: Matrix[] = []
     let b: Matrix[] = []
-    for (let l = 1; l < shape.length; l++) {
-      w[l] = Matrix.generate(shape[l], shape[l - 1])
-      b[l] = Matrix.generate(1, shape[l])
+    for (let l = 1; l < this.shape.length; l++) {
+      w[l] = Matrix.generate(this.shape[l], this.shape[l - 1], v)
+      b[l] = Matrix.generate(1, this.shape[l], v)
     }
     return [w, b]
   }
-  /**
-   * 更新学习率
-   * @param rate 
-   */
+
   setRate(rate: number) {
     this.rate = rate
   }
@@ -78,22 +76,19 @@ export class BPNet {
   }
 
   calcnet(xs: Matrix) {
-    if (xs.shape[1] !== this.shape[0]) {
-      throw new Error(`特征与网络输入不符合，input num -> ${this.shape[0]}`)
-    }
-    let ys: Matrix[] = []
+    let hy: Matrix[] = []
     for (let l = 0; l < this.nlayer; l++) {
       if (l === 0) {
-        ys[l] = xs
+        hy[l] = xs
         continue;
       }
       let w = this.w[l].T
       let b = this.b[l]
-      ys[l] = ys[l - 1].multiply(w).atomicOperation((item, _, j) =>
+      hy[l] = hy[l - 1].multiply(w).atomicOperation((item, _, j) =>
         this.afn(item + b.get(0, j))
       )
     }
-    return ys
+    return hy
   }
 
   /**
@@ -108,53 +103,57 @@ export class BPNet {
   }
 
   predict(xs: Matrix) {
+    if (xs.shape[1] !== this.shape[0]) {
+      throw new Error(`特征与网络输入不符合，input num -> ${this.shape[0]}`)
+    }
     return this.calcnet(this.zoomScalem(xs))
   }
 
   /**
    * 求误差相对于每一个节点的导数  
    * - E = 1 / 2 (hy - y)^2
-   * - ∂E / ∂hy = (1 / 2) * 2 * (hy - y) = hy - y  
+   * - ∂E / ∂hy = (1 / 2) * 2 * (hy - y) = hy - y  最后一个节点的导数
+   * - ∂E / ∂w = 当前权重输入节点的值 * 输出节点的导数
+   * 
    * 求导遵循链式法则：分支节点相加，链路节点相乘。
-   * 有激活函数的情况，还需乘以激活函数的导数
+   * 有激活函数，还需乘以激活函数的导数。
+   * @returns [节点导数矩阵，权重导数矩阵]
    */
   calcDerivative(ys: number[], hy: Matrix[]) {
-    let dy = []
+    const [dw, dy] = this.initwb(0)
     for (let l = this.nlayer - 1; l > 0; l--) {
       if (l === this.nlayer - 1) {
-        let n = []
         for (let j = 0; j < this.shape[l]; j++) {
-          n[j] = (hy[l].get(0, j) - ys[j]) * this.afd(hy[l].get(0, j))
+          let n = (hy[l].get(0, j) - ys[j]) * this.afd(hy[l].get(0, j))
+          dy[l].update(0, j, n)
+          for (let k = 0; k < this.shape[l - 1]; k++) {
+            dw[l].update(j, k, hy[l - 1].get(0, k) * n)
+          }
         }
-        dy[l] = n
         continue;
       }
-      let n = []
       for (let j = 0; j < this.shape[l]; j++) {
-        n[j] = 0
         for (let i = 0; i < this.shape[l + 1]; i++) {
-          n[j] += dy[l + 1][i] * this.w[l + 1].get(i, j)
+          dy[l].update(0, j, dy[l + 1].get(0, i) * this.w[l + 1].get(i, j), '+=')
         }
-        n[j] *= this.afd(hy[l].get(0, j))
+        dy[l].update(0, j, this.afd(hy[l].get(0, j)), '*=')
+        for (let k = 0; k < this.shape[l - 1]; k++) {
+          dw[l].update(j, k, hy[l - 1].get(0, k) * dy[l].get(0, j))
+        }
       }
-      dy[l] = n
     }
-    return dy
+    return { dy, dw }
   }
 
   /**
-   * 调整权值和阈值
-   * @param dy 
-   * @param hy 
+   * 调整权值和偏值矩阵
+   * - w = w - α * (∂E / ∂w)  导数项 = 误差相对于当前权重的偏导数
+   * - b = b - α * (∂E / ∂hy) 导数项 = 误差相对于节点值的偏导数
    */
-  update(dy: number[][], hy: Matrix[]) {
+  update(dy: Matrix[], dw: Matrix[]) {
     for (let l = 1; l < this.nlayer; l++) {
-      for (let j = 0; j < this.shape[l]; j++) {
-        for (let i = 0; i < this.shape[l - 1]; i++) {
-          this.w[l].update(j, i, this.rate * dy[l][j] * hy[l - 1].get(0, i), '-=')
-          this.b[l].update(0, j, this.rate * dy[l][j], '-=')
-        }
-      }
+      this.w[l] = this.w[l].atomicOperation((w, i, j) => w - this.rate * dw[l].get(i, j))
+      this.b[l] = this.b[l].atomicOperation((b, i, j) => b - this.rate * dy[l].get(i, j))
     }
   }
 
@@ -168,7 +167,6 @@ export class BPNet {
     if (ys.shape[1] !== this.shape[this.nlayer - 1]) {
       throw new Error(`标签与网络输出不符合，output num -> ${this.shape[this.nlayer - 1]}`)
     }
-
     //归一化 -0.5 ～ 0.5
     let [inputs, scalem] = xs.normalization()
     this.scalem = scalem
@@ -179,17 +177,16 @@ export class BPNet {
       for (let n = 0; n < xs.shape[0]; n++) {
         let xss = new Matrix([xs.getRow(n)])
         let hy = this.calcnet(xss)
-        let dys = this.calcDerivative(ys.getRow(n), hy)
-        this.update(dys, hy)
-
+        const { dy, dw } = this.calcDerivative(ys.getRow(n), hy)
+        this.update(dy, dw)
         let e = 0
         let l = this.nlayer - 1
         for (let j = 0; j < this.shape[l]; j++) {
-          e += ((ys.get(n, j) - hy[l].get(0, j)) ** 2)
+          e += ((ys.get(n, j) - hy[l].get(0, j)) ** 2) / 2
         }
         loss += e / this.shape[l]
       }
-      loss = loss / (2 * xs.shape[0])
+      loss = loss / xs.shape[0]
       if (callback) callback(p, loss)
     }
   }

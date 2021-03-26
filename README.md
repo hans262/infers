@@ -24,7 +24,7 @@ BP神经网络XOR示例，三层网络：
 let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
 let ys = new Matrix([[1], [1], [0], [0]])
 let model = new BPNet([2, 4, 1], 'Sigmoid')
-model.setRate(0.1)
+model.setRate(0.3)
 model.fit(xs, ys, 10000, (batch, loss) => {
   if (batch % 500 === 0) console.log(batch, loss)
 })
@@ -40,7 +40,7 @@ BP神经网络加法示例，四层网络：
 ```ts
 let xs = new Matrix([[1, 4], [3, 2], [6, 5], [4, 7]])
 let ys = new Matrix([[5], [5], [11], [11]])
-let model = new BPNet([2, 5, 4, 1])
+let model = new BPNet([2, 6, 6, 1])
 model.setRate(0.001)
 model.fit(xs, ys, 1000, (batch, loss) => {
   if (batch % 10 === 0) console.log(batch, loss)
@@ -66,11 +66,11 @@ const xs2 = new Matrix([[5], [20]])
 model.predict(xs2).print()
 ```
 参数影响
- - **shape**: 模型的网络层次结构，结构越复杂单次训练的计算量就相对较大，且容易造成过拟合。
- - **rate**: 步长学习率，越低的学习率也就需要相对较多的训练次数才能达到代价函数最优，过大则可能因跨度太大而越过最优点造成损失值趋近于正无穷模型无法收敛的问题。
+ - **shape**：模型的网络层次结构，结构越复杂单次训练的计算量就相对较大，且容易造成过拟合。
+ - **rate**：步长学习率，越低的学习率也就需要相对较多的训练次数才能达到代价函数最优，过大则可能因跨度太大而越过最优点造成损失值趋近于正无穷模型无法收敛的问题。
  - **batch**：训练集全部数据迭代一次的过程。
 
-以上参数的选择也是就是模型的调优的过程，需根据代价函数的每次求解来判定，每种模型所需要的学习率、训练次数、模型结构各不相同。
+以上参数的选择也是就是模型的调优的过程，每种模型所需要的学习率、训练次数、模型结构各不相同，需根据代价函数的每次求解来判定。
 
 ## Export
 - class Matrix

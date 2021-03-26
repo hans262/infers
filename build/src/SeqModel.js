@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SeqModel = void 0;
 const matrix_1 = require("./matrix");
 class SeqModel {
     constructor(shape, af) {
