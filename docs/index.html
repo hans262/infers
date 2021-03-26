@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>infers - v1.1.3</title>
-	<meta name="description" content="Documentation for infers - v1.1.3">
+	<title>infers - v1.1.4</title>
+	<meta name="description" content="Documentation for infers - v1.1.4">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 	<script async src="assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">infers - v1.1.3</a>
+					<a href="index.html" class="title">infers - v1.1.4</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<h1>infers - v1.1.3</h1>
+			<h1>infers - v1.1.4</h1>
 		</div>
 	</div>
 </header>
@@ -69,9 +69,9 @@
 				<pre><code class="language-shell"><span style="color: #000000">$ npm install infers@latest</span>
 </code></pre>
 				<p>然后在项目中引用：</p>
-				<pre><code class="language-ts"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Matrix</span><span style="color: #000000">, </span><span style="color: #001080">BPNet</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;infers&#039;</span>
+				<pre><code class="language-ts"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Matrix</span><span style="color: #000000">, </span><span style="color: #001080">BPNet</span><span style="color: #000000">, </span><span style="color: #001080">SeqModel</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;infers&#039;</span>
 </code></pre>
-				<p>计算矩阵转置：</p>
+				<p>矩阵转置：</p>
 				<pre><code class="language-ts"><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">m</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([</span>
 <span style="color: #000000">  [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">],</span>
 <span style="color: #000000">  [</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">4</span><span style="color: #000000"> , -</span><span style="color: #098658">1</span><span style="color: #000000">],</span>
@@ -79,11 +79,11 @@
 <span style="color: #000000">])</span>
 <span style="color: #001080">m</span><span style="color: #000000">.</span><span style="color: #0070C1">T</span><span style="color: #000000">.</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
 </code></pre>
-				<p>BP神经网络XOR例子，三层网络：</p>
+				<p>BP神经网络XOR示例，三层网络：</p>
 				<pre><code class="language-ts"><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">xs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">]])</span>
 <span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">ys</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">]])</span>
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">BPNet</span><span style="color: #000000">([</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">3</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">], </span><span style="color: #A31515">&#039;Sigmoid&#039;</span><span style="color: #000000">)</span>
-<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">setRate</span><span style="color: #000000">(</span><span style="color: #098658">0.5</span><span style="color: #000000">)</span>
+<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">BPNet</span><span style="color: #000000">([</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">4</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">], </span><span style="color: #A31515">&#039;Sigmoid&#039;</span><span style="color: #000000">)</span>
+<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">setRate</span><span style="color: #000000">(</span><span style="color: #098658">0.1</span><span style="color: #000000">)</span>
 <span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">fit</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">, </span><span style="color: #098658">10000</span><span style="color: #000000">, (</span><span style="color: #001080">batch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">  </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">batch</span><span style="color: #000000"> % </span><span style="color: #098658">500</span><span style="color: #000000"> === </span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">batch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">)</span>
 <span style="color: #000000">})</span>
@@ -95,63 +95,40 @@
 <span style="color: #008000">//  0.014425871504885788, </span>
 <span style="color: #008000">// ]</span>
 </code></pre>
-				<p>BP神经网络加法例子，四层网络：</p>
+				<p>BP神经网络加法示例，四层网络：</p>
 				<pre><code class="language-ts"><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">xs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">4</span><span style="color: #000000">], [</span><span style="color: #098658">3</span><span style="color: #000000">, </span><span style="color: #098658">2</span><span style="color: #000000">], [</span><span style="color: #098658">6</span><span style="color: #000000">, </span><span style="color: #098658">5</span><span style="color: #000000">], [</span><span style="color: #098658">4</span><span style="color: #000000">, </span><span style="color: #098658">7</span><span style="color: #000000">]])</span>
 <span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">ys</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">5</span><span style="color: #000000">], [</span><span style="color: #098658">5</span><span style="color: #000000">], [</span><span style="color: #098658">11</span><span style="color: #000000">], [</span><span style="color: #098658">11</span><span style="color: #000000">]])</span>
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">BPNet</span><span style="color: #000000">([</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">3</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">])</span>
+<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">BPNet</span><span style="color: #000000">([</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">4</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">])</span>
 <span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">setRate</span><span style="color: #000000">(</span><span style="color: #098658">0.001</span><span style="color: #000000">)</span>
 <span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">fit</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">, </span><span style="color: #098658">1000</span><span style="color: #000000">, (</span><span style="color: #001080">batch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">  </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">batch</span><span style="color: #000000"> % </span><span style="color: #098658">10</span><span style="color: #000000"> === </span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">batch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">)</span>
 <span style="color: #000000">})</span>
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">xs2</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">8</span><span style="color: #000000">], [</span><span style="color: #098658">22</span><span style="color: #000000">, </span><span style="color: #098658">6</span><span style="color: #000000">]])</span>
+<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">xs2</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">8</span><span style="color: #000000">], [</span><span style="color: #098658">22</span><span style="color: #000000">, </span><span style="color: #098658">6</span><span style="color: #000000">], [-</span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">9</span><span style="color: #000000">]])</span>
 <span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #001080">xs2</span><span style="color: #000000">)[</span><span style="color: #098658">3</span><span style="color: #000000">].</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
 <span style="color: #008000">// Matrix 2x1 [</span>
 <span style="color: #008000">//  12.994745740521667, </span>
 <span style="color: #008000">//  27.99134620596921, </span>
+<span style="color: #008000">//  3.9987224114576856, </span>
 <span style="color: #008000">// ]</span>
 </code></pre>
-				<p>线性回归模型：</p>
+				<p>序列模型，该模型只有输入层和输出层两层，支持线性回归和逻辑分类。</p>
 				<pre><code class="language-ts"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">xs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">2</span><span style="color: #000000">], [</span><span style="color: #098658">3</span><span style="color: #000000">], [</span><span style="color: #098658">4</span><span style="color: #000000">]])</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">ys</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">3</span><span style="color: #000000">], [</span><span style="color: #098658">5</span><span style="color: #000000">], [</span><span style="color: #098658">7</span><span style="color: #000000">]])</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">RegressionModel</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">)</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">SeqModel</span><span style="color: #000000">([</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">])</span>
 <span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">setRate</span><span style="color: #000000">(</span><span style="color: #098658">0.01</span><span style="color: #000000">)</span>
-<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">fit</span><span style="color: #000000">(</span><span style="color: #098658">5000</span><span style="color: #000000">, (</span><span style="color: #001080">batch</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">batch</span><span style="color: #000000"> % </span><span style="color: #098658">500</span><span style="color: #000000"> === </span><span style="color: #098658">0</span><span style="color: #000000">) {</span>
-<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">batch</span><span style="color: #000000">, </span><span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">cost</span><span style="color: #000000">())</span>
-<span style="color: #000000">  }</span>
+<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">fit</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">, </span><span style="color: #098658">5000</span><span style="color: #000000">, (</span><span style="color: #001080">batch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">batch</span><span style="color: #000000"> % </span><span style="color: #098658">500</span><span style="color: #000000"> === </span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">batch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">)</span>
 <span style="color: #000000">})</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">xs2</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">5</span><span style="color: #000000">], [</span><span style="color: #098658">20</span><span style="color: #000000">]])</span>
 <span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #001080">xs2</span><span style="color: #000000">).</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
 </code></pre>
-				<p>逻辑分类模型：</p>
-				<pre><code class="language-ts"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">xs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">2</span><span style="color: #000000">], [</span><span style="color: #098658">3</span><span style="color: #000000">], [</span><span style="color: #098658">4</span><span style="color: #000000">]])</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">ys</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">]])</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">LogisticModel</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">)</span>
-<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">setRate</span><span style="color: #000000">(</span><span style="color: #098658">0.01</span><span style="color: #000000">)</span>
-<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">fit</span><span style="color: #000000">(</span><span style="color: #098658">50000</span><span style="color: #000000">, (</span><span style="color: #001080">batch</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">batch</span><span style="color: #000000"> % </span><span style="color: #098658">500</span><span style="color: #000000"> === </span><span style="color: #098658">0</span><span style="color: #000000">) {</span>
-<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">batch</span><span style="color: #000000">, </span><span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">cost</span><span style="color: #000000">())</span>
-<span style="color: #000000">  }</span>
-<span style="color: #000000">})</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">xs2</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">20</span><span style="color: #000000">], [</span><span style="color: #098658">30</span><span style="color: #000000">], [-</span><span style="color: #098658">2</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">3</span><span style="color: #000000">], [</span><span style="color: #098658">2</span><span style="color: #000000">]])</span>
-<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #001080">xs2</span><span style="color: #000000">).</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
-</code></pre>
-				<p>多分类：</p>
-				<pre><code class="language-ts"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">xs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([</span>
-<span style="color: #000000">  [-</span><span style="color: #098658">2</span><span style="color: #000000">], [-</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">2</span><span style="color: #000000">], [</span><span style="color: #098658">3</span><span style="color: #000000">], [</span><span style="color: #098658">4</span><span style="color: #000000">]</span>
-<span style="color: #000000">])</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">ys</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([</span>
-<span style="color: #000000">  [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">],</span>
-<span style="color: #000000">  [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">],</span>
-<span style="color: #000000">  [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">],</span>
-<span style="color: #000000">  [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">],</span>
-<span style="color: #000000">  [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">],</span>
-<span style="color: #000000">  [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">]</span>
-<span style="color: #000000">])</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">LogisticModel</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">)</span>
-<span style="color: #008000">// ...</span>
-</code></pre>
-				<p>学习率和训练次数的选择，需根据代价函数的每次求解来判定，每种模型所需要的学习率和训练次数各不相同，越低的学习率也就需要相对较多的训练次数才能达到代价函数最优，过高也可能造成跨度太大而越过最优点，造成损失值趋近于正无穷模型无法收敛的问题。</p>
+				<p>参数影响</p>
+				<ul>
+					<li><strong>shape</strong>: 模型的网络层次结构，结构越复杂单次训练的计算量就相对较大，且容易造成过拟合。</li>
+					<li><strong>rate</strong>: 步长学习率，越低的学习率也就需要相对较多的训练次数才能达到代价函数最优，过大则可能因跨度太大而越过最优点造成损失值趋近于正无穷模型无法收敛的问题。</li>
+					<li><strong>batch</strong>：训练集全部数据迭代一次的过程。</li>
+				</ul>
+				<p>以上参数的选择也是就是模型的调优的过程，需根据代价函数的每次求解来判定，每种模型所需要的学习率、训练次数、模型结构各不相同。</p>
 				<a href="#export" id="export" style="color: inherit; text-decoration: none;">
 					<h2>Export</h2>
 				</a>
@@ -161,10 +138,15 @@
 							<li>行列式、归一化</li>
 						</ul>
 					</li>
-					<li>class Model<ul>
-							<li>线性回归模型</li>
-							<li>分类模型</li>
-							<li>NeuralNetwork BP神经网络</li>
+					<li>class SeqModel<ul>
+							<li>两层模型</li>
+							<li>线性回归、逻辑分类</li>
+						</ul>
+					</li>
+					<li>class BPNet<ul>
+							<li>多层网络模型</li>
+							<li>支持多种激活函数</li>
+							<li>支持分类和回归</li>
 						</ul>
 					</li>
 				</ul>
@@ -187,9 +169,6 @@
 						<a href="classes/edge.html" class="tsd-kind-icon">Edge</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/logisticmodel.html" class="tsd-kind-icon">Logistic<wbr>Model</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="classes/matrix.html" class="tsd-kind-icon">Matrix</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -202,10 +181,13 @@
 						<a href="classes/polygon.html" class="tsd-kind-icon">Polygon</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/regressionmodel.html" class="tsd-kind-icon">Regression<wbr>Model</a>
+						<a href="classes/seqmodel.html" class="tsd-kind-icon">Seq<wbr>Model</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/rect.html" class="tsd-kind-icon">Rect</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#activationfunction" class="tsd-kind-icon">Activation<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#tofixed" class="tsd-kind-icon">to<wbr>Fixed</a>
@@ -223,11 +205,6 @@
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
