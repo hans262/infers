@@ -1,6 +1,8 @@
 # infers
 The library of machine learning and matrix operation by Typescript.
 
+The Chinese README is [here](https://gitee.com/badgua/infers/blob/main/cn.md).
+
 ## Installed
 Make sure NPM is installed, Switch to the project directory and execute the following command.
 ```shell
