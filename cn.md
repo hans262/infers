@@ -42,7 +42,7 @@ BP神经网络加法示例，四层网络模型：
 ```ts
 let xs = new Matrix([[1, 4], [3, 2], [6, 5], [4, 7]])
 let ys = new Matrix([[5], [5], [11], [11]])
-let model = new BPNet([2, 6, 6, [1, 'Relu']])
+let model = new BPNet([2, 6, 6, 1])
 model.setRate(0.001)
 model.fit(xs, ys, 10000, (batch, loss) => {
   if (batch % 500 === 0) console.log(batch, loss)

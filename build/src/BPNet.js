@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BPNet = void 0;
 const matrix_1 = require("./matrix");
 class BPNet {
-    constructor(shape) {
+    constructor(shape, netconf) {
         this.shape = shape;
+        this.netconf = netconf;
         this.rate = 0.001;
         if (shape.length < 3) {
             throw new Error('BP网络至少有三层结构');
@@ -67,9 +68,7 @@ class BPNet {
                 hy[l] = xs;
                 continue;
             }
-            let w = this.w[l].T;
-            let b = this.b[l];
-            hy[l] = hy[l - 1].multiply(w).atomicOperation((item, _, j) => this.afn(item + b.get(0, j), l));
+            hy[l] = hy[l - 1].multiply(this.w[l].T).atomicOperation((item, _, j) => this.afn(item + this.b[l].get(0, j), l));
         }
         return hy;
     }
@@ -86,15 +85,14 @@ class BPNet {
         }
         return this.calcnet(this.zoomScalem(xs));
     }
-    calcDerivative(ys, hy) {
+    calcDerivative(hy, ys, n) {
         const [dw, dy] = this.initwb(0);
         for (let l = this.nlayer - 1; l > 0; l--) {
             if (l === this.nlayer - 1) {
                 for (let j = 0; j < this.nOfLayer(l); j++) {
-                    let n = (hy[l].get(0, j) - ys.get(0, j)) * this.afd(hy[l].get(0, j), l);
-                    dy[l].update(0, j, n);
+                    dy[l].update(0, j, (hy[l].get(n, j) - ys.get(n, j)) * this.afd(hy[l].get(n, j), l));
                     for (let k = 0; k < this.nOfLayer(l - 1); k++) {
-                        dw[l].update(j, k, hy[l - 1].get(0, k) * n);
+                        dw[l].update(j, k, hy[l - 1].get(n, k) * dy[l].get(0, j));
                     }
                 }
                 continue;
@@ -103,9 +101,9 @@ class BPNet {
                 for (let i = 0; i < this.nOfLayer(l + 1); i++) {
                     dy[l].update(0, j, dy[l + 1].get(0, i) * this.w[l + 1].get(i, j), '+=');
                 }
-                dy[l].update(0, j, this.afd(hy[l].get(0, j), l), '*=');
+                dy[l].update(0, j, this.afd(hy[l].get(n, j), l), '*=');
                 for (let k = 0; k < this.nOfLayer(l - 1); k++) {
-                    dw[l].update(j, k, hy[l - 1].get(0, k) * dy[l].get(0, j));
+                    dw[l].update(j, k, hy[l - 1].get(n, k) * dy[l].get(0, j));
                 }
             }
         }
@@ -115,6 +113,35 @@ class BPNet {
         for (let l = 1; l < this.nlayer; l++) {
             this.w[l] = this.w[l].subtraction(dw[l].numberMultiply(this.rate));
             this.b[l] = this.b[l].subtraction(dy[l].numberMultiply(this.rate));
+        }
+    }
+    cost(hy, ys) {
+        let m = ys.shape[0];
+        let sub = hy[this.nlayer - 1].subtraction(ys).atomicOperation(item => item ** 2).columnSum();
+        let tmp = sub.getRow(0).map(v => (1 / (2 * m)) * v);
+        return tmp.reduce((p, c) => p + c) / tmp.length;
+    }
+    bgd(hy, ys) {
+        let m = ys.shape[0];
+        const [ndw, ndy] = this.initwb(0);
+        for (let n = 0; n < m; n++) {
+            const { dy, dw } = this.calcDerivative(hy, ys, n);
+            for (let l = 1; l < this.nlayer; l++) {
+                ndw[l] = ndw[l].addition(dw[l]);
+                ndy[l] = ndy[l].addition(dy[l]);
+            }
+        }
+        for (let l = 1; l < this.nlayer; l++) {
+            ndw[l] = ndw[l].atomicOperation(item => item / m);
+            ndy[l] = ndy[l].atomicOperation(item => item / m);
+        }
+        this.update(ndy, ndw);
+    }
+    sgd(hy, ys) {
+        let m = ys.shape[0];
+        for (let n = 0; n < m; n++) {
+            const { dy, dw } = this.calcDerivative(hy, ys, n);
+            this.update(dy, dw);
         }
     }
     fit(xs, ys, batch, callback) {
@@ -127,25 +154,18 @@ class BPNet {
         if (ys.shape[1] !== this.nOfLayer(this.nlayer - 1)) {
             throw new Error(`标签与网络输出不符合，output num -> ${this.nOfLayer(this.nlayer - 1)}`);
         }
-        let [inputs, scalem] = xs.normalization();
+        const [nxs, scalem] = xs.normalization();
         this.scalem = scalem;
-        xs = inputs;
+        xs = nxs;
         for (let p = 0; p < batch; p++) {
-            let loss = 0;
-            for (let n = 0; n < xs.shape[0]; n++) {
-                let xss = new matrix_1.Matrix([xs.getRow(n)]);
-                let yss = new matrix_1.Matrix([ys.getRow(n)]);
-                let hy = this.calcnet(xss);
-                const { dy, dw } = this.calcDerivative(yss, hy);
-                this.update(dy, dw);
-                let e = 0;
-                let l = this.nlayer - 1;
-                for (let j = 0; j < this.nOfLayer(l); j++) {
-                    e += ((ys.get(n, j) - hy[l].get(0, j)) ** 2) / 2;
-                }
-                loss += e / this.nOfLayer(l);
+            let hy = this.calcnet(xs);
+            if (this.netconf && this.netconf.optimizer === 'BGD') {
+                this.bgd(hy, ys);
             }
-            loss = loss / xs.shape[0];
+            else {
+                this.sgd(hy, ys);
+            }
+            let loss = this.cost(hy, ys);
             if (callback)
                 callback(p, loss);
         }

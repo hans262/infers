@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Path | infers - v1.1.8</title>
+	<title>NetConfig | infers - v1.1.8</title>
 	<meta name="description" content="Documentation for infers - v1.1.8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,21 +55,28 @@
 					<a href="../modules.html">infers - v1.1.8</a>
 				</li>
 				<li>
-					<a href="path.html">Path</a>
+					<a href="netconfig.html">NetConfig</a>
 				</li>
 			</ul>
-			<h1>Class Path</h1>
+			<h1>Interface NetConfig</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>模型配置项</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Path</span>
+						<span class="target">NetConfig</span>
 					</li>
 				</ul>
 			</section>
@@ -78,53 +85,24 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="path.html#constructor" class="tsd-kind-icon">constructor</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="path.html#pts" class="tsd-kind-icon">pts</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="netconfig.html#optimizer" class="tsd-kind-icon">optimizer</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Path<span class="tsd-signature-symbol">(</span>pts<span class="tsd-signature-symbol">: </span><a href="point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="path.html" class="tsd-signature-type" data-tsd-kind="Class">Path</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/4488205/src/graphical.ts#L56">graphical.ts:56</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>pts: <a href="point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a><span class="tsd-signature-symbol">[]</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="path.html" class="tsd-signature-type" data-tsd-kind="Class">Path</a></h4>
-						</li>
-					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="pts" class="tsd-anchor"></a>
-					<h3>pts</h3>
-					<div class="tsd-signature tsd-kind-icon">pts<span class="tsd-signature-symbol">:</span> <a href="point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a><span class="tsd-signature-symbol">[]</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="optimizer" class="tsd-anchor"></a>
+					<h3>optimizer</h3>
+					<div class="tsd-signature tsd-kind-icon">optimizer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;SGD&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;BGD&quot;</span></div>
 					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/4488205/src/BPNet.ts#L9">BPNet.ts:9</a></li>
+						</ul>
 					</aside>
 				</section>
 			</section>
@@ -140,43 +118,40 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class">
-						<a href="bpnet.html" class="tsd-kind-icon">BPNet</a>
+						<a href="../classes/bpnet.html" class="tsd-kind-icon">BPNet</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="edge.html" class="tsd-kind-icon">Edge</a>
+						<a href="../classes/edge.html" class="tsd-kind-icon">Edge</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="matrix.html" class="tsd-kind-icon">Matrix</a>
+						<a href="../classes/matrix.html" class="tsd-kind-icon">Matrix</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/path.html" class="tsd-kind-icon">Path</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/point.html" class="tsd-kind-icon">Point</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/polygon.html" class="tsd-kind-icon">Polygon</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/seqmodel.html" class="tsd-kind-icon">Seq<wbr>Model</a>
 					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class">
-						<a href="path.html" class="tsd-kind-icon">Path</a>
+					<li class="current tsd-kind-interface">
+						<a href="netconfig.html" class="tsd-kind-icon">Net<wbr>Config</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="path.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="path.html#pts" class="tsd-kind-icon">pts</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="netconfig.html#optimizer" class="tsd-kind-icon">optimizer</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class">
-						<a href="point.html" class="tsd-kind-icon">Point</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="polygon.html" class="tsd-kind-icon">Polygon</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="seqmodel.html" class="tsd-kind-icon">Seq<wbr>Model</a>
-					</li>
 					<li class=" tsd-kind-interface">
-						<a href="../interfaces/netconfig.html" class="tsd-kind-icon">Net<wbr>Config</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="../interfaces/rect.html" class="tsd-kind-icon">Rect</a>
+						<a href="rect.html" class="tsd-kind-icon">Rect</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../modules.html#activationfunction" class="tsd-kind-icon">Activation<wbr>Function</a>
