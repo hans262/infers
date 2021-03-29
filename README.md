@@ -10,7 +10,7 @@ $ npm install infers@latest
 ```
 Then reference in the project: 
 ```ts
-import { Matrix, BPNet, SeqModel } from 'infers'
+import { Matrix, BPNet } from 'infers'
 ```
 
 ## Examples
@@ -57,18 +57,6 @@ model.predict(xs2)[3].print()
 //  3.9987224114576856, 
 // ]
 ```
-Sequence model, only input layer and output layer model, support linear regression and logical classification.
-```ts
-const xs = new Matrix([[1], [2], [3], [4]])
-const ys = new Matrix([[1], [3], [5], [7]])
-const model = new SeqModel([1, 1])
-model.setRate(0.01)
-model.fit(xs, ys, 5000, (batch, loss) => {
-  if (batch % 500 === 0) console.log(batch, loss)
-})
-const xs2 = new Matrix([[5], [20]])
-model.predict(xs2).print()
-```
 Parameter introduction: 
  - **shape**: The network hierarchical structure of the model includes the number of neurons in each layer, the type of activation function in each layer and the total number of layers. The more complex the network structure is, the more computation is needed for a single training, and it is easy to cause over fitting.
  - **rate**: Learning rate is also known as training step. The lower the learning rate, the more training times are needed to achieve the optimal cost function. If the learning rate is too large, it may cross the optimal cost function due to too large span, resulting in the loss value approaching the positive infinite model and the problem that the model cannot converge.
@@ -80,10 +68,7 @@ The selection of the above parameters is also the process of model optimization.
 - class Matrix
   - Add, multiply, multiply, transpose
   - Determinant, normalization
-- class SeqModel
-  - Two layer network model
-  - Linear regression and logical classification
 - class BPNet
   - Multi layer network model
   - Support multiple activation functions
-  - Support classification and regression
+  - Linear regression and logical classification

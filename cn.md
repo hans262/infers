@@ -8,7 +8,7 @@ $ npm install infers@latest
 ```
 然后在项目中引用：
 ```ts
-import { Matrix, BPNet, SeqModel } from 'infers'
+import { Matrix, BPNet } from 'infers'
 ```
 
 ## Examples
@@ -55,18 +55,6 @@ model.predict(xs2)[3].print()
 //  3.9987224114576856, 
 // ]
 ```
-序列模型，只有输入层和输出层的模型，支持线性回归和逻辑分类。
-```ts
-const xs = new Matrix([[1], [2], [3], [4]])
-const ys = new Matrix([[1], [3], [5], [7]])
-const model = new SeqModel([1, 1])
-model.setRate(0.01)
-model.fit(xs, ys, 5000, (batch, loss) => {
-  if (batch % 500 === 0) console.log(batch, loss)
-})
-const xs2 = new Matrix([[5], [20]])
-model.predict(xs2).print()
-```
 参数介绍：
  - **shape**：模型的网络层次结构，包含了每层神经元个数、每层激活函数类型和总的层数，结构越复杂的网络单次训练所需的计算量也相对较大，且容易造成过拟合。
  - **rate**：学习率又称训练步长，越低的学习率需要相对较多的训练次数才能达到代价函数最优，过大则可能因跨度太大而越过最优点造成损失值趋近于正无穷模型无法收敛的问题。
@@ -78,10 +66,7 @@ model.predict(xs2).print()
 - class Matrix
   - 加法、乘法、数乘、转置
   - 行列式、归一化
-- class SeqModel
-  - 两层网络模型
-  - 线性回归、逻辑分类
 - class BPNet
   - 多层网络模型
   - 支持多种激活函数
-  - 支持分类和回归
+  - 线性回归、逻辑分类

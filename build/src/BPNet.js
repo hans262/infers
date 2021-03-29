@@ -7,8 +7,8 @@ class BPNet {
         this.shape = shape;
         this.netconf = netconf;
         this.rate = 0.001;
-        if (shape.length < 3) {
-            throw new Error('BP网络至少有三层结构');
+        if (shape.length < 2) {
+            throw new Error('The network has at least two layers');
         }
         this.nlayer = shape.length;
         const [w, b] = this.initwb();
@@ -119,6 +119,15 @@ class BPNet {
         let m = ys.shape[0];
         let sub = hy[this.nlayer - 1].subtraction(ys).atomicOperation(item => item ** 2).columnSum();
         let tmp = sub.getRow(0).map(v => (1 / (2 * m)) * v);
+        return tmp.reduce((p, c) => p + c) / tmp.length;
+    }
+    crossCost(hy, ys) {
+        let m = ys.shape[0];
+        let t = hy[this.nlayer - 1].atomicOperation((h, i, j) => {
+            let y = ys.get(i, j);
+            return y === 1 ? -Math.log(h) : -Math.log(1 - h);
+        }).columnSum();
+        let tmp = t.getRow(0).map(v => (1 / m) * v);
         return tmp.reduce((p, c) => p + c) / tmp.length;
     }
     bgd(hy, ys) {

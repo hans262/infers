@@ -28,6 +28,7 @@ export declare class BPNet {
     };
     update(dy: Matrix[], dw: Matrix[]): void;
     cost(hy: Matrix[], ys: Matrix): number;
+    crossCost(hy: Matrix[], ys: Matrix): number;
     bgd(hy: Matrix[], ys: Matrix): void;
     sgd(hy: Matrix[], ys: Matrix): void;
     fit(xs: Matrix, ys: Matrix, batch: number, callback?: (batch: number, loss: number) => void): void;

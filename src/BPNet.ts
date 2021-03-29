@@ -1,30 +1,30 @@
 import { Matrix } from "./matrix"
 
-/**激活函数类型*/
+/**Activation function type*/
 export type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh'
-/**网络形状*/
+/**Network shape*/
 export type NetShape = (number | [number, ActivationFunction])[]
-/**模型配置项*/
+/**Model configuration*/
 export interface NetConfig {
   optimizer: 'SGD' | 'BGD'
 }
 
 export class BPNet {
-  /**权值矩阵*/
+  /**Weight matrix*/
   w: Matrix[]
-  /**偏值矩阵*/
+  /**Partial value matrix*/
   b: Matrix[]
   nlayer: number
-  /**学习率*/
+  /**Learning rate*/
   rate = 0.001
-  /**缩放比例*/
+  /**Scaling*/
   scalem?: Matrix
   constructor(
     public readonly shape: NetShape,
     public netconf?: NetConfig
   ) {
-    if (shape.length < 3) {
-      throw new Error('BP网络至少有三层结构')
+    if (shape.length < 2) {
+      throw new Error('The network has at least two layers')
     }
     this.nlayer = shape.length
     const [w, b] = this.initwb()
@@ -33,7 +33,7 @@ export class BPNet {
   }
 
   /**
-   * 获取当前层的神经元个数
+   * Get the number of neurons in the current layer
    * @param l 
    */
   nOfLayer(l: number) {
@@ -42,7 +42,7 @@ export class BPNet {
   }
 
   /**
-   * 获取当前层的激活函数类型
+   * Gets the active function type of the current layer
    * @param l 
    */
   afOfLayer(l: number) {
@@ -51,8 +51,8 @@ export class BPNet {
   }
 
   /**
-   * 初始化权值、偏值
-   * @param shape 
+   * Initialization weight and bias  
+   * default value -0.5 ~ 0.5
    * @returns [w, b]
    */
   initwb(v?: number) {
@@ -64,14 +64,17 @@ export class BPNet {
     }
     return [w, b]
   }
-
+  
+  /**
+   * Update learning rate
+   * @param rate 
+   */
   setRate(rate: number) {
     this.rate = rate
   }
 
   /**
-   * 激活函数
-   * @param x 
+   * Get activation function for current layer
    */
   afn(x: number, l: number) {
     let af = this.afOfLayer(l)
@@ -88,8 +91,7 @@ export class BPNet {
   }
 
   /**
-   * 激活函数对应求导
-   * @param x 
+   * Gets the active function derivative of the current layer
    */
   afd(x: number, l: number) {
     let af = this.afOfLayer(l)
@@ -104,7 +106,12 @@ export class BPNet {
         return 1
     }
   }
-
+  
+  /**
+   * Calculate the output of the whole network
+   * - hy =  θ1 * X1 + θ2 * X2 + ... + θn * Xn + b
+   * @param xs inputs
+   */
   calcnet(xs: Matrix) {
     let hy: Matrix[] = []
     for (let l = 0; l < this.nlayer; l++) {
@@ -120,7 +127,7 @@ export class BPNet {
   }
 
   /**
-   * 特征按均值空间缩放
+   * Scaling features in mean space
    * @param xs 
    */
   zoomScalem(xs: Matrix) {
@@ -138,15 +145,16 @@ export class BPNet {
   }
 
   /**
-   * 求误差相对于每一个节点的导数  
-   * 这是关于单个样本的导数  
-   * - E = 1 / 2 (hy - y)^2
-   * - ∂E / ∂hy = (1 / 2) * 2 * (hy - y) = hy - y  最后一个节点的导数
-   * - ∂E / ∂w = 当前权重输入节点的值 * 输出节点的导数
+   * The derivative of the valence function with respect to each neuron 
+   * and the derivative of each weight are calculated.
+   * It's for a single sample.
+   * - J = 1 / 2 * (hy - y)^2
+   * - ∂J / ∂hy = (1 / 2) * 2 * (hy - y) = hy - y  Derivation of the last node
+   * - ∂J / ∂w = Value of input node * derivative of output node
    * 
-   * 求导遵循链式法则：分支节点相加，链路节点相乘。
-   * 有激活函数，还需乘以激活函数的导数。
-   * @returns [节点导数矩阵，权重导数矩阵]
+   * Derivation follows the chain rule: branch nodes add, link nodes multiply.
+   * If there is an activation function, it needs to be multiplied by the derivative of the activation function.
+   * @returns [Neuron derivative matrix, Weighted derivative matrix]
    */
   calcDerivative(hy: Matrix[], ys: Matrix, n: number) {
     const [dw, dy] = this.initwb(0)
@@ -174,9 +182,9 @@ export class BPNet {
   }
 
   /**
-   * 调整权值和偏值矩阵
-   * - w = w - α * (∂E / ∂w)  导数项 = 误差相对于当前权重的偏导数
-   * - b = b - α * (∂E / ∂hy) 导数项 = 误差相对于节点值的偏导数
+   * update weight and bias matrix
+   * - w = w - α * (∂J / ∂w)
+   * - b = b - α * (∂J / ∂hy)
    */
   update(dy: Matrix[], dw: Matrix[]) {
     for (let l = 1; l < this.nlayer; l++) {
@@ -186,15 +194,33 @@ export class BPNet {
   }
 
   /**
-   * 代价函数
-   * J = 1 / 2 * m * ∑m(hy - ys) ** 2 
-   * @param hy 
-   * @param ys 
+   * Quadratic cost function
+   * Multiple outputs average multiple loss values  
+   * - J = 1 / 2 * m * ∑m(hy - ys) ** 2 
    */
   cost(hy: Matrix[], ys: Matrix) {
     let m = ys.shape[0]
     let sub = hy[this.nlayer - 1].subtraction(ys).atomicOperation(item => item ** 2).columnSum()
     let tmp = sub.getRow(0).map(v => (1 / (2 * m)) * v)
+    return tmp.reduce((p, c) => p + c) / tmp.length
+  }
+
+  /**
+   * Cross entropy cost function
+   * To simulate the last layer is the sigmoid activation function
+   * Multiple outputs average multiple loss values  
+   * 输出值域必须是 {0, 1}
+   * - J = 1 / m * ∑m Cost
+   * - y = 1 ? Cost = - Math.log(H(X[i]))
+   * - y = 0 ? Cost = -Math.log(1 - H(X[i]))
+   */
+   crossCost(hy: Matrix[], ys: Matrix) {
+    let m = ys.shape[0]
+    let t = hy[this.nlayer - 1].atomicOperation((h, i, j) => {
+      let y = ys.get(i, j)
+      return y === 1 ? -Math.log(h) : -Math.log(1 - h)
+    }).columnSum()
+    let tmp = t.getRow(0).map(v => (1 / m) * v)
     return tmp.reduce((p, c) => p + c) / tmp.length
   }
 
@@ -243,7 +269,7 @@ export class BPNet {
     if (ys.shape[1] !== this.nOfLayer(this.nlayer - 1)) {
       throw new Error(`标签与网络输出不符合，output num -> ${this.nOfLayer(this.nlayer - 1)}`)
     }
-    //归一化 -0.5 ～ 0.5
+    //normalization -0.5 ～ 0.5
     const [nxs, scalem] = xs.normalization()
     this.scalem = scalem
     xs = nxs
