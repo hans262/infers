@@ -153,6 +153,66 @@ class BPNet {
             this.update(dy, dw);
         }
     }
+    momentum(hy, ys) {
+        let m = ys.shape[0];
+        for (let n = 0; n < m; n++) {
+            const { dy, dw } = this.calcDerivative(hy, ys, n);
+            if (!this.vdw || !this.vdy) {
+                this.vdw = dw.map(w => w.numberMultiply(this.rate));
+                this.vdy = dy.map(w => w.numberMultiply(this.rate));
+            }
+            if (this.vdw && this.vdy) {
+                let ndw = dw.map(w => w.numberMultiply(this.rate));
+                let ndy = dy.map(w => w.numberMultiply(this.rate));
+                this.vdw = this.vdw.map((v, i) => v.numberMultiply(0.9).addition(ndw[i]));
+                this.vdy = this.vdy.map((v, i) => v.numberMultiply(0.9).addition(ndy[i]));
+            }
+            for (let l = 1; l < this.nlayer; l++) {
+                this.w[l] = this.w[l].subtraction(this.vdw[l]);
+                this.b[l] = this.b[l].subtraction(this.vdy[l]);
+            }
+        }
+    }
+    adaDelta(hy, ys) {
+        let m = ys.shape[0];
+        for (let n = 0; n < m; n++) {
+            const { dy, dw } = this.calcDerivative(hy, ys, n);
+            if (!this.adgdw || !this.adgdy) {
+                this.adgdw = dw.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2));
+                this.adgdy = dy.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2));
+            }
+            if (this.adgdw && this.adgdy) {
+                let powdw = dw.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2));
+                let powdy = dy.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2));
+                this.adgdw = this.adgdw.map((v, i) => v.numberMultiply(0.999).addition(powdw[i]));
+                this.adgdy = this.adgdy.map((v, i) => v.numberMultiply(0.999).addition(powdy[i]));
+            }
+            for (let l = 1; l < this.nlayer; l++) {
+                this.w[l] = this.w[l].subtraction(dw[l].numberMultiply(this.rate).atomicOperation((item, i, j) => item / Math.sqrt(this.adgdw[l].get(i, j) + 1e-07)));
+                this.b[l] = this.b[l].subtraction(dy[l].numberMultiply(this.rate).atomicOperation((item, i, j) => item / Math.sqrt(this.adgdy[l].get(i, j) + 1e-07)));
+            }
+        }
+    }
+    adaGrad(hy, ys) {
+        let m = ys.shape[0];
+        for (let n = 0; n < m; n++) {
+            const { dy, dw } = this.calcDerivative(hy, ys, n);
+            if (!this.adgdw || !this.adgdy) {
+                this.adgdw = dw.map(v => v.atomicOperation(item => item ** 2));
+                this.adgdy = dy.map(v => v.atomicOperation(item => item ** 2));
+            }
+            if (this.adgdw && this.adgdy) {
+                let powdw = dw.map(v => v.atomicOperation(item => item ** 2));
+                let powdy = dy.map(v => v.atomicOperation(item => item ** 2));
+                this.adgdw = this.adgdw.map((v, i) => v.addition(powdw[i]));
+                this.adgdy = this.adgdy.map((v, i) => v.addition(powdy[i]));
+            }
+            for (let l = 1; l < this.nlayer; l++) {
+                this.w[l] = this.w[l].subtraction(dw[l].numberMultiply(this.rate).atomicOperation((item, i, j) => item * 1 / Math.sqrt(this.adgdw[l].get(i, j) + 1e-07)));
+                this.b[l] = this.b[l].subtraction(dy[l].numberMultiply(this.rate).atomicOperation((item, i, j) => item * 1 / Math.sqrt(this.adgdy[l].get(i, j) + 1e-07)));
+            }
+        }
+    }
     fit(xs, ys, batch, callback) {
         if (xs.shape[0] !== ys.shape[0]) {
             throw new Error('输入输出矩阵行数不统一');
@@ -168,12 +228,19 @@ class BPNet {
         xs = nxs;
         for (let p = 0; p < batch; p++) {
             let hy = this.calcnet(xs);
-            if (this.netconf && this.netconf.optimizer === 'BGD') {
+            if (this.netconf && this.netconf.optimizer === 'AdaGrad') {
+                this.adaGrad(hy, ys);
+            }
+            if (this.netconf && this.netconf.optimizer === 'Bgd') {
                 this.bgd(hy, ys);
             }
-            else {
-                this.sgd(hy, ys);
+            if (this.netconf && this.netconf.optimizer === 'Momentum') {
+                this.momentum(hy, ys);
             }
+            if (this.netconf && this.netconf.optimizer === 'AdaDelta') {
+                this.adaDelta(hy, ys);
+            }
+            this.sgd(hy, ys);
             let loss = this.cost(hy, ys);
             if (callback)
                 callback(p, loss);

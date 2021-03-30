@@ -6,7 +6,7 @@ export type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh'
 export type NetShape = (number | [number, ActivationFunction])[]
 /**Model configuration*/
 export interface NetConfig {
-  optimizer: 'SGD' | 'BGD'
+  optimizer: 'Sgd' | 'Bgd' | 'AdaGrad' | 'Momentum' | 'AdaDelta'
 }
 
 export class BPNet {
@@ -19,6 +19,10 @@ export class BPNet {
   rate = 0.001
   /**Scaling*/
   scalem?: Matrix
+  adgdw?: Matrix[] //adg超参
+  adgdy?: Matrix[]
+  vdw?: Matrix[] //动量超参
+  vdy?: Matrix[]
   constructor(
     public readonly shape: NetShape,
     public netconf?: NetConfig
@@ -64,7 +68,7 @@ export class BPNet {
     }
     return [w, b]
   }
-  
+
   /**
    * Update learning rate
    * @param rate 
@@ -106,7 +110,7 @@ export class BPNet {
         return 1
     }
   }
-  
+
   /**
    * Calculate the output of the whole network
    * - hy =  θ1 * X1 + θ2 * X2 + ... + θn * Xn + b
@@ -214,7 +218,7 @@ export class BPNet {
    * - y = 1 ? Cost = - Math.log(H(X[i]))
    * - y = 0 ? Cost = -Math.log(1 - H(X[i]))
    */
-   crossCost(hy: Matrix[], ys: Matrix) {
+  crossCost(hy: Matrix[], ys: Matrix) {
     let m = ys.shape[0]
     let t = hy[this.nlayer - 1].atomicOperation((h, i, j) => {
       let y = ys.get(i, j)
@@ -259,6 +263,99 @@ export class BPNet {
     }
   }
 
+  /**
+   * Momentum
+   * 动量的梯度下降法
+   */
+  momentum(hy: Matrix[], ys: Matrix) {
+    let m = ys.shape[0]
+    for (let n = 0; n < m; n++) {
+      const { dy, dw } = this.calcDerivative(hy, ys, n)
+      if (!this.vdw || !this.vdy) {
+        this.vdw = dw.map(w => w.numberMultiply(this.rate))
+        this.vdy = dy.map(w => w.numberMultiply(this.rate))
+      }
+      if (this.vdw && this.vdy) {
+        let ndw = dw.map(w => w.numberMultiply(this.rate))
+        let ndy = dy.map(w => w.numberMultiply(this.rate))
+        this.vdw = this.vdw.map((v, i) => v.numberMultiply(0.9).addition(ndw[i]))
+        this.vdy = this.vdy.map((v, i) => v.numberMultiply(0.9).addition(ndy[i]))
+      }
+      //更新
+      for (let l = 1; l < this.nlayer; l++) {
+        this.w[l] = this.w[l].subtraction(this.vdw![l])
+        this.b[l] = this.b[l].subtraction(this.vdy![l])
+      }
+    }
+  }
+
+  adaDelta(hy: Matrix[], ys: Matrix) {
+    let m = ys.shape[0]
+    for (let n = 0; n < m; n++) {
+      const { dy, dw } = this.calcDerivative(hy, ys, n)
+      //存储以前的导数平方和矩阵
+      if (!this.adgdw || !this.adgdy) {
+        this.adgdw = dw.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2))
+        this.adgdy = dy.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2))
+      }
+      if (this.adgdw && this.adgdy) {
+        let powdw = dw.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2))
+        let powdy = dy.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2))
+        this.adgdw = this.adgdw.map((v, i) => v.numberMultiply(0.999).addition(powdw[i]))
+        this.adgdy = this.adgdy.map((v, i) => v.numberMultiply(0.999).addition(powdy[i]))
+      }
+      //更新
+      for (let l = 1; l < this.nlayer; l++) {
+        this.w[l] = this.w[l].subtraction(
+          dw[l].numberMultiply(this.rate).atomicOperation((item, i, j) =>
+            item / Math.sqrt(this.adgdw![l].get(i, j) + 1e-07) //加极小值 防止分母为0
+          )
+        )
+        this.b[l] = this.b[l].subtraction(
+          dy[l].numberMultiply(this.rate).atomicOperation((item, i, j) =>
+            item / Math.sqrt(this.adgdy![l].get(i, j) + 1e-07)
+          )
+        )
+      }
+    }
+  }
+
+  /**
+   * AdaGrad
+   * 学习衰减率法，训练初期波动较大，
+   * 后期学习率可能趋近于0，导致不更新梯度
+   */
+  adaGrad(hy: Matrix[], ys: Matrix) {
+    let m = ys.shape[0]
+    for (let n = 0; n < m; n++) {
+      const { dy, dw } = this.calcDerivative(hy, ys, n)
+      //存储以前的导数平方和矩阵
+      if (!this.adgdw || !this.adgdy) {
+        this.adgdw = dw.map(v => v.atomicOperation(item => item ** 2))
+        this.adgdy = dy.map(v => v.atomicOperation(item => item ** 2))
+      }
+      if (this.adgdw && this.adgdy) {
+        let powdw = dw.map(v => v.atomicOperation(item => item ** 2))
+        let powdy = dy.map(v => v.atomicOperation(item => item ** 2))
+        this.adgdw = this.adgdw.map((v, i) => v.addition(powdw[i]))
+        this.adgdy = this.adgdy.map((v, i) => v.addition(powdy[i]))
+      }
+      //更新
+      for (let l = 1; l < this.nlayer; l++) {
+        this.w[l] = this.w[l].subtraction(
+          dw[l].numberMultiply(this.rate).atomicOperation((item, i, j) =>
+            item * 1 / Math.sqrt(this.adgdw![l].get(i, j) + 1e-07) //加极小值 防止分母为0
+          )
+        )
+        this.b[l] = this.b[l].subtraction(
+          dy[l].numberMultiply(this.rate).atomicOperation((item, i, j) =>
+            item * 1 / Math.sqrt(this.adgdy![l].get(i, j) + 1e-07)
+          )
+        )
+      }
+    }
+  }
+
   fit(xs: Matrix, ys: Matrix, batch: number, callback?: (batch: number, loss: number) => void) {
     if (xs.shape[0] !== ys.shape[0]) {
       throw new Error('输入输出矩阵行数不统一')
@@ -275,11 +372,19 @@ export class BPNet {
     xs = nxs
     for (let p = 0; p < batch; p++) {
       let hy = this.calcnet(xs)
-      if (this.netconf && this.netconf.optimizer === 'BGD') {
-        this.bgd(hy, ys)
-      } else {
-        this.sgd(hy, ys)
+      if (this.netconf && this.netconf.optimizer === 'AdaGrad') {
+        this.adaGrad(hy, ys)
       }
+      if (this.netconf && this.netconf.optimizer === 'Bgd') {
+        this.bgd(hy, ys)
+      }
+      if (this.netconf && this.netconf.optimizer === 'Momentum') {
+        this.momentum(hy, ys)
+      }
+      if (this.netconf && this.netconf.optimizer === 'AdaDelta') {
+        this.adaDelta(hy, ys)
+      }
+      this.sgd(hy, ys)
       let loss = this.cost(hy, ys)
       if (callback) callback(p, loss)
     }

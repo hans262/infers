@@ -14,10 +14,10 @@ export namespace TestModel {
   export function bpNet2() {
     let xs = new Matrix([[1, 4], [3, 2], [6, 5], [4, 7]])
     let ys = new Matrix([[5], [5], [11], [11]])
-    let model = new BPNet([2, 6, 6, 1])
+    let model = new BPNet([2, 6, 6, 1], {optimizer: 'Sgd'})
     model.setRate(0.01)
     model.fit(xs, ys, 10000, (batch, loss) => {
-      if (batch % 500 === 0) console.log(batch, loss)
+      if (batch % 1000 === 0) console.log(batch, loss)
     })
     let xs2 = new Matrix([[5, 8], [22, 6], [-5, 9], [-5, -4]])
     model.predict(xs2)[3].print()

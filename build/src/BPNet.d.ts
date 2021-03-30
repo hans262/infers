@@ -2,7 +2,7 @@ import { Matrix } from "./matrix";
 export declare type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh';
 export declare type NetShape = (number | [number, ActivationFunction])[];
 export interface NetConfig {
-    optimizer: 'SGD' | 'BGD';
+    optimizer: 'Sgd' | 'Bgd' | 'AdaGrad' | 'Momentum' | 'AdaDelta';
 }
 export declare class BPNet {
     readonly shape: NetShape;
@@ -12,6 +12,10 @@ export declare class BPNet {
     nlayer: number;
     rate: number;
     scalem?: Matrix;
+    adgdw?: Matrix[];
+    adgdy?: Matrix[];
+    vdw?: Matrix[];
+    vdy?: Matrix[];
     constructor(shape: NetShape, netconf?: NetConfig | undefined);
     nOfLayer(l: number): number;
     afOfLayer(l: number): ActivationFunction | undefined;
@@ -31,5 +35,8 @@ export declare class BPNet {
     crossCost(hy: Matrix[], ys: Matrix): number;
     bgd(hy: Matrix[], ys: Matrix): void;
     sgd(hy: Matrix[], ys: Matrix): void;
+    momentum(hy: Matrix[], ys: Matrix): void;
+    adaDelta(hy: Matrix[], ys: Matrix): void;
+    adaGrad(hy: Matrix[], ys: Matrix): void;
     fit(xs: Matrix, ys: Matrix, batch: number, callback?: (batch: number, loss: number) => void): void;
 }
