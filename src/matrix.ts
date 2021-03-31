@@ -9,6 +9,16 @@ export class Matrix {
   }
 
   /**
+   * 获取某一行的均值
+   * @param i 
+   * @returns 
+   */
+  getMeanOfRow(i: number) {
+    let tmp = this.getRow(i)
+    return tmp.reduce((p, c) => p + c) / tmp.length
+  }
+
+  /**
    * 矩阵mxn每列求和
    * @returns Matrix 1 x n
    */
@@ -85,7 +95,7 @@ export class Matrix {
    * @param oper 
    */
   update(row: number, col: number, val: number, oper?: '+=' | '-=' | '*=' | '/=') {
-    switch(oper){
+    switch (oper) {
       case '+=':
         this.self[row][col] += val
         break

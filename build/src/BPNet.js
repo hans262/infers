@@ -83,16 +83,16 @@ class BPNet {
         if (xs.shape[1] !== this.nOfLayer(0)) {
             throw new Error(`特征与网络输入不符合，input num -> ${this.nOfLayer(0)}`);
         }
-        return this.calcnet(this.zoomScalem(xs));
+        return this.calcnet(this.zoomScalem(xs))[this.nlayer - 1];
     }
-    calcDerivative(hy, ys, n) {
+    calcDerivative(hy, ys) {
         const [dw, dy] = this.initwb(0);
         for (let l = this.nlayer - 1; l > 0; l--) {
             if (l === this.nlayer - 1) {
                 for (let j = 0; j < this.nOfLayer(l); j++) {
-                    dy[l].update(0, j, (hy[l].get(n, j) - ys.get(n, j)) * this.afd(hy[l].get(n, j), l));
+                    dy[l].update(0, j, (hy[l].get(0, j) - ys.get(0, j)) * this.afd(hy[l].get(0, j), l));
                     for (let k = 0; k < this.nOfLayer(l - 1); k++) {
-                        dw[l].update(j, k, hy[l - 1].get(n, k) * dy[l].get(0, j));
+                        dw[l].update(j, k, hy[l - 1].get(0, k) * dy[l].get(0, j));
                     }
                 }
                 continue;
@@ -101,9 +101,9 @@ class BPNet {
                 for (let i = 0; i < this.nOfLayer(l + 1); i++) {
                     dy[l].update(0, j, dy[l + 1].get(0, i) * this.w[l + 1].get(i, j), '+=');
                 }
-                dy[l].update(0, j, this.afd(hy[l].get(n, j), l), '*=');
+                dy[l].update(0, j, this.afd(hy[l].get(0, j), l), '*=');
                 for (let k = 0; k < this.nOfLayer(l - 1); k++) {
-                    dw[l].update(j, k, hy[l - 1].get(n, k) * dy[l].get(0, j));
+                    dw[l].update(j, k, hy[l - 1].get(0, k) * dy[l].get(0, j));
                 }
             }
         }
@@ -115,105 +115,95 @@ class BPNet {
             this.b[l] = this.b[l].subtraction(dy[l].numberMultiply(this.rate));
         }
     }
-    cost(hy, ys) {
+    bgd(xs, ys, conf) {
         let m = ys.shape[0];
-        let sub = hy[this.nlayer - 1].subtraction(ys).atomicOperation(item => item ** 2).columnSum();
-        let tmp = sub.getRow(0).map(v => (1 / (2 * m)) * v);
-        return tmp.reduce((p, c) => p + c) / tmp.length;
-    }
-    crossCost(hy, ys) {
-        let m = ys.shape[0];
-        let t = hy[this.nlayer - 1].atomicOperation((h, i, j) => {
-            let y = ys.get(i, j);
-            return y === 1 ? -Math.log(h) : -Math.log(1 - h);
-        }).columnSum();
-        let tmp = t.getRow(0).map(v => (1 / m) * v);
-        return tmp.reduce((p, c) => p + c) / tmp.length;
-    }
-    bgd(hy, ys) {
-        let m = ys.shape[0];
-        const [ndw, ndy] = this.initwb(0);
-        for (let n = 0; n < m; n++) {
-            const { dy, dw } = this.calcDerivative(hy, ys, n);
-            for (let l = 1; l < this.nlayer; l++) {
-                ndw[l] = ndw[l].addition(dw[l]);
-                ndy[l] = ndy[l].addition(dy[l]);
-            }
-        }
-        for (let l = 1; l < this.nlayer; l++) {
-            ndw[l] = ndw[l].atomicOperation(item => item / m);
-            ndy[l] = ndy[l].atomicOperation(item => item / m);
-        }
-        this.update(ndy, ndw);
-    }
-    sgd(hy, ys) {
-        let m = ys.shape[0];
-        for (let n = 0; n < m; n++) {
-            const { dy, dw } = this.calcDerivative(hy, ys, n);
-            this.update(dy, dw);
-        }
-    }
-    momentum(hy, ys) {
-        let m = ys.shape[0];
-        for (let n = 0; n < m; n++) {
-            const { dy, dw } = this.calcDerivative(hy, ys, n);
-            if (!this.vdw || !this.vdy) {
-                this.vdw = dw.map(w => w.numberMultiply(this.rate));
-                this.vdy = dy.map(w => w.numberMultiply(this.rate));
-            }
-            if (this.vdw && this.vdy) {
-                let ndw = dw.map(w => w.numberMultiply(this.rate));
-                let ndy = dy.map(w => w.numberMultiply(this.rate));
-                this.vdw = this.vdw.map((v, i) => v.numberMultiply(0.9).addition(ndw[i]));
-                this.vdy = this.vdy.map((v, i) => v.numberMultiply(0.9).addition(ndy[i]));
+        for (let ep = 0; ep < conf.epochs; ep++) {
+            let eploss = 0;
+            const [dws, dys] = this.initwb(0);
+            for (let n = 0; n < m; n++) {
+                let xss = new matrix_1.Matrix([xs.getRow(n)]);
+                let yss = new matrix_1.Matrix([ys.getRow(n)]);
+                let hy = this.calcnet(xss);
+                const { dy, dw } = this.calcDerivative(hy, yss);
+                for (let l = 1; l < this.nlayer; l++) {
+                    dws[l] = dws[l].addition(dw[l]);
+                    dys[l] = dys[l].addition(dy[l]);
+                }
+                let loss = hy[this.nlayer - 1].subtraction(yss)
+                    .atomicOperation(item => (item ** 2) / 2)
+                    .getMeanOfRow(0);
+                eploss += loss;
             }
             for (let l = 1; l < this.nlayer; l++) {
-                this.w[l] = this.w[l].subtraction(this.vdw[l]);
-                this.b[l] = this.b[l].subtraction(this.vdy[l]);
+                dws[l] = dws[l].atomicOperation(item => item / m);
+                dys[l] = dys[l].atomicOperation(item => item / m);
             }
+            this.update(dys, dws);
+            if (conf.onEpoch)
+                conf.onEpoch(ep, eploss / m);
         }
     }
-    adaDelta(hy, ys) {
+    sgd(xs, ys, conf) {
         let m = ys.shape[0];
-        for (let n = 0; n < m; n++) {
-            const { dy, dw } = this.calcDerivative(hy, ys, n);
-            if (!this.adgdw || !this.adgdy) {
-                this.adgdw = dw.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2));
-                this.adgdy = dy.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2));
+        for (let ep = 0; ep < conf.epochs; ep++) {
+            let eploss = 0;
+            for (let n = 0; n < m; n++) {
+                let xss = new matrix_1.Matrix([xs.getRow(n)]);
+                let yss = new matrix_1.Matrix([ys.getRow(n)]);
+                let hy = this.calcnet(xss);
+                const { dy, dw } = this.calcDerivative(hy, yss);
+                this.update(dy, dw);
+                let loss = hy[this.nlayer - 1].subtraction(yss)
+                    .atomicOperation(item => (item ** 2) / 2)
+                    .getMeanOfRow(0);
+                eploss += loss;
             }
-            if (this.adgdw && this.adgdy) {
-                let powdw = dw.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2));
-                let powdy = dy.map(v => v.atomicOperation(item => (1 - 0.999) * item ** 2));
-                this.adgdw = this.adgdw.map((v, i) => v.numberMultiply(0.999).addition(powdw[i]));
-                this.adgdy = this.adgdy.map((v, i) => v.numberMultiply(0.999).addition(powdy[i]));
-            }
-            for (let l = 1; l < this.nlayer; l++) {
-                this.w[l] = this.w[l].subtraction(dw[l].numberMultiply(this.rate).atomicOperation((item, i, j) => item / Math.sqrt(this.adgdw[l].get(i, j) + 1e-07)));
-                this.b[l] = this.b[l].subtraction(dy[l].numberMultiply(this.rate).atomicOperation((item, i, j) => item / Math.sqrt(this.adgdy[l].get(i, j) + 1e-07)));
-            }
+            if (conf.onEpoch)
+                conf.onEpoch(ep, eploss / m);
         }
     }
-    adaGrad(hy, ys) {
+    mbgd(xs, ys, conf) {
+        let batchSize = conf.batchSize ? conf.batchSize : 10;
+        let nbatch = 0;
+        let batch = 0;
         let m = ys.shape[0];
-        for (let n = 0; n < m; n++) {
-            const { dy, dw } = this.calcDerivative(hy, ys, n);
-            if (!this.adgdw || !this.adgdy) {
-                this.adgdw = dw.map(v => v.atomicOperation(item => item ** 2));
-                this.adgdy = dy.map(v => v.atomicOperation(item => item ** 2));
+        let [dws, dys] = this.initwb(0);
+        for (let ep = 0; ep < conf.epochs; ep++) {
+            let eploss = 0;
+            for (let n = 0; n < m; n++) {
+                batch += 1;
+                let xss = new matrix_1.Matrix([xs.getRow(n)]);
+                let yss = new matrix_1.Matrix([ys.getRow(n)]);
+                let hy = this.calcnet(xss);
+                const { dy, dw } = this.calcDerivative(hy, yss);
+                for (let l = 1; l < this.nlayer; l++) {
+                    dws[l] = dws[l].addition(dw[l]);
+                    dys[l] = dys[l].addition(dy[l]);
+                }
+                let loss = hy[this.nlayer - 1].subtraction(yss)
+                    .atomicOperation(item => (item ** 2) / 2)
+                    .getMeanOfRow(0);
+                eploss += loss;
+                if (batch === batchSize || (ep === conf.epochs - 1 && n === m - 1 && batch !== 0)) {
+                    nbatch += 1;
+                    for (let l = 1; l < this.nlayer; l++) {
+                        dws[l] = dws[l].atomicOperation(item => item / batch);
+                        dys[l] = dys[l].atomicOperation(item => item / batch);
+                    }
+                    this.update(dys, dws);
+                    if (conf.onBatch)
+                        conf.onBatch(nbatch, batch, loss);
+                    let [dwt, dyt] = this.initwb(0);
+                    dws = dwt;
+                    dys = dyt;
+                    batch = 0;
+                }
             }
-            if (this.adgdw && this.adgdy) {
-                let powdw = dw.map(v => v.atomicOperation(item => item ** 2));
-                let powdy = dy.map(v => v.atomicOperation(item => item ** 2));
-                this.adgdw = this.adgdw.map((v, i) => v.addition(powdw[i]));
-                this.adgdy = this.adgdy.map((v, i) => v.addition(powdy[i]));
-            }
-            for (let l = 1; l < this.nlayer; l++) {
-                this.w[l] = this.w[l].subtraction(dw[l].numberMultiply(this.rate).atomicOperation((item, i, j) => item * 1 / Math.sqrt(this.adgdw[l].get(i, j) + 1e-07)));
-                this.b[l] = this.b[l].subtraction(dy[l].numberMultiply(this.rate).atomicOperation((item, i, j) => item * 1 / Math.sqrt(this.adgdy[l].get(i, j) + 1e-07)));
-            }
+            if (conf.onEpoch)
+                conf.onEpoch(ep, eploss / m);
         }
     }
-    fit(xs, ys, batch, callback) {
+    fit(xs, ys, conf) {
         if (xs.shape[0] !== ys.shape[0]) {
             throw new Error('输入输出矩阵行数不统一');
         }
@@ -223,27 +213,21 @@ class BPNet {
         if (ys.shape[1] !== this.nOfLayer(this.nlayer - 1)) {
             throw new Error(`标签与网络输出不符合，output num -> ${this.nOfLayer(this.nlayer - 1)}`);
         }
+        if (conf.batchSize && conf.batchSize > ys.shape[0] * conf.epochs) {
+            throw new Error(`批次大小不能大于 epochs * m`);
+        }
         const [nxs, scalem] = xs.normalization();
         this.scalem = scalem;
         xs = nxs;
-        for (let p = 0; p < batch; p++) {
-            let hy = this.calcnet(xs);
-            if (this.netconf && this.netconf.optimizer === 'AdaGrad') {
-                this.adaGrad(hy, ys);
-            }
-            if (this.netconf && this.netconf.optimizer === 'Bgd') {
-                this.bgd(hy, ys);
-            }
-            if (this.netconf && this.netconf.optimizer === 'Momentum') {
-                this.momentum(hy, ys);
-            }
-            if (this.netconf && this.netconf.optimizer === 'AdaDelta') {
-                this.adaDelta(hy, ys);
-            }
-            this.sgd(hy, ys);
-            let loss = this.cost(hy, ys);
-            if (callback)
-                callback(p, loss);
+        let optimizer = this.netconf ? this.netconf.optimizer : undefined;
+        switch (optimizer) {
+            case 'bgd':
+                return this.bgd(xs, ys, conf);
+            case 'mbgd':
+                return this.mbgd(xs, ys, conf);
+            case 'sgd':
+            default:
+                return this.sgd(xs, ys, conf);
         }
     }
 }

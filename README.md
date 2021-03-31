@@ -28,11 +28,13 @@ BP neural network XOR example, three-layer network model:
 let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
 let ys = new Matrix([[1], [1], [0], [0]])
 let model = new BPNet([2, [6, 'Tanh'], [1, 'Sigmoid']])
-model.setRate(0.1)
-model.fit(xs, ys, 10000, (batch, loss) => {
-  if (batch % 500 === 0) console.log(batch, loss)
+model.setRate(0.3)
+model.fit(xs, ys, {
+  epochs: 5000, onEpoch: (epoch, loss) => {
+    if (epoch % 100 === 0) console.log('epoch = ' + epoch, loss)
+  }
 })
-model.predict(xs)[2].print()
+model.predict(xs).print()
 // Matrix 4x1 [
 //  0.9862025352830867, 
 //  0.986128496195502, 
@@ -44,13 +46,15 @@ BP neural network addition example, four-layer network model:
 ```ts
 let xs = new Matrix([[1, 4], [3, 2], [6, 5], [4, 7]])
 let ys = new Matrix([[5], [5], [11], [11]])
-let model = new BPNet([2, 6, 6, 1])
-model.setRate(0.001)
-model.fit(xs, ys, 10000, (batch, loss) => {
-  if (batch % 500 === 0) console.log(batch, loss)
+let model = new BPNet([2, 6, 6, 1], { optimizer: 'mbgd' })
+model.setRate(0.01)
+model.fit(xs, ys, {
+  epochs: 1000, batchSize: 10, onBatch: (batch, size, loss) => {
+    console.log('batch = ' + batch, size, loss)
+  }
 })
 let xs2 = new Matrix([[5, 8], [22, 6], [-5, 9]])
-model.predict(xs2)[3].print()
+model.predict(xs2).print()
 // Matrix 2x1 [
 //  12.994745740521667, 
 //  27.99134620596921, 

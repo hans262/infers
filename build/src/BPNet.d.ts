@@ -2,7 +2,13 @@ import { Matrix } from "./matrix";
 export declare type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh';
 export declare type NetShape = (number | [number, ActivationFunction])[];
 export interface NetConfig {
-    optimizer: 'Sgd' | 'Bgd' | 'AdaGrad' | 'Momentum' | 'AdaDelta';
+    optimizer: 'sgd' | 'bgd' | 'mbgd';
+}
+export interface FitConf {
+    epochs: number;
+    batchSize?: number;
+    onBatch?: (batch: number, size: number, loss: number) => void;
+    onEpoch?: (epoch: number, loss: number) => void;
 }
 export declare class BPNet {
     readonly shape: NetShape;
@@ -12,10 +18,6 @@ export declare class BPNet {
     nlayer: number;
     rate: number;
     scalem?: Matrix;
-    adgdw?: Matrix[];
-    adgdy?: Matrix[];
-    vdw?: Matrix[];
-    vdy?: Matrix[];
     constructor(shape: NetShape, netconf?: NetConfig | undefined);
     nOfLayer(l: number): number;
     afOfLayer(l: number): ActivationFunction | undefined;
@@ -25,18 +27,14 @@ export declare class BPNet {
     afd(x: number, l: number): number;
     calcnet(xs: Matrix): Matrix[];
     zoomScalem(xs: Matrix): Matrix;
-    predict(xs: Matrix): Matrix[];
-    calcDerivative(hy: Matrix[], ys: Matrix, n: number): {
+    predict(xs: Matrix): Matrix;
+    calcDerivative(hy: Matrix[], ys: Matrix): {
         dy: Matrix[];
         dw: Matrix[];
     };
     update(dy: Matrix[], dw: Matrix[]): void;
-    cost(hy: Matrix[], ys: Matrix): number;
-    crossCost(hy: Matrix[], ys: Matrix): number;
-    bgd(hy: Matrix[], ys: Matrix): void;
-    sgd(hy: Matrix[], ys: Matrix): void;
-    momentum(hy: Matrix[], ys: Matrix): void;
-    adaDelta(hy: Matrix[], ys: Matrix): void;
-    adaGrad(hy: Matrix[], ys: Matrix): void;
-    fit(xs: Matrix, ys: Matrix, batch: number, callback?: (batch: number, loss: number) => void): void;
+    bgd(xs: Matrix, ys: Matrix, conf: FitConf): void;
+    sgd(xs: Matrix, ys: Matrix, conf: FitConf): void;
+    mbgd(xs: Matrix, ys: Matrix, conf: FitConf): void;
+    fit(xs: Matrix, ys: Matrix, conf: FitConf): void;
 }
