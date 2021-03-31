@@ -8,7 +8,7 @@ export type NetShape = (number | [number, ActivationFunction])[]
 
 /**Model configuration*/
 export interface NetConfig {
-  optimizer: 'sgd' | 'bgd' | 'mbgd'
+  mode: 'sgd' | 'bgd' | 'mbgd'
 }
 
 /**Fit configuration*/
@@ -319,8 +319,8 @@ export class BPNet {
     const [nxs, scalem] = xs.normalization()
     this.scalem = scalem
     xs = nxs
-    let optimizer = this.netconf ? this.netconf.optimizer : undefined
-    switch (optimizer) {
+    let mode = this.netconf ? this.netconf.mode : undefined
+    switch (mode) {
       case 'bgd':
         return this.bgd(xs, ys, conf)
       case 'mbgd':

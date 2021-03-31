@@ -17,7 +17,7 @@ export namespace TestModel {
   export function bpNet2() {
     let xs = new Matrix([[1, 4], [3, 2], [6, 5], [4, 7]])
     let ys = new Matrix([[5], [5], [11], [11]])
-    let model = new BPNet([2, 6, 6, 1], { optimizer: 'mbgd' })
+    let model = new BPNet([2, 6, 6, 1], { mode: 'mbgd' })
     model.setRate(0.01)
     model.fit(xs, ys, {
       epochs: 1000, batchSize: 10, onBatch: (batch, size, loss) => {
@@ -38,7 +38,7 @@ export namespace TestModel {
     ])
     let ys = new Matrix(d2)
     let model = new BPNet([4, [8, 'Relu'], [8, 'Sigmoid'], [3, 'Sigmoid']], {
-      optimizer: 'mbgd'
+      mode: 'mbgd'
     })
     model.setRate(0.3)
     model.fit(xs, ys, {

@@ -2,7 +2,7 @@ import { Matrix } from "./matrix";
 export declare type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh';
 export declare type NetShape = (number | [number, ActivationFunction])[];
 export interface NetConfig {
-    optimizer: 'sgd' | 'bgd' | 'mbgd';
+    mode: 'sgd' | 'bgd' | 'mbgd';
 }
 export interface FitConf {
     epochs: number;

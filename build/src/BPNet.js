@@ -219,8 +219,8 @@ class BPNet {
         const [nxs, scalem] = xs.normalization();
         this.scalem = scalem;
         xs = nxs;
-        let optimizer = this.netconf ? this.netconf.optimizer : undefined;
-        switch (optimizer) {
+        let mode = this.netconf ? this.netconf.mode : undefined;
+        switch (mode) {
             case 'bgd':
                 return this.bgd(xs, ys, conf);
             case 'mbgd':
