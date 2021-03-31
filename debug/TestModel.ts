@@ -27,22 +27,17 @@ export namespace TestModel {
     let xs2 = new Matrix([[5, 8], [22, 6], [-5, 9], [-5, -4]])
     model.predict(xs2).print()
   }
-
   export function bpNet3() {
-    let d1 = data.map(d => d[0])
-    let xs = new Matrix(d1)
-    let d2 = data.map(d => [
+    let xs = new Matrix(data.map(d => d[0]))
+    let ys = new Matrix(data.map(d => [
       d[1][0] === 'setosa' ? 1 : 0,
       d[1][0] === "virginica" ? 1 : 0,
       d[1][0] === "versicolor" ? 1 : 0
-    ])
-    let ys = new Matrix(d2)
-    let model = new BPNet([4, [8, 'Relu'], [8, 'Sigmoid'], [3, 'Sigmoid']], {
-      mode: 'mbgd'
-    })
+    ]))
+    let model = new BPNet([4, [8, 'Relu'], [8, 'Sigmoid'], [3, 'Softmax']], { mode: 'mbgd' })
     model.setRate(0.3)
     model.fit(xs, ys, {
-      epochs: 1000,
+      epochs: 100,
       batchSize: 13,
       onBatch: (batch, size, loss) => {
         if (batch % 100 === 0) console.log('batch = ' + batch, size, loss)
@@ -56,7 +51,7 @@ export namespace TestModel {
     model.predict(xs2).print()
   }
   export function run() {
-    bpNet2()
+    bpNet3()
   }
 }
 TestModel.run()

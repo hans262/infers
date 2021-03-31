@@ -1,5 +1,5 @@
 import { Matrix } from "./matrix";
-export declare type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh';
+export declare type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh' | 'Softmax';
 export declare type NetShape = (number | [number, ActivationFunction])[];
 export interface NetConfig {
     mode: 'sgd' | 'bgd' | 'mbgd';
@@ -23,7 +23,7 @@ export declare class BPNet {
     afOfLayer(l: number): ActivationFunction | undefined;
     initwb(v?: number): Matrix[][];
     setRate(rate: number): void;
-    afn(x: number, l: number): number;
+    afn(x: number, l: number, rows: number[]): number;
     afd(x: number, l: number): number;
     calcnet(xs: Matrix): Matrix[];
     zoomScalem(xs: Matrix): Matrix;

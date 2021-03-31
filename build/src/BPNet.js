@@ -35,7 +35,7 @@ class BPNet {
     setRate(rate) {
         this.rate = rate;
     }
-    afn(x, l) {
+    afn(x, l, rows) {
         let af = this.afOfLayer(l);
         switch (af) {
             case 'Sigmoid':
@@ -44,6 +44,9 @@ class BPNet {
                 return x >= 0 ? x : 0;
             case 'Tanh':
                 return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
+            case 'Softmax':
+                let d = Math.max(...rows);
+                return Math.exp(x - d) / rows.reduce((p, c) => p + Math.exp(c - d), 0);
             default:
                 return x;
         }
@@ -57,6 +60,7 @@ class BPNet {
                 return x >= 0 ? 1 : 0;
             case 'Tanh':
                 return 1 - ((Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x))) ** 2;
+            case 'Softmax':
             default:
                 return 1;
         }
@@ -68,7 +72,8 @@ class BPNet {
                 hy[l] = xs;
                 continue;
             }
-            hy[l] = hy[l - 1].multiply(this.w[l].T).atomicOperation((item, _, j) => this.afn(item + this.b[l].get(0, j), l));
+            let a = hy[l - 1].multiply(this.w[l].T).atomicOperation((item, _, j) => item + this.b[l].get(0, j));
+            hy[l] = a.atomicOperation((item, i) => this.afn(item, l, a.getRow(i)));
         }
         return hy;
     }
