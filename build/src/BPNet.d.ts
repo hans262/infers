@@ -20,7 +20,7 @@ export declare class BPNet {
     scalem?: Matrix;
     constructor(shape: NetShape, netconf?: NetConfig | undefined);
     nOfLayer(l: number): number;
-    afOfLayer(l: number): ActivationFunction | undefined;
+    afOfLayer(l: number): "Sigmoid" | "Relu" | "Tanh" | "Softmax" | undefined;
     initwb(v?: number): Matrix[][];
     setRate(rate: number): void;
     afn(x: number, l: number, rows: number[]): number;

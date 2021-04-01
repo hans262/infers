@@ -2,6 +2,8 @@ export declare class Matrix {
     shape: [number, number];
     private self;
     constructor(data: number[][]);
+    zeroed(): Matrix;
+    clone(): Matrix;
     getMeanOfRow(i: number): number;
     columnSum(): Matrix;
     dataSync(): number[][];

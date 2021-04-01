@@ -9,6 +9,12 @@ class Matrix {
         this.shape = [data.length, data[0].length];
         this.self = data;
     }
+    zeroed() {
+        return this.atomicOperation(_ => 0);
+    }
+    clone() {
+        return new Matrix(this.dataSync());
+    }
     getMeanOfRow(i) {
         let tmp = this.getRow(i);
         return tmp.reduce((p, c) => p + c) / tmp.length;

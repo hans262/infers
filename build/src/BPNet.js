@@ -124,12 +124,13 @@ class BPNet {
         let m = ys.shape[0];
         for (let ep = 0; ep < conf.epochs; ep++) {
             let eploss = 0;
-            const [dws, dys] = this.initwb(0);
+            let dws = this.w.map(w => w.zeroed());
+            let dys = this.b.map(b => b.zeroed());
             for (let n = 0; n < m; n++) {
                 let xss = new matrix_1.Matrix([xs.getRow(n)]);
                 let yss = new matrix_1.Matrix([ys.getRow(n)]);
                 let hy = this.calcnet(xss);
-                const { dy, dw } = this.calcDerivative(hy, yss);
+                let { dy, dw } = this.calcDerivative(hy, yss);
                 for (let l = 1; l < this.nlayer; l++) {
                     dws[l] = dws[l].addition(dw[l]);
                     dys[l] = dys[l].addition(dy[l]);
@@ -169,18 +170,19 @@ class BPNet {
     }
     mbgd(xs, ys, conf) {
         let batchSize = conf.batchSize ? conf.batchSize : 10;
-        let nbatch = 0;
         let batch = 0;
+        let b = 0;
         let m = ys.shape[0];
-        let [dws, dys] = this.initwb(0);
+        let dws = this.w.map(w => w.zeroed());
+        let dys = this.b.map(b => b.zeroed());
         for (let ep = 0; ep < conf.epochs; ep++) {
             let eploss = 0;
             for (let n = 0; n < m; n++) {
-                batch += 1;
+                b += 1;
                 let xss = new matrix_1.Matrix([xs.getRow(n)]);
                 let yss = new matrix_1.Matrix([ys.getRow(n)]);
                 let hy = this.calcnet(xss);
-                const { dy, dw } = this.calcDerivative(hy, yss);
+                let { dy, dw } = this.calcDerivative(hy, yss);
                 for (let l = 1; l < this.nlayer; l++) {
                     dws[l] = dws[l].addition(dw[l]);
                     dys[l] = dys[l].addition(dy[l]);
@@ -189,19 +191,18 @@ class BPNet {
                     .atomicOperation(item => (item ** 2) / 2)
                     .getMeanOfRow(0);
                 eploss += loss;
-                if (batch === batchSize || (ep === conf.epochs - 1 && n === m - 1 && batch !== 0)) {
-                    nbatch += 1;
+                if (b === batchSize || (ep === conf.epochs - 1 && n === m - 1 && b !== 0)) {
+                    batch += 1;
                     for (let l = 1; l < this.nlayer; l++) {
-                        dws[l] = dws[l].atomicOperation(item => item / batch);
-                        dys[l] = dys[l].atomicOperation(item => item / batch);
+                        dws[l] = dws[l].atomicOperation(item => item / b);
+                        dys[l] = dys[l].atomicOperation(item => item / b);
                     }
                     this.update(dys, dws);
                     if (conf.onBatch)
-                        conf.onBatch(nbatch, batch, loss);
-                    let [dwt, dyt] = this.initwb(0);
-                    dws = dwt;
-                    dys = dyt;
-                    batch = 0;
+                        conf.onBatch(batch, b, loss);
+                    dws = dws.map(d => d.zeroed());
+                    dys = dys.map(d => d.zeroed());
+                    b = 0;
                 }
             }
             if (conf.onEpoch)

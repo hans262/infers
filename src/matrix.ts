@@ -9,6 +9,20 @@ export class Matrix {
   }
 
   /**
+   * 返回新的归零矩阵
+   */
+  zeroed() {
+    return this.atomicOperation(_ => 0)
+  }
+
+  /**
+   * 克隆当前矩阵
+   */
+  clone() {
+    return new Matrix(this.dataSync())
+  }
+
+  /**
    * 获取某一行的均值
    * @param i 
    * @returns 

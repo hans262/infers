@@ -34,13 +34,16 @@ export namespace TestModel {
       d[1][0] === "virginica" ? 1 : 0,
       d[1][0] === "versicolor" ? 1 : 0
     ]))
-    let model = new BPNet([4, [8, 'Relu'], [8, 'Sigmoid'], [3, 'Softmax']], { mode: 'mbgd' })
+    let model = new BPNet([4, [8, 'Relu'], [8, 'Sigmoid'], [3, 'Softmax']], { mode: 'bgd' })
     model.setRate(0.3)
     model.fit(xs, ys, {
-      epochs: 100,
+      epochs: 1000,
       batchSize: 13,
       onBatch: (batch, size, loss) => {
         if (batch % 100 === 0) console.log('batch = ' + batch, size, loss)
+      },
+      onEpoch: (epoch, loss) => {
+        console.log('epoch = ' + epoch, loss)
       }
     })
     let xs2 = new Matrix([
