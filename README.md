@@ -1,14 +1,12 @@
 # infers
-The library of machine learning and matrix operation by Typescript.
-
-The Chinese README is [here](https://gitee.com/badgua/infers/blob/main/cn.md).
+Matrix operation and machine learning library by TypesScript.
 
 ## Installed
-Make sure NPM is installed, Switch to the project directory and execute the following command.
+Make sure NPM is installed, Switch to the project directory then execute the following command.
 ```shell
 $ npm install infers@latest
 ```
-Then reference in the project: 
+Reference in project:
 ```ts
 import { Matrix, BPNet } from 'infers'
 ```
@@ -23,12 +21,12 @@ let m = new Matrix([
 ])
 m.T.print()
 ```
-BP neural network XOR example, three-layer network model: 
+BP neural network example of XOR, three-layer network: 
 ```ts
 let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
 let ys = new Matrix([[1], [1], [0], [0]])
 let model = new BPNet([2, [6, 'Tanh'], [1, 'Sigmoid']])
-model.setRate(0.3)
+model.setRate(0.1)
 model.fit(xs, ys, {
   epochs: 5000, onEpoch: (epoch, loss) => {
     if (epoch % 100 === 0) console.log('epoch = ' + epoch, loss)
@@ -42,23 +40,24 @@ model.predict(xs).print()
 //  0.014425871504885788, 
 // ]
 ```
-BP neural network addition example, four-layer network model: 
+BP neural network example of addition, four-layer network: 
 ```ts
 let xs = new Matrix([[1, 4], [3, 2], [6, 5], [4, 7]])
 let ys = new Matrix([[5], [5], [11], [11]])
-let model = new BPNet([2, 6, 6, 1], { mode: 'mbgd' })
+let model = new BPNet([2, 6, 6, 1], { mode: 'bgd' })
 model.setRate(0.01)
 model.fit(xs, ys, {
-  epochs: 1000, batchSize: 10, onBatch: (batch, size, loss) => {
-    console.log('batch = ' + batch, size, loss)
+  epochs: 500, onEpoch: (epoch, loss) => {
+    console.log('epoch = ' + epoch, loss)
   }
 })
-let xs2 = new Matrix([[5, 8], [22, 6], [-5, 9]])
+let xs2 = new Matrix([[5, 8], [22, 6], [-5, 9], [-5, -4]])
 model.predict(xs2).print()
 // Matrix 2x1 [
 //  12.994745740521667, 
 //  27.99134620596921, 
 //  3.9987224114576856, 
+//  -9.000000644547901,
 // ]
 ```
 Parameter introduction: 
@@ -70,9 +69,9 @@ The selection of the above parameters is also the process of model optimization.
 
 ## Export
 - class Matrix
-  - Add, multiply, multiply, transpose
-  - Determinant, normalization
+  - addition, subtraction, multiply, transpose
+  - determinant, normalization
 - class BPNet
-  - Multi layer network model
+  - Multi-layer network model of CNN
   - Support multiple activation functions
-  - Linear regression and logical classification
+  - Linear regression and Logical classification

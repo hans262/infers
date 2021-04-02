@@ -20,7 +20,7 @@ export declare class BPNet {
     scalem?: Matrix;
     constructor(shape: NetShape, netconf?: NetConfig | undefined);
     nOfLayer(l: number): number;
-    afOfLayer(l: number): "Sigmoid" | "Relu" | "Tanh" | "Softmax" | undefined;
+    afOfLayer(l: number): ActivationFunction | undefined;
     initwb(v?: number): Matrix[][];
     setRate(rate: number): void;
     afn(x: number, l: number, rows: number[]): number;
@@ -28,13 +28,22 @@ export declare class BPNet {
     calcnet(xs: Matrix): Matrix[];
     zoomScalem(xs: Matrix): Matrix;
     predict(xs: Matrix): Matrix;
+    calcDerivativeMul(hy: Matrix[], ys: Matrix): {
+        dy: Matrix[];
+        dw: Matrix[];
+    };
     calcDerivative(hy: Matrix[], ys: Matrix): {
         dy: Matrix[];
         dw: Matrix[];
     };
     update(dy: Matrix[], dw: Matrix[]): void;
+    cost(hy: Matrix, ys: Matrix): number;
     bgd(xs: Matrix, ys: Matrix, conf: FitConf): void;
     sgd(xs: Matrix, ys: Matrix, conf: FitConf): void;
     mbgd(xs: Matrix, ys: Matrix, conf: FitConf): void;
+    upset(xs: Matrix, ys: Matrix): {
+        xs: Matrix;
+        ys: Matrix;
+    };
     fit(xs: Matrix, ys: Matrix, conf: FitConf): void;
 }

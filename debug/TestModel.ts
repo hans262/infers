@@ -6,7 +6,7 @@ export namespace TestModel {
     let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
     let ys = new Matrix([[1], [1], [0], [0]])
     let model = new BPNet([2, [6, 'Tanh'], [1, 'Sigmoid']])
-    model.setRate(0.3)
+    model.setRate(0.1)
     model.fit(xs, ys, {
       epochs: 5000, onEpoch: (epoch, loss) => {
         if (epoch % 100 === 0) console.log('epoch = ' + epoch, loss)
@@ -17,11 +17,11 @@ export namespace TestModel {
   export function bpNet2() {
     let xs = new Matrix([[1, 4], [3, 2], [6, 5], [4, 7]])
     let ys = new Matrix([[5], [5], [11], [11]])
-    let model = new BPNet([2, 6, 6, 1], { mode: 'mbgd' })
+    let model = new BPNet([2, 6, 6, 1], { mode: 'bgd' })
     model.setRate(0.01)
     model.fit(xs, ys, {
-      epochs: 1000, batchSize: 10, onBatch: (batch, size, loss) => {
-        console.log('batch = ' + batch, size, loss)
+      epochs: 500, onEpoch: (epoch, loss) => {
+        console.log('epoch = ' + epoch, loss)
       }
     })
     let xs2 = new Matrix([[5, 8], [22, 6], [-5, 9], [-5, -4]])
@@ -34,13 +34,13 @@ export namespace TestModel {
       d[1][0] === "virginica" ? 1 : 0,
       d[1][0] === "versicolor" ? 1 : 0
     ]))
-    let model = new BPNet([4, [8, 'Relu'], [8, 'Sigmoid'], [3, 'Softmax']], { mode: 'bgd' })
+    let model = new BPNet([4, [8, 'Relu'], [8, 'Sigmoid'], [3, 'Softmax']], { mode: 'mbgd' })
     model.setRate(0.3)
     model.fit(xs, ys, {
-      epochs: 1000,
-      batchSize: 13,
+      epochs: 100,
+      batchSize: 10,
       onBatch: (batch, size, loss) => {
-        if (batch % 100 === 0) console.log('batch = ' + batch, size, loss)
+        console.log('batch = ' + batch, size, loss)
       },
       onEpoch: (epoch, loss) => {
         console.log('epoch = ' + epoch, loss)
@@ -54,7 +54,7 @@ export namespace TestModel {
     model.predict(xs2).print()
   }
   export function run() {
-    bpNet3()
+    bpNet2()
   }
 }
 TestModel.run()

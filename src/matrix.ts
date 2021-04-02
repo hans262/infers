@@ -9,6 +9,25 @@ export class Matrix {
   }
 
   /**
+   * 上下分割矩阵
+   */
+  slice(start: number, end: number) {
+    return new Matrix(this.self.slice(start, end))
+  }
+
+  /**
+   * 连接两个矩阵
+   * 从底部连接
+   */
+  connect(b: Matrix) {
+    if (this.shape[1] !== b.shape[1]) {
+      throw new Error('列数不统一')
+    }
+    let tmp = this.dataSync().concat(b.dataSync())
+    return new Matrix(tmp)
+  }
+
+  /**
    * 返回新的归零矩阵
    */
   zeroed() {

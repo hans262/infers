@@ -9,6 +9,16 @@ class Matrix {
         this.shape = [data.length, data[0].length];
         this.self = data;
     }
+    slice(start, end) {
+        return new Matrix(this.self.slice(start, end));
+    }
+    connect(b) {
+        if (this.shape[1] !== b.shape[1]) {
+            throw new Error('列数不统一');
+        }
+        let tmp = this.dataSync().concat(b.dataSync());
+        return new Matrix(tmp);
+    }
     zeroed() {
         return this.atomicOperation(_ => 0);
     }

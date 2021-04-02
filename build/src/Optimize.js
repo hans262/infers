@@ -2,12 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Optimize = void 0;
 class Optimize {
-    cost(hy, ys) {
-        let m = ys.shape[0];
-        let sub = hy[hy.length - 1].subtraction(ys).atomicOperation(item => item ** 2).columnSum();
-        let tmp = sub.getRow(0).map(v => (1 / (2 * m)) * v);
-        return tmp.reduce((p, c) => p + c) / tmp.length;
-    }
     crossCost(hy, ys) {
         let m = ys.shape[0];
         let t = hy[hy.length - 1].atomicOperation((h, i, j) => {

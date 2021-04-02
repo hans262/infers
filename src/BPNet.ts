@@ -158,6 +158,26 @@ export class BPNet {
   }
 
   /**
+   * 多样本求导
+   * 需求平均导数
+   */
+  calcDerivativeMul(hy: Matrix[], ys: Matrix) {
+    let m = ys.shape[0]
+    let dws: Matrix[] | null = null
+    let dys: Matrix[] | null = null
+    for (let n = 0; n < m; n++) {
+      let nhy = hy.map(item => new Matrix([item.getRow(n)]))
+      let nys = new Matrix([ys.getRow(n)])
+      let { dw, dy } = this.calcDerivative(nhy, nys)
+      dws = dws ? dws.map((d, l) => d.addition(dw[l])) : dw
+      dys = dys ? dys.map((d, l) => d.addition(dy[l])) : dy
+    }
+    dws = dws!.map(d => d.atomicOperation(item => item / m))
+    dys = dys!.map(d => d.atomicOperation(item => item / m))
+    return { dy: dys, dw: dws }
+  }
+
+  /**
    * The derivative of the valence function with respect to each neuron 
    * and the derivative of each weight are calculated.
    * It's for a single sample.
@@ -170,7 +190,8 @@ export class BPNet {
    * @returns [Neuron derivative matrix, Weighted derivative matrix]
    */
   calcDerivative(hy: Matrix[], ys: Matrix) {
-    const [dw, dy] = this.initwb(0)
+    let dw = this.w.map(w => w.zeroed())
+    let dy = this.b.map(b => b.zeroed())
     for (let l = this.nlayer - 1; l > 0; l--) {
       if (l === this.nlayer - 1) {
         for (let j = 0; j < this.nOfLayer(l); j++) {
@@ -207,104 +228,93 @@ export class BPNet {
   }
 
   /**
-   * 梯度下降，
-   * 求全部样本导数平均值
+   * Quadratic cost function
+   * Multiple outputs average multiple loss values  
+   * - J = 1 / 2 * m * ∑m(hy - ys) ** 2 
+   */
+  cost(hy: Matrix, ys: Matrix) {
+    let m = ys.shape[0]
+    let sub = hy.subtraction(ys).atomicOperation(item => item ** 2).columnSum()
+    let tmp = sub.getRow(0).map(v => v / (2 * m))
+    return tmp.reduce((p, c) => p + c) / tmp.length
+  }
+
+  /**
+   * 标准梯度下降，
+   * 全部样本导数的平均值
    */
   bgd(xs: Matrix, ys: Matrix, conf: FitConf) {
-    let m = ys.shape[0]
     for (let ep = 0; ep < conf.epochs; ep++) {
-      let eploss = 0
-      let dws = this.w.map(w => w.zeroed())
-      let dys = this.b.map(b => b.zeroed())
-      for (let n = 0; n < m; n++) {
-        let xss = new Matrix([xs.getRow(n)])
-        let yss = new Matrix([ys.getRow(n)])
-        let hy = this.calcnet(xss)
-        let { dy, dw } = this.calcDerivative(hy, yss)
-        for (let l = 1; l < this.nlayer; l++) {
-          dws[l] = dws[l].addition(dw[l])
-          dys[l] = dys[l].addition(dy[l])
-        }
-        let loss = hy[this.nlayer - 1].subtraction(yss)
-          .atomicOperation(item => (item ** 2) / 2)
-          .getMeanOfRow(0)
-        eploss += loss
-      }
-      for (let l = 1; l < this.nlayer; l++) {
-        dws[l] = dws[l].atomicOperation(item => item / m)
-        dys[l] = dys[l].atomicOperation(item => item / m)
-      }
-      this.update(dys, dws)
-      if (conf.onEpoch) conf.onEpoch(ep, eploss / m)
+      let hy = this.calcnet(xs)
+      let { dy, dw } = this.calcDerivativeMul(hy, ys)
+      this.update(dy, dw)
+      if (conf.onEpoch) conf.onEpoch(ep, this.cost(hy[this.nlayer - 1], ys))
     }
   }
 
   /**
    * 随机梯度下降，
-   * 求单个样本导数
+   * 单个样本的导数
    */
   sgd(xs: Matrix, ys: Matrix, conf: FitConf) {
     let m = ys.shape[0]
     for (let ep = 0; ep < conf.epochs; ep++) {
-      let eploss = 0
+      let hys: Matrix | null = null
       for (let n = 0; n < m; n++) {
         let xss = new Matrix([xs.getRow(n)])
         let yss = new Matrix([ys.getRow(n)])
         let hy = this.calcnet(xss)
         const { dy, dw } = this.calcDerivative(hy, yss)
         this.update(dy, dw)
-        let loss = hy[this.nlayer - 1].subtraction(yss)
-          .atomicOperation(item => (item ** 2) / 2)
-          .getMeanOfRow(0)
-        eploss += loss
+        //把当前结果缓存起来
+        hys = hys ? hys.connect(hy[this.nlayer - 1]) : hy[this.nlayer - 1]
       }
-      if (conf.onEpoch) conf.onEpoch(ep, eploss / m)
+      if (conf.onEpoch) conf.onEpoch(ep, this.cost(hys!, ys))
     }
   }
 
   /**
-   * 批次梯度下降，
-   * 求多个样本导数平均值
+   * 批量梯度下降，
+   * 多个样本导数的平均值
    */
   mbgd(xs: Matrix, ys: Matrix, conf: FitConf) {
-    let batchSize = conf.batchSize ? conf.batchSize : 10
-    let batch = 0
-    let b = 0
     let m = ys.shape[0]
-    let dws = this.w.map(w => w.zeroed())
-    let dys = this.b.map(b => b.zeroed())
+    let batchSize = conf.batchSize ? conf.batchSize : 10
+    let batch = Math.ceil(m / batchSize) //总批次
     for (let ep = 0; ep < conf.epochs; ep++) {
+      let { xs: xst, ys: yst } = this.upset(xs, ys)
+      //必须每次打乱数据
       let eploss = 0
-      for (let n = 0; n < m; n++) {
-        b += 1
-        let xss = new Matrix([xs.getRow(n)])
-        let yss = new Matrix([ys.getRow(n)])
+      for (let b = 0; b < batch; b++) {
+        let start = b * batchSize
+        let end = start + batchSize
+        end = end > m ? m : end
+        let size = end - start
+        let xss = xst.slice(start, end)
+        let yss = yst.slice(start, end)
         let hy = this.calcnet(xss)
-        let { dy, dw } = this.calcDerivative(hy, yss)
-        for (let l = 1; l < this.nlayer; l++) {
-          dws[l] = dws[l].addition(dw[l])
-          dys[l] = dys[l].addition(dy[l])
-        }
-        let loss = hy[this.nlayer - 1].subtraction(yss)
-          .atomicOperation(item => (item ** 2) / 2)
-          .getMeanOfRow(0)
-        eploss += loss
-        //到达下一个批次 || 最后一次迭代且有余量 -> 则更新
-        if (b === batchSize || (ep === conf.epochs - 1 && n === m - 1 && b !== 0)) {
-          batch += 1
-          for (let l = 1; l < this.nlayer; l++) {
-            dws[l] = dws[l].atomicOperation(item => item / b)
-            dys[l] = dys[l].atomicOperation(item => item / b)
-          }
-          this.update(dys, dws)
-          if (conf.onBatch) conf.onBatch(batch, b, loss)
-          dws = dws.map(d => d.zeroed())
-          dys = dys.map(d => d.zeroed())
-          b = 0
-        }
+        const { dy, dw } = this.calcDerivative(hy, yss)
+        this.update(dy, dw)
+        let bloss = this.cost(hy[this.nlayer - 1], yss)
+        eploss += bloss
+        if (conf.onBatch) conf.onBatch(b, size, bloss)
       }
-      if (conf.onEpoch) conf.onEpoch(ep, eploss / m)
+      if (conf.onEpoch) conf.onEpoch(ep, eploss / batch)
     }
+  }
+
+  /**
+   * 打乱数据
+   */
+  upset(xs: Matrix, ys: Matrix) {
+    let xss = xs.dataSync()
+    let yss = ys.dataSync()
+    for (let i = 1; i < ys.shape[0]; i++) {
+      let random = Math.floor(Math.random() * (i + 1));
+      [xss[i], xss[random]] = [xss[random], xss[i]];
+      [yss[i], yss[random]] = [yss[random], yss[i]];
+    }
+    return { xs: new Matrix(xss), ys: new Matrix(yss) }
   }
 
   fit(xs: Matrix, ys: Matrix, conf: FitConf) {
@@ -317,8 +327,8 @@ export class BPNet {
     if (ys.shape[1] !== this.nOfLayer(this.nlayer - 1)) {
       throw new Error(`标签与网络输出不符合，output num -> ${this.nOfLayer(this.nlayer - 1)}`)
     }
-    if (conf.batchSize && conf.batchSize > ys.shape[0] * conf.epochs) {
-      throw new Error(`批次大小不能大于 epochs * m`)
+    if (conf.batchSize && conf.batchSize > ys.shape[0]) {
+      throw new Error(`批次大小不能大于样本数`)
     }
     const [nxs, scalem] = xs.normalization()
     this.scalem = scalem

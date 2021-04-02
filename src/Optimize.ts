@@ -2,18 +2,6 @@ import { Matrix } from "./matrix"
 
 export class Optimize {
   /**
-   * Quadratic cost function
-   * Multiple outputs average multiple loss values  
-   * - J = 1 / 2 * m * ∑m(hy - ys) ** 2 
-   */
-  cost(hy: Matrix[], ys: Matrix) {
-    let m = ys.shape[0]
-    let sub = hy[hy.length - 1].subtraction(ys).atomicOperation(item => item ** 2).columnSum()
-    let tmp = sub.getRow(0).map(v => (1 / (2 * m)) * v)
-    return tmp.reduce((p, c) => p + c) / tmp.length
-  }
-
-  /**
    * Cross entropy cost function
    * To simulate the last layer is the sigmoid activation function
    * Multiple outputs average multiple loss values  
