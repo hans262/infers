@@ -1,8 +1,13 @@
 import { Matrix } from "./matrix";
 export declare type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh' | 'Softmax';
+export declare type Mode = 'sgd' | 'bgd' | 'mbgd';
 export declare type NetShape = (number | [number, ActivationFunction])[];
 export interface NetConfig {
-    mode: 'sgd' | 'bgd' | 'mbgd';
+    mode?: Mode;
+    rate?: number;
+    w?: Matrix[];
+    b?: Matrix[];
+    scalem?: Matrix;
 }
 export interface FitConf {
     epochs: number;
@@ -12,17 +17,16 @@ export interface FitConf {
 }
 export declare class BPNet {
     readonly shape: NetShape;
-    netconf?: NetConfig | undefined;
     w: Matrix[];
     b: Matrix[];
     nlayer: number;
-    rate: number;
     scalem?: Matrix;
-    constructor(shape: NetShape, netconf?: NetConfig | undefined);
+    mode: Mode;
+    rate: number;
+    constructor(shape: NetShape, conf?: NetConfig);
     nOfLayer(l: number): number;
     afOfLayer(l: number): ActivationFunction | undefined;
     initwb(v?: number): Matrix[][];
-    setRate(rate: number): void;
     afn(x: number, l: number, rows: number[]): number;
     afd(x: number, l: number): number;
     calcnet(xs: Matrix): Matrix[];

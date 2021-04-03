@@ -1,17 +1,24 @@
 import { Matrix } from "./matrix"
 
-/**Activation function type*/
+/**激活函数类型*/
 export type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh' | 'Softmax'
 
-/**Network shape*/
+/**梯度更新方式*/
+export type Mode = 'sgd' | 'bgd' | 'mbgd'
+
+/**网络形状*/
 export type NetShape = (number | [number, ActivationFunction])[]
 
-/**Model configuration*/
+/**模型配置*/
 export interface NetConfig {
-  mode: 'sgd' | 'bgd' | 'mbgd'
+  mode?: Mode
+  rate?: number
+  w?: Matrix[]
+  b?: Matrix[]
+  scalem?: Matrix
 }
 
-/**Fit configuration*/
+/**训练配置*/
 export interface FitConf {
   epochs: number
   batchSize?: number
@@ -20,18 +27,19 @@ export interface FitConf {
 }
 
 export class BPNet {
-  /**Weight matrix*/
+  /**权值*/
   w: Matrix[]
-  /**Partial value matrix*/
+  /**偏值*/
   b: Matrix[]
   nlayer: number
-  /**Learning rate*/
-  rate = 0.001
-  /**Scaling matrix*/
+  /**缩放比*/
   scalem?: Matrix
+  mode: Mode = 'sgd'
+  /**学习率*/
+  rate: number = 0.01
   constructor(
     public readonly shape: NetShape,
-    public netconf?: NetConfig
+    conf?: NetConfig
   ) {
     if (shape.length < 2) {
       throw new Error('The network has at least two layers')
@@ -40,11 +48,17 @@ export class BPNet {
     const [w, b] = this.initwb()
     this.w = w
     this.b = b
+    if (conf) {
+      if (conf.mode) this.mode = conf.mode
+      if (conf.rate) this.rate = conf.rate
+      if (conf.w) this.w = conf.w
+      if (conf.b) this.b = conf.b
+      if (conf.scalem) this.scalem = conf.scalem
+    }
   }
 
   /**
-   * Get the number of neurons in the current layer
-   * @param l 
+   * 获取当前层神经元
    */
   nOfLayer(l: number) {
     let n = this.shape[l]
@@ -52,8 +66,7 @@ export class BPNet {
   }
 
   /**
-   * Gets the active function type of the current layer
-   * @param l 
+   * 获取当前层激活函数
    */
   afOfLayer(l: number) {
     let n = this.shape[l]
@@ -61,8 +74,8 @@ export class BPNet {
   }
 
   /**
-   * Initialization weight and bias  
-   * default value -0.5 ~ 0.5
+   * 初始化权值偏值，
+   * 默认值-0.5 ~ 0.5
    * @returns [w, b]
    */
   initwb(v?: number) {
@@ -76,15 +89,7 @@ export class BPNet {
   }
 
   /**
-   * Update learning rate
-   * @param rate 
-   */
-  setRate(rate: number) {
-    this.rate = rate
-  }
-
-  /**
-   * Get activation function for current layer
+   * 获取当前层激活函数
    */
   afn(x: number, l: number, rows: number[]) {
     let af = this.afOfLayer(l)
@@ -104,7 +109,7 @@ export class BPNet {
   }
 
   /**
-   * Gets the active function derivative of the current layer
+   * 获取当前层激活函数求导
    */
   afd(x: number, l: number) {
     let af = this.afOfLayer(l)
@@ -122,7 +127,8 @@ export class BPNet {
   }
 
   /**
-   * Calculate the output of the whole network
+   * 计算整个网络输出
+   * - layer[hy][t-1] * w[t] + b
    * - hy =  θ1 * X1 + θ2 * X2 + ... + θn * Xn + b
    * @param xs inputs
    */
@@ -140,8 +146,7 @@ export class BPNet {
   }
 
   /**
-   * Scaling features in mean space
-   * @param xs 
+   * 按比例缩放矩阵
    */
   zoomScalem(xs: Matrix) {
     return xs.atomicOperation((item, _, j) => {
@@ -150,6 +155,9 @@ export class BPNet {
     })
   }
 
+  /**
+   * 预测函数，输出最后一层求值
+   */
   predict(xs: Matrix) {
     if (xs.shape[1] !== this.nOfLayer(0)) {
       throw new Error(`特征与网络输入不符合，input num -> ${this.nOfLayer(0)}`)
@@ -158,8 +166,7 @@ export class BPNet {
   }
 
   /**
-   * 多样本求导
-   * 需求平均导数
+   * 多样本求导，求平均导数
    */
   calcDerivativeMul(hy: Matrix[], ys: Matrix) {
     let m = ys.shape[0]
@@ -178,16 +185,13 @@ export class BPNet {
   }
 
   /**
-   * The derivative of the valence function with respect to each neuron 
-   * and the derivative of each weight are calculated.
-   * It's for a single sample.
+   * 单样本求导，对每个输出单元的求导，对每个权重的求导
    * - J = 1 / 2 * (hy - y)^2
-   * - ∂J / ∂hy = (1 / 2) * 2 * (hy - y) = hy - y  Derivation of the last node
-   * - ∂J / ∂w = Value of input node * derivative of output node
-   * 
-   * Derivation follows the chain rule: branch nodes add, link nodes multiply.
-   * If there is an activation function, it needs to be multiplied by the derivative of the activation function.
-   * @returns [Neuron derivative matrix, Weighted derivative matrix]
+   * - ∂J / ∂hy = (1 / 2) * 2 * (hy - y) = hy - y  最后一层节点求导
+   * - ∂J / ∂w = 输入节点 * 输出节点导数   
+   * 遵循链式求导法则：分支节点相加；链路节点相乘法；反向的计算过程
+   * 如果有激活函数，需乘激活函数的导数
+   * @returns [输出单元导数, 权重导数]
    */
   calcDerivative(hy: Matrix[], ys: Matrix) {
     let dw = this.w.map(w => w.zeroed())
@@ -216,7 +220,7 @@ export class BPNet {
   }
 
   /**
-   * update weight and bias matrix
+   * 更新权值偏值
    * - w = w - α * (∂J / ∂w)
    * - b = b - α * (∂J / ∂hy)
    */
@@ -228,8 +232,8 @@ export class BPNet {
   }
 
   /**
-   * Quadratic cost function
-   * Multiple outputs average multiple loss values  
+   * 平方差带价函数
+   * 多输出求平均值
    * - J = 1 / 2 * m * ∑m(hy - ys) ** 2 
    */
   cost(hy: Matrix, ys: Matrix) {
@@ -333,8 +337,7 @@ export class BPNet {
     const [nxs, scalem] = xs.normalization()
     this.scalem = scalem
     xs = nxs
-    let mode = this.netconf ? this.netconf.mode : undefined
-    switch (mode) {
+    switch (this.mode) {
       case 'bgd':
         return this.bgd(xs, ys, conf)
       case 'mbgd':

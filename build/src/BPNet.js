@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BPNet = void 0;
 const matrix_1 = require("./matrix");
 class BPNet {
-    constructor(shape, netconf) {
+    constructor(shape, conf) {
         this.shape = shape;
-        this.netconf = netconf;
-        this.rate = 0.001;
+        this.mode = 'sgd';
+        this.rate = 0.01;
         if (shape.length < 2) {
             throw new Error('The network has at least two layers');
         }
@@ -14,6 +14,18 @@ class BPNet {
         const [w, b] = this.initwb();
         this.w = w;
         this.b = b;
+        if (conf) {
+            if (conf.mode)
+                this.mode = conf.mode;
+            if (conf.rate)
+                this.rate = conf.rate;
+            if (conf.w)
+                this.w = conf.w;
+            if (conf.b)
+                this.b = conf.b;
+            if (conf.scalem)
+                this.scalem = conf.scalem;
+        }
     }
     nOfLayer(l) {
         let n = this.shape[l];
@@ -31,9 +43,6 @@ class BPNet {
             b[l] = matrix_1.Matrix.generate(1, this.nOfLayer(l), v);
         }
         return [w, b];
-    }
-    setRate(rate) {
-        this.rate = rate;
     }
     afn(x, l, rows) {
         let af = this.afOfLayer(l);
@@ -219,8 +228,7 @@ class BPNet {
         const [nxs, scalem] = xs.normalization();
         this.scalem = scalem;
         xs = nxs;
-        let mode = this.netconf ? this.netconf.mode : undefined;
-        switch (mode) {
+        switch (this.mode) {
             case 'bgd':
                 return this.bgd(xs, ys, conf);
             case 'mbgd':

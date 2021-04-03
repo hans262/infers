@@ -14,4 +14,5 @@ __exportStar(require("./matrix"), exports);
 __exportStar(require("./graphical"), exports);
 __exportStar(require("./common"), exports);
 __exportStar(require("./BPNet"), exports);
+__exportStar(require("./Model"), exports);
 //# sourceMappingURL=index.js.map

@@ -25,8 +25,7 @@ BP neural network example of XOR, three-layer network:
 ```ts
 let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
 let ys = new Matrix([[1], [1], [0], [0]])
-let model = new BPNet([2, [6, 'Tanh'], [1, 'Sigmoid']])
-model.setRate(0.1)
+let model = new BPNet([2, [6, 'Tanh'], [1, 'Sigmoid']], { rate: 0.1 })
 model.fit(xs, ys, {
   epochs: 5000, onEpoch: (epoch, loss) => {
     if (epoch % 100 === 0) console.log('epoch = ' + epoch, loss)
@@ -44,8 +43,7 @@ BP neural network example of addition, four-layer network:
 ```ts
 let xs = new Matrix([[1, 4], [3, 2], [6, 5], [4, 7]])
 let ys = new Matrix([[5], [5], [11], [11]])
-let model = new BPNet([2, 6, 6, 1], { mode: 'bgd' })
-model.setRate(0.01)
+let model = new BPNet([2, 6, 6, 1], { mode: 'bgd', rate: 0.01 })
 model.fit(xs, ys, {
   epochs: 500, onEpoch: (epoch, loss) => {
     console.log('epoch = ' + epoch, loss)
