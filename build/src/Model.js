@@ -5,13 +5,12 @@ const BPNet_1 = require("./BPNet");
 const fs = require("fs");
 const matrix_1 = require("./matrix");
 class Model {
-    static saveLocalstorage(model) { }
     static saveFile(model, path) {
         const conf = {
             mode: model.mode,
             shape: model.shape,
             rate: model.rate,
-            scalem: model.scalem ? model.scalem.dataSync() : null,
+            scalem: model.scalem ? model.scalem.dataSync() : undefined,
             w: model.w.map(w => w.dataSync()),
             b: model.b.map(b => b.dataSync()),
         };

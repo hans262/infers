@@ -3,13 +3,12 @@ import * as fs from 'fs'
 import { Matrix } from "./matrix";
 
 export class Model {
-  static saveLocalstorage(model: BPNet) { }
   static saveFile(model: BPNet, path: string) {
     const conf = {
       mode: model.mode,
       shape: model.shape,
       rate: model.rate,
-      scalem: model.scalem ? model.scalem.dataSync() : null,
+      scalem: model.scalem ? model.scalem.dataSync() : undefined,
       w: model.w.map(w => w.dataSync()),
       b: model.b.map(b => b.dataSync()),
     }
