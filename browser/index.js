@@ -1,3 +1,5 @@
+import { BPNet, Matrix, toFixed } from './infers.esm.js'
+
 const canvas = document.getElementById('canvas')
 canvas.width = 800
 canvas.height = 600
