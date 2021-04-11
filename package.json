@@ -1,8 +1,9 @@
 {
   "name": "infers",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "Matrix operation and machine learning library by TypesScript.",
-  "main": "./build/src/index.js",
+  "main": "./lib/src/index.js",
+  "browser": "./lib/src/browser.js",
   "keywords": [
     "infers",
     "machine-learning",
@@ -21,7 +22,7 @@
     "t-registry": "npm config set registry https://registry.npm.taobao.org",
     "doc": "typedoc --options ./typedoc.json",
     "test": "jest",
-    "esbuild": "esbuild src/browser.ts --bundle --outfile=public/infers.js --format=iife"
+    "esbuild": "esbuild src/browser.ts --bundle --outfile=browser/infers.js --format=iife"
   },
   "repository": {
     "type": "git",

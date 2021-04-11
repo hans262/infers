@@ -1,30 +1,6 @@
+import { upset } from "./common"
 import { Matrix } from "./matrix"
-
-/**激活函数类型*/
-export type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh' | 'Softmax'
-
-/**梯度更新方式*/
-export type Mode = 'sgd' | 'bgd' | 'mbgd'
-
-/**网络形状*/
-export type NetShape = (number | [number, ActivationFunction])[]
-
-/**模型配置*/
-export interface NetConfig {
-  mode?: Mode
-  rate?: number
-  w?: Matrix[]
-  b?: Matrix[]
-  scalem?: Matrix
-}
-
-/**训练配置*/
-export interface FitConf {
-  epochs: number
-  batchSize?: number
-  onBatch?: (batch: number, size: number, loss: number) => void
-  onEpoch?: (epoch: number, loss: number) => void
-}
+import { FitConf, Mode, NetConfig, NetShape } from "./types"
 
 export class BPNet {
   /**权值*/
@@ -41,13 +17,17 @@ export class BPNet {
     public readonly shape: NetShape,
     conf?: NetConfig
   ) {
-    if (shape.length < 2) {
+    this.nlayer = shape.length
+    if (this.nlayer < 2) {
       throw new Error('The network has at least two layers')
     }
-    this.nlayer = shape.length
-    const [w, b] = this.initwb()
-    this.w = w
-    this.b = b
+    //初始化权值偏值
+    this.w = []
+    this.b = []
+    for (let l = 1; l < this.shape.length; l++) {
+      this.w[l] = Matrix.generate(this.unit(l), this.unit(l - 1))
+      this.b[l] = Matrix.generate(1, this.unit(l))
+    }
     if (conf) {
       if (conf.mode) this.mode = conf.mode
       if (conf.rate) this.rate = conf.rate
@@ -58,9 +38,9 @@ export class BPNet {
   }
 
   /**
-   * 获取当前层神经元
+   * 获取当前层单元数
    */
-  nOfLayer(l: number) {
+  unit(l: number) {
     let n = this.shape[l]
     return Array.isArray(n) ? n[0] : n
   }
@@ -68,31 +48,16 @@ export class BPNet {
   /**
    * 获取当前层激活函数
    */
-  afOfLayer(l: number) {
+  af(l: number) {
     let n = this.shape[l]
     return Array.isArray(n) ? n[1] : undefined
-  }
-
-  /**
-   * 初始化权值偏值，
-   * 默认值-0.5 ~ 0.5
-   * @returns [w, b]
-   */
-  initwb(v?: number) {
-    let w: Matrix[] = []
-    let b: Matrix[] = []
-    for (let l = 1; l < this.shape.length; l++) {
-      w[l] = Matrix.generate(this.nOfLayer(l), this.nOfLayer(l - 1), v)
-      b[l] = Matrix.generate(1, this.nOfLayer(l), v)
-    }
-    return [w, b]
   }
 
   /**
    * 获取当前层激活函数
    */
   afn(x: number, l: number, rows: number[]) {
-    let af = this.afOfLayer(l)
+    let af = this.af(l)
     switch (af) {
       case 'Sigmoid':
         return 1 / (1 + Math.exp(-x))
@@ -112,7 +77,7 @@ export class BPNet {
    * 获取当前层激活函数求导
    */
   afd(x: number, l: number) {
-    let af = this.afOfLayer(l)
+    let af = this.af(l)
     switch (af) {
       case 'Sigmoid':
         return x * (1 - x)
@@ -139,8 +104,8 @@ export class BPNet {
         hy[l] = xs
         continue;
       }
-      let a = hy[l - 1].multiply(this.w[l].T).atomicOperation((item, _, j) => item + this.b[l].get(0, j))
-      hy[l] = a.atomicOperation((item, i) => this.afn(item, l, a.getRow(i)))
+      let tmp = hy[l - 1].multiply(this.w[l].T).atomicOperation((item, _, j) => item + this.b[l].get(0, j))
+      hy[l] = tmp.atomicOperation((item, i) => this.afn(item, l, tmp.getRow(i)))
     }
     return hy
   }
@@ -156,11 +121,11 @@ export class BPNet {
   }
 
   /**
-   * 预测函数，输出最后一层求值
+   * 预测函数，返回最后一层求值
    */
   predict(xs: Matrix) {
-    if (xs.shape[1] !== this.nOfLayer(0)) {
-      throw new Error(`特征与网络输入不符合，input num -> ${this.nOfLayer(0)}`)
+    if (xs.shape[1] !== this.unit(0)) {
+      throw new Error(`Input matrix column number error, input shape -> ${this.unit(0)}.`)
     }
     return this.calcnet(this.zoomScalem(xs))[this.nlayer - 1]
   }
@@ -198,20 +163,20 @@ export class BPNet {
     let dy = this.b.map(b => b.zeroed())
     for (let l = this.nlayer - 1; l > 0; l--) {
       if (l === this.nlayer - 1) {
-        for (let j = 0; j < this.nOfLayer(l); j++) {
+        for (let j = 0; j < this.unit(l); j++) {
           dy[l].update(0, j, (hy[l].get(0, j) - ys.get(0, j)) * this.afd(hy[l].get(0, j), l))
-          for (let k = 0; k < this.nOfLayer(l - 1); k++) {
+          for (let k = 0; k < this.unit(l - 1); k++) {
             dw[l].update(j, k, hy[l - 1].get(0, k) * dy[l].get(0, j))
           }
         }
         continue;
       }
-      for (let j = 0; j < this.nOfLayer(l); j++) {
-        for (let i = 0; i < this.nOfLayer(l + 1); i++) {
+      for (let j = 0; j < this.unit(l); j++) {
+        for (let i = 0; i < this.unit(l + 1); i++) {
           dy[l].update(0, j, dy[l + 1].get(0, i) * this.w[l + 1].get(i, j), '+=')
         }
         dy[l].update(0, j, this.afd(hy[l].get(0, j), l), '*=')
-        for (let k = 0; k < this.nOfLayer(l - 1); k++) {
+        for (let k = 0; k < this.unit(l - 1); k++) {
           dw[l].update(j, k, hy[l - 1].get(0, k) * dy[l].get(0, j))
         }
       }
@@ -247,12 +212,18 @@ export class BPNet {
    * 标准梯度下降，
    * 全部样本导数的平均值
    */
-  bgd(xs: Matrix, ys: Matrix, conf: FitConf) {
+  async bgd(xs: Matrix, ys: Matrix, conf: FitConf) {
     for (let ep = 0; ep < conf.epochs; ep++) {
       let hy = this.calcnet(xs)
       let { dy, dw } = this.calcDerivativeMul(hy, ys)
       this.update(dy, dw)
-      if (conf.onEpoch) conf.onEpoch(ep, this.cost(hy[this.nlayer - 1], ys))
+      if (conf.onEpoch) {
+        conf.onEpoch(ep, this.cost(hy[this.nlayer - 1], ys))
+        conf.async && await new Promise(resolve => setTimeout(resolve))
+      }
+      if (conf.onTrainEnd && ep === conf.epochs - 1) {
+        conf.onTrainEnd(this.cost(hy[this.nlayer - 1], ys))
+      }
     }
   }
 
@@ -260,7 +231,7 @@ export class BPNet {
    * 随机梯度下降，
    * 单个样本的导数
    */
-  sgd(xs: Matrix, ys: Matrix, conf: FitConf) {
+  async sgd(xs: Matrix, ys: Matrix, conf: FitConf) {
     let m = ys.shape[0]
     for (let ep = 0; ep < conf.epochs; ep++) {
       let hys: Matrix | null = null
@@ -270,10 +241,15 @@ export class BPNet {
         let hy = this.calcnet(xss)
         const { dy, dw } = this.calcDerivative(hy, yss)
         this.update(dy, dw)
-        //把当前结果缓存起来
         hys = hys ? hys.connect(hy[this.nlayer - 1]) : hy[this.nlayer - 1]
       }
-      if (conf.onEpoch) conf.onEpoch(ep, this.cost(hys!, ys))
+      if (conf.onEpoch) {
+        conf.onEpoch(ep, this.cost(hys!, ys))
+        conf.async && await new Promise(resolve => setTimeout(resolve))
+      }
+      if (conf.onTrainEnd && ep === conf.epochs - 1) {
+        conf.onTrainEnd(this.cost(hys!, ys))
+      }
     }
   }
 
@@ -281,12 +257,12 @@ export class BPNet {
    * 批量梯度下降，
    * 多个样本导数的平均值
    */
-  mbgd(xs: Matrix, ys: Matrix, conf: FitConf) {
+  async mbgd(xs: Matrix, ys: Matrix, conf: FitConf) {
     let m = ys.shape[0]
     let batchSize = conf.batchSize ? conf.batchSize : 10
     let batch = Math.ceil(m / batchSize) //总批次
     for (let ep = 0; ep < conf.epochs; ep++) {
-      let { xs: xst, ys: yst } = this.upset(xs, ys)
+      let { xs: xst, ys: yst } = upset(xs, ys)
       //必须每次打乱数据
       let eploss = 0
       for (let b = 0; b < batch; b++) {
@@ -303,36 +279,28 @@ export class BPNet {
         eploss += bloss
         if (conf.onBatch) conf.onBatch(b, size, bloss)
       }
-      if (conf.onEpoch) conf.onEpoch(ep, eploss / batch)
+      if (conf.onEpoch) {
+        conf.onEpoch(ep, eploss / batch)
+        conf.async && await new Promise(resolve => setTimeout(resolve))
+      }
+      if (conf.onTrainEnd && ep === conf.epochs - 1) {
+        conf.onTrainEnd(eploss / batch)
+      }
     }
-  }
-
-  /**
-   * 打乱数据
-   */
-  upset(xs: Matrix, ys: Matrix) {
-    let xss = xs.dataSync()
-    let yss = ys.dataSync()
-    for (let i = 1; i < ys.shape[0]; i++) {
-      let random = Math.floor(Math.random() * (i + 1));
-      [xss[i], xss[random]] = [xss[random], xss[i]];
-      [yss[i], yss[random]] = [yss[random], yss[i]];
-    }
-    return { xs: new Matrix(xss), ys: new Matrix(yss) }
   }
 
   fit(xs: Matrix, ys: Matrix, conf: FitConf) {
     if (xs.shape[0] !== ys.shape[0]) {
-      throw new Error('输入输出矩阵行数不统一')
+      throw new Error('The row number of input and output matrix is not uniform.')
     }
-    if (xs.shape[1] !== this.nOfLayer(0)) {
-      throw new Error(`特征与网络输入不符合，input num -> ${this.nOfLayer(0)}`)
+    if (xs.shape[1] !== this.unit(0)) {
+      throw new Error(`Input matrix column number error, input shape -> ${this.unit(0)}.`)
     }
-    if (ys.shape[1] !== this.nOfLayer(this.nlayer - 1)) {
-      throw new Error(`标签与网络输出不符合，output num -> ${this.nOfLayer(this.nlayer - 1)}`)
+    if (ys.shape[1] !== this.unit(this.nlayer - 1)) {
+      throw new Error(`Output matrix column number error, output shape -> ${this.unit(this.nlayer - 1)}.`)
     }
     if (conf.batchSize && conf.batchSize > ys.shape[0]) {
-      throw new Error(`批次大小不能大于样本数`)
+      throw new Error(`The batch size cannot be greater than the number of samples.`)
     }
     const [nxs, scalem] = xs.normalization()
     this.scalem = scalem
