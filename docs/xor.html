@@ -8,6 +8,15 @@
     button {
       font-size: 30px;
     }
+
+    pre {
+      display: inline-block;
+      font-family: sans-serif;
+      font-size: 20px;
+      color: #a6a4f5;
+      background: #464955;
+      padding: 10px 20px;
+    }
   </style>
 </head>
 
@@ -21,7 +30,14 @@
     <button>0, 0</button>
     <button>1, 1</button>
   </div>
+  <pre><code id="code"></code></pre>
   <script type="module" src="./xor.js"></script>
+  <script>
+    let code = document.getElementById('code')
+    fetch('./xor.js').then(t => t.text()).then(res => {
+      code.innerHTML = res
+    })
+  </script>
 </body>
 
 </html>
