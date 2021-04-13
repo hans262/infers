@@ -10,7 +10,7 @@ export declare class BPNet {
     rate: number;
     constructor(shape: NetShape, conf?: NetConfig);
     unit(l: number): number;
-    af(l: number): "Sigmoid" | "Relu" | "Tanh" | "Softmax" | undefined;
+    af(l: number): import("./types").ActivationFunction | undefined;
     afn(x: number, l: number, rows: number[]): number;
     afd(x: number, l: number): number;
     calcnet(xs: Matrix): Matrix[];

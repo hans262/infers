@@ -1,9 +1,9 @@
 {
   "name": "infers",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "Matrix operation and machine learning library by TypesScript.",
-  "main": "./lib/src/index.js",
-  "browser": "./lib/src/browser.js",
+  "main": "./lib/index.js",
+  "browser": "./lib/browser.js",
   "keywords": [
     "infers",
     "machine-learning",
@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "watch": "tsc -w",
-    "build": "tsc",
+    "build": "tsc --project tsconfig.production.json",
     "get-registry": "npm get registry",
     "login": "npm login",
     "pub": "npm publish",

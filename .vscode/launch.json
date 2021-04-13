@@ -7,7 +7,7 @@
       "name": "example",
       "program": "${workspaceFolder}/example/index.ts",
       "outFiles": [
-        "${workspaceFolder}/lib/**/*.js"
+        "${workspaceFolder}/dist/**/*.js"
       ]
     }
   ]
