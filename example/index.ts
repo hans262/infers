@@ -1,5 +1,5 @@
 import { addition } from './addition'
-import { iris } from './iris'
+import { iris, saveIris } from './iris'
 import { xor } from './xor'
 
 export namespace TestMatrix {
@@ -7,6 +7,7 @@ export namespace TestMatrix {
     addition()
     // xor()
     // iris()
+    // saveIris()
   }
 }
 TestMatrix.run()

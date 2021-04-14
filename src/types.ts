@@ -15,7 +15,7 @@ export interface NetConfig {
   rate?: number
   w?: Matrix[]
   b?: Matrix[]
-  scalem?: Matrix
+  scale?: Matrix
 }
 
 /**训练配置*/

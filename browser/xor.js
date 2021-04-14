@@ -35,7 +35,7 @@ function drawText(epoch, loss) {
 }
 
 function drawNet(model, xs) {
-  let xs2 = model.zoomScalem(new Matrix([xs]))
+  let xs2 = model.scaled(new Matrix([xs]))
   let hy = model.calcnet(xs2)
   ctx.fillStyle = "white"
   ctx.fillRect(0, 0, W, H)

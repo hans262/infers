@@ -8,7 +8,7 @@ export class Model {
       mode: model.mode,
       shape: model.shape,
       rate: model.rate,
-      scalem: model.scalem ? model.scalem.dataSync() : undefined,
+      scale: model.scale ? model.scale.dataSync() : undefined,
       w: model.w.map(w => w.dataSync()),
       b: model.b.map(b => b.dataSync()),
     }
@@ -24,11 +24,11 @@ export class Model {
       w[l] = new Matrix(mp.w[l])
       b[l] = new Matrix(mp.b[l])
     }
-    let scalem = mp.scalem ? new Matrix(mp.scalem) : undefined
+    let scale = mp.scale ? new Matrix(mp.scale) : undefined
     return new BPNet(mp.shape, {
       mode: mp.mode,
       rate: mp.mode,
-      w, b, scalem
+      w, b, scale
     })
   }
 }

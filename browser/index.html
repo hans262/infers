@@ -31,10 +31,10 @@
     <button>1, 1</button>
   </div>
   <pre><code id="code"></code></pre>
-  <script type="module" src="./index.js"></script>
+  <script type="module" src="./xor.js"></script>
   <script>
     let code = document.getElementById('code')
-    fetch('./index.js').then(t => t.text()).then(res => {
+    fetch('./xor.js').then(t => t.text()).then(res => {
       code.innerHTML = res
     })
   </script>

@@ -9,7 +9,7 @@ export class BPNet {
   b: Matrix[]
   nlayer: number
   /**缩放比*/
-  scalem?: Matrix
+  scale?: Matrix
   mode: Mode = 'sgd'
   /**学习率*/
   rate: number = 0.01
@@ -33,7 +33,7 @@ export class BPNet {
       if (conf.rate) this.rate = conf.rate
       if (conf.w) this.w = conf.w
       if (conf.b) this.b = conf.b
-      if (conf.scalem) this.scalem = conf.scalem
+      if (conf.scale) this.scale = conf.scale
     }
   }
 
@@ -111,12 +111,15 @@ export class BPNet {
   }
 
   /**
-   * 按比例缩放矩阵
+   * 按照以前的缩放比，来缩放新的特征
    */
-  zoomScalem(xs: Matrix) {
+  scaled(xs: Matrix) {
+    if (!this.scale) return xs
     return xs.atomicOperation((item, _, j) => {
-      if (!this.scalem) return item
-      return this.scalem.get(1, j) === 0 ? 0 : (item - this.scalem.get(0, j)) / this.scalem.get(1, j)
+      let scale = this.scale!
+      let range = scale.get(1, j)
+      let average = scale.get(0, j)
+      return range === 0 ? 0 : (item - average) / range
     })
   }
 
@@ -127,7 +130,7 @@ export class BPNet {
     if (xs.shape[1] !== this.unit(0)) {
       throw new Error(`Input matrix column number error, input shape -> ${this.unit(0)}.`)
     }
-    return this.calcnet(this.zoomScalem(xs))[this.nlayer - 1]
+    return this.calcnet(this.scaled(xs))[this.nlayer - 1]
   }
 
   /**
@@ -302,8 +305,8 @@ export class BPNet {
     if (conf.batchSize && conf.batchSize > ys.shape[0]) {
       throw new Error(`The batch size cannot be greater than the number of samples.`)
     }
-    const [nxs, scalem] = xs.normalization()
-    this.scalem = scalem
+    const [nxs, scale] = xs.normalization()
+    this.scale = scale
     xs = nxs
     switch (this.mode) {
       case 'bgd':

@@ -13,9 +13,6 @@ export function toFixed(num: number, fix: number): number {
 /**
  * 打乱特征和标签矩阵，
  * 两个矩阵行数必须统一
- * @param xs 
- * @param ys 
- * @returns 
  */
 export function upset(xs: Matrix, ys: Matrix) {
   let xss = xs.dataSync()
