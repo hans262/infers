@@ -5,7 +5,7 @@ export declare class BPNet {
     w: Matrix[];
     b: Matrix[];
     nlayer: number;
-    scalem?: Matrix;
+    scale?: Matrix;
     mode: Mode;
     rate: number;
     constructor(shape: NetShape, conf?: NetConfig);
@@ -14,7 +14,7 @@ export declare class BPNet {
     afn(x: number, l: number, rows: number[]): number;
     afd(x: number, l: number): number;
     calcnet(xs: Matrix): Matrix[];
-    zoomScalem(xs: Matrix): Matrix;
+    scaled(xs: Matrix): Matrix;
     predict(xs: Matrix): Matrix;
     calcDerivativeMul(hy: Matrix[], ys: Matrix): {
         dy: Matrix[];

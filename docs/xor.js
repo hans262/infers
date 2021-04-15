@@ -1,11 +1,9 @@
 import { BPNet, Matrix, toFixed } from './infers.esm.js'
 
 const [W, H] = [1200, 600]
-
 const canvas = document.getElementById('canvas')
 canvas.width = W
 canvas.height = H
-canvas.style.border = '1px solid'
 const ctx = canvas.getContext('2d')
 
 function drawCircle(x, y, r, n) {
@@ -14,8 +12,8 @@ function drawCircle(x, y, r, n) {
   ctx.fillStyle = 'white'
   ctx.fill()
   ctx.stroke()
-  ctx.fillStyle = 'blue'
-  ctx.font = "30px Verdana";
+  ctx.fillStyle = '#222'
+  ctx.font = "30px sans-serif";
   ctx.fillText(n, x - 10, y + 12)
 }
 
@@ -28,8 +26,8 @@ function drawLine(x1, y1, x2, y2) {
 
 function drawText(epoch, loss) {
   ctx.beginPath()
-  ctx.fillStyle = 'blue'
-  ctx.font = "30px Verdana";
+  ctx.fillStyle = '#222'
+  ctx.font = "30px sans-serif";
   let n = 'epoch: ' + epoch + ', loss: ' + loss
   ctx.fillText(n, 100, 520)
 }
@@ -37,7 +35,7 @@ function drawText(epoch, loss) {
 function drawNet(model, xs) {
   let xs2 = model.scaled(new Matrix([xs]))
   let hy = model.calcnet(xs2)
-  ctx.fillStyle = "white"
+  ctx.fillStyle = "#f6f6f6"
   ctx.fillRect(0, 0, W, H)
   let max = Math.max(...model.shape.map(v => Array.isArray(v) ? v[0] : v))
   let left = 50
@@ -61,7 +59,7 @@ function drawNet(model, xs) {
   }
 }
 
-let model = new BPNet([2, [6, 'Tanh'], [6, 'Tanh'], [2, 'Sigmoid']], { rate: 0.1 })
+let model = new BPNet([2, [6, 'Tanh'], [6, 'Tanh'], [2, 'Softmax']], { rate: 0.1 })
 drawNet(model, [1, 0])
 
 let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])

@@ -7,7 +7,7 @@ export interface NetConfig {
     rate?: number;
     w?: Matrix[];
     b?: Matrix[];
-    scalem?: Matrix;
+    scale?: Matrix;
 }
 export interface FitConf {
     epochs: number;

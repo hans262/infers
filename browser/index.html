@@ -5,32 +5,72 @@
   <meta charset="utf-8" />
   <title>xor</title>
   <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f1f1f1;
+    }
+
+    h2 {
+      font-size: 70px;
+      padding-left: 20px;
+      color: #3d3537;
+      transform: scaleY(.5);
+      margin: 0;
+      letter-spacing: 10px;
+    }
+
+    h4 {
+      color: #3a3435;
+      font-size: 25px;
+      padding-left: 20px;
+      margin: 5px 0;
+      letter-spacing: 4px;
+    }
+
+    #container {
+      background: #f6f6f6;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: scroll;
+    }
+
+    #buts {
+      padding: 20px 0 0 20px;
+    }
+
     button {
+      margin-right: 10px;
+      color: #3d3537;
       font-size: 30px;
     }
 
     pre {
-      display: inline-block;
-      font-family: sans-serif;
       font-size: 20px;
-      color: #a6a4f5;
-      background: #464955;
-      padding: 10px 20px;
+      color: #5c5c5d;
+      padding: 50px 20px 0px;
+      overflow: scroll;
     }
   </style>
 </head>
 
 <body>
-  <h4>XOR EXAMPLE</h4>
-  <canvas id="canvas"></canvas>
-  <div id="buts">
-    <button>TRAIN</button>
-    <button>1, 0</button>
-    <button>0, 1</button>
-    <button>0, 0</button>
-    <button>1, 1</button>
+  <div id="container">
+    <h2>XOR EXAMPLE</h2>
+    <h4>shape: [2, [6, 'Tanh'], [6, 'Tanh'], [2, 'Softmax']]</h4>
+    <h4>rate: 0.1</h4>
+    <h4>mode: sgd</h4>
+    <canvas id="canvas"></canvas>
+    <div id="buts">
+      <button>TRAIN</button>
+      <button>1, 0</button>
+      <button>0, 1</button>
+      <button>0, 0</button>
+      <button>1, 1</button>
+    </div>
+    <pre><code id="code"></code></pre>
   </div>
-  <pre><code id="code"></code></pre>
   <script type="module" src="./xor.js"></script>
   <script>
     let code = document.getElementById('code')
