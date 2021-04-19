@@ -1,7 +1,7 @@
 # infers
 Matrix operation and machine learning library by TypesScript.
-
-Here is an example of [XOR](https://badgua.gitee.io/infers).
+- [XOR EXAMPLE](https://badgua.gitee.io/infers)
+- [API DOC](https://badgua.gitee.io/infers/api/)
 
 ![](https://gitee.com/badgua/infers/raw/main/docs/net.png)
 
