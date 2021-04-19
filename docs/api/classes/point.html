@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Polygon | infers - v1.2.9</title>
-	<meta name="description" content="Documentation for infers - v1.2.9">
+	<title>Point | infers - v1.3.0</title>
+	<meta name="description" content="Documentation for infers - v1.3.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">infers - v1.2.9</a>
+					<a href="../index.html" class="title">infers - v1.3.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,13 +52,13 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">infers - v1.2.9</a>
+					<a href="../modules.html">infers - v1.3.0</a>
 				</li>
 				<li>
-					<a href="polygon.html">Polygon</a>
+					<a href="point.html">Point</a>
 				</li>
 			</ul>
-			<h1>Class Polygon</h1>
+			<h1>Class Point</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Polygon</span>
+						<span class="target">Point</span>
 					</li>
 				</ul>
 			</section>
@@ -80,19 +80,20 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="polygon.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="point.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="polygon.html#points" class="tsd-kind-icon">points</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="point.html#x" class="tsd-kind-icon">X</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="point.html#y" class="tsd-kind-icon">Y</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="polygon.html#testpointinsidepolygon" class="tsd-kind-icon">test<wbr>Point<wbr>Inside<wbr>Polygon</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="point.html#contrast" class="tsd-kind-icon">contrast</a></li>
 							</ul>
 						</section>
 					</div>
@@ -104,22 +105,25 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Polygon<span class="tsd-signature-symbol">(</span>pts<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="polygon.html" class="tsd-signature-type" data-tsd-kind="Class">Polygon</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Point<span class="tsd-signature-symbol">(</span>X<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, Y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/1c17579/src/graphical.ts#L73">graphical.ts:73</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/graphical.ts#L1">graphical.ts:1</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>pts: <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>X: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>Y: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="polygon.html" class="tsd-signature-type" data-tsd-kind="Class">Polygon</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -127,29 +131,33 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="points" class="tsd-anchor"></a>
-					<h3>points</h3>
-					<div class="tsd-signature tsd-kind-icon">points<span class="tsd-signature-symbol">:</span> <a href="point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="x" class="tsd-anchor"></a>
+					<h3>X</h3>
+					<div class="tsd-signature tsd-kind-icon">X<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/1c17579/src/graphical.ts#L73">graphical.ts:73</a></li>
-						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="y" class="tsd-anchor"></a>
+					<h3>Y</h3>
+					<div class="tsd-signature tsd-kind-icon">Y<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="testpointinsidepolygon" class="tsd-anchor"></a>
-					<h3>test<wbr>Point<wbr>Inside<wbr>Polygon</h3>
+					<a name="contrast" class="tsd-anchor"></a>
+					<h3>contrast</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">test<wbr>Point<wbr>Inside<wbr>Polygon<span class="tsd-signature-symbol">(</span>pt<span class="tsd-signature-symbol">: </span><a href="point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">contrast<span class="tsd-signature-symbol">(</span>pt<span class="tsd-signature-symbol">: </span><a href="point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/1c17579/src/graphical.ts#L99">graphical.ts:99</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/graphical.ts#L3">graphical.ts:3</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -158,7 +166,7 @@
 									<h5>pt: <a href="point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -184,32 +192,32 @@
 						<a href="matrix.html" class="tsd-kind-icon">Matrix</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="model.html" class="tsd-kind-icon">Model</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="path.html" class="tsd-kind-icon">Path</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="point.html" class="tsd-kind-icon">Point</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class">
-						<a href="polygon.html" class="tsd-kind-icon">Polygon</a>
+						<a href="point.html" class="tsd-kind-icon">Point</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="polygon.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="point.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="polygon.html#points" class="tsd-kind-icon">points</a>
+								<a href="point.html#x" class="tsd-kind-icon">X</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="point.html#y" class="tsd-kind-icon">Y</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="polygon.html#testpointinsidepolygon" class="tsd-kind-icon">test<wbr>Point<wbr>Inside<wbr>Polygon</a>
+								<a href="point.html#contrast" class="tsd-kind-icon">contrast</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-class">
+						<a href="polygon.html" class="tsd-kind-icon">Polygon</a>
+					</li>
 					<li class=" tsd-kind-interface">
 						<a href="../interfaces/fitconf.html" class="tsd-kind-icon">Fit<wbr>Conf</a>
 					</li>
@@ -227,6 +235,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../modules.html#netshape" class="tsd-kind-icon">Net<wbr>Shape</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../modules.html#loadbpnet" class="tsd-kind-icon">loadBPNet</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../modules.html#tofixed" class="tsd-kind-icon">to<wbr>Fixed</a>

@@ -1,9 +1,9 @@
 # infers
 Matrix operation and machine learning library by TypesScript.
 
-Here is an example of [XOR](https://badgua.gitee.io/infers/xor.html).
+Here is an example of [XOR](https://badgua.gitee.io/infers).
 
-![](https://gitee.com/badgua/infers/raw/main/browser/net.png)
+![](https://gitee.com/badgua/infers/raw/main/docs/net.png)
 
 ## Installed
 Make sure NPM is installed, Switch to the project directory then execute the following command.

@@ -1,235 +1,81 @@
-<!doctype html>
-<html class="default no-js">
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>infers - v1.2.9</title>
-	<meta name="description" content="Documentation for infers - v1.2.9">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-	<script async src="assets/js/search.js" id="search-script"></script>
+  <meta charset="utf-8" />
+  <title>xor</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f1f1f1;
+    }
+
+    h2 {
+      font-size: 70px;
+      padding-left: 20px;
+      color: #3d3537;
+      transform: scaleY(.5);
+      margin: 0;
+      letter-spacing: 10px;
+    }
+
+    h4 {
+      color: #3a3435;
+      font-size: 25px;
+      padding-left: 20px;
+      margin: 5px 0;
+      letter-spacing: 4px;
+    }
+
+    #container {
+      background: #f6f6f6;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    #buts {
+      padding: 20px 0 0 20px;
+    }
+
+    button {
+      margin-right: 10px;
+      color: #3d3537;
+      font-size: 30px;
+    }
+
+    pre {
+      font-size: 20px;
+      color: #5c5c5d;
+      padding: 50px 20px 0px;
+    }
+  </style>
 </head>
+
 <body>
-<header>
-	<div class="tsd-page-toolbar">
-		<div class="container">
-			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
-					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-					<a href="index.html" class="title">infers - v1.2.9</a>
-				</div>
-				<div class="table-cell" id="tsd-widgets">
-					<div id="tsd-filter">
-						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
-						<div class="tsd-filter-group">
-							<div class="tsd-select" id="tsd-filter-visibility">
-								<span class="tsd-select-label">All</span>
-								<ul class="tsd-select-list">
-									<li data-value="public">Public</li>
-									<li data-value="protected">Public/Protected</li>
-									<li data-value="private" class="selected">All</li>
-								</ul>
-							</div>
-							<input type="checkbox" id="tsd-filter-inherited" checked />
-							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-externals" checked />
-							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-						</div>
-					</div>
-					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="tsd-page-title">
-		<div class="container">
-			<h1>infers - v1.2.9</h1>
-		</div>
-	</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<div class="tsd-panel tsd-typography">
-				<a href="#infers" id="infers" style="color: inherit; text-decoration: none;">
-					<h1>infers</h1>
-				</a>
-				<p>Matrix operation and machine learning library by TypesScript.</p>
-				<p>Here is an example of <a href="https://badgua.gitee.io/infers/xor.html">XOR</a>.</p>
-				<p><img src="https://gitee.com/badgua/infers/raw/main/browser/net.png" alt="net"></p>
-				<a href="#installed" id="installed" style="color: inherit; text-decoration: none;">
-					<h2>Installed</h2>
-				</a>
-				<p>Make sure NPM is installed, Switch to the project directory then execute the following command.</p>
-				<pre><code class="language-shell"><span style="color: #000000">$ npm install infers@latest</span>
-</code></pre>
-				<p>Reference in project:</p>
-				<pre><code class="language-ts"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Matrix</span><span style="color: #000000">, </span><span style="color: #001080">BPNet</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;infers&#039;</span>
-</code></pre>
-				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
-					<h2>Examples</h2>
-				</a>
-				<p>Matrix transpose: </p>
-				<pre><code class="language-ts"><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">m</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([</span>
-<span style="color: #000000">  [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">],</span>
-<span style="color: #000000">  [</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">4</span><span style="color: #000000"> , -</span><span style="color: #098658">1</span><span style="color: #000000">],</span>
-<span style="color: #000000">  [</span><span style="color: #098658">0</span><span style="color: #000000">, -</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">]</span>
-<span style="color: #000000">])</span>
-<span style="color: #001080">m</span><span style="color: #000000">.</span><span style="color: #0070C1">T</span><span style="color: #000000">.</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
-</code></pre>
-				<p>BP neural network example of XOR, three-layer network: </p>
-				<pre><code class="language-ts"><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">xs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">]])</span>
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">ys</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">]])</span>
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">BPNet</span><span style="color: #000000">([</span><span style="color: #098658">2</span><span style="color: #000000">, [</span><span style="color: #098658">6</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;Tanh&#039;</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;Sigmoid&#039;</span><span style="color: #000000">]], { </span><span style="color: #001080">rate:</span><span style="color: #000000"> </span><span style="color: #098658">0.1</span><span style="color: #000000"> })</span>
-<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">fit</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">, {</span>
-<span style="color: #000000">  </span><span style="color: #001080">epochs:</span><span style="color: #000000"> </span><span style="color: #098658">5000</span><span style="color: #000000">, </span><span style="color: #795E26">onEpoch</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">epoch</span><span style="color: #000000"> % </span><span style="color: #098658">100</span><span style="color: #000000"> === </span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;epoch = &#039;</span><span style="color: #000000"> + </span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">)</span>
-<span style="color: #000000">  }</span>
-<span style="color: #000000">})</span>
-<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">).</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
-<span style="color: #008000">// Matrix 4x1 [</span>
-<span style="color: #008000">//  0.9862025352830867, </span>
-<span style="color: #008000">//  0.986128496195502, </span>
-<span style="color: #008000">//  0.01443800549676924, </span>
-<span style="color: #008000">//  0.014425871504885788, </span>
-<span style="color: #008000">// ]</span>
-</code></pre>
-				<p>BP neural network example of addition, four-layer network: </p>
-				<pre><code class="language-ts"><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">xs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">4</span><span style="color: #000000">], [</span><span style="color: #098658">3</span><span style="color: #000000">, </span><span style="color: #098658">2</span><span style="color: #000000">], [</span><span style="color: #098658">6</span><span style="color: #000000">, </span><span style="color: #098658">5</span><span style="color: #000000">], [</span><span style="color: #098658">4</span><span style="color: #000000">, </span><span style="color: #098658">7</span><span style="color: #000000">]])</span>
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">ys</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">5</span><span style="color: #000000">], [</span><span style="color: #098658">5</span><span style="color: #000000">], [</span><span style="color: #098658">11</span><span style="color: #000000">], [</span><span style="color: #098658">11</span><span style="color: #000000">]])</span>
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">BPNet</span><span style="color: #000000">([</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">6</span><span style="color: #000000">, </span><span style="color: #098658">6</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">], { </span><span style="color: #001080">mode:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;bgd&#039;</span><span style="color: #000000">, </span><span style="color: #001080">rate:</span><span style="color: #000000"> </span><span style="color: #098658">0.01</span><span style="color: #000000"> })</span>
-<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">fit</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">, {</span>
-<span style="color: #000000">  </span><span style="color: #001080">epochs:</span><span style="color: #000000"> </span><span style="color: #098658">500</span><span style="color: #000000">, </span><span style="color: #795E26">onEpoch</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;epoch = &#039;</span><span style="color: #000000"> + </span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">)</span>
-<span style="color: #000000">  }</span>
-<span style="color: #000000">})</span>
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">xs2</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">8</span><span style="color: #000000">], [</span><span style="color: #098658">22</span><span style="color: #000000">, </span><span style="color: #098658">6</span><span style="color: #000000">], [-</span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">9</span><span style="color: #000000">], [-</span><span style="color: #098658">5</span><span style="color: #000000">, -</span><span style="color: #098658">4</span><span style="color: #000000">]])</span>
-<span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #001080">xs2</span><span style="color: #000000">).</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
-<span style="color: #008000">// Matrix 2x1 [</span>
-<span style="color: #008000">//  12.994745740521667, </span>
-<span style="color: #008000">//  27.99134620596921, </span>
-<span style="color: #008000">//  3.9987224114576856, </span>
-<span style="color: #008000">//  -9.000000644547901,</span>
-<span style="color: #008000">// ]</span>
-</code></pre>
-				<p>Parameter introduction: </p>
-				<ul>
-					<li><strong>shape</strong>: The network hierarchical structure of the model includes the number of neurons in each layer, the type of activation function in each layer and the total number of layers. The more complex the network structure is, the more computation is needed for a single training, and it is easy to cause over fitting.</li>
-					<li><strong>rate</strong>: Learning rate is also known as training step. The lower the learning rate, the more training times are needed to achieve the optimal cost function. If the learning rate is too large, it may cross the optimal cost function due to too large span, resulting in the loss value approaching the positive infinite model and the problem that the model cannot converge.</li>
-					<li><strong>epochs</strong>: All the data of the whole training set are iterated once.</li>
-					<li><strong>mode</strong>: Three gradient descent methods are SGD, BGD and MBGD.</li>
-				</ul>
-				<p>The selection of the above parameters is also the process of model optimization. The learning rate, training times and network shape needed to deal with different problems are different, which need to be adjusted according to each solution of the cost function.</p>
-				<a href="#export" id="export" style="color: inherit; text-decoration: none;">
-					<h2>Export</h2>
-				</a>
-				<ul>
-					<li>class Matrix<ul>
-							<li>addition, subtraction, multiply, transpose</li>
-							<li>determinant, normalization</li>
-						</ul>
-					</li>
-					<li>class BPNet<ul>
-							<li>Multi-layer network model of CNN</li>
-							<li>Support multiple activation functions</li>
-							<li>Linear regression and Logical classification</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class=" ">
-						<a href="modules.html">Exports</a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-					<li class=" tsd-kind-class">
-						<a href="classes/bpnet.html" class="tsd-kind-icon">BPNet</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/edge.html" class="tsd-kind-icon">Edge</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/matrix.html" class="tsd-kind-icon">Matrix</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/model.html" class="tsd-kind-icon">Model</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/path.html" class="tsd-kind-icon">Path</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/point.html" class="tsd-kind-icon">Point</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/polygon.html" class="tsd-kind-icon">Polygon</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/fitconf.html" class="tsd-kind-icon">Fit<wbr>Conf</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/netconfig.html" class="tsd-kind-icon">Net<wbr>Config</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/rect.html" class="tsd-kind-icon">Rect</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#activationfunction" class="tsd-kind-icon">Activation<wbr>Function</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#mode" class="tsd-kind-icon">Mode</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#netshape" class="tsd-kind-icon">Net<wbr>Shape</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#tofixed" class="tsd-kind-icon">to<wbr>Fixed</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#upset" class="tsd-kind-icon">upset</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
-	</div>
-</div>
-<footer class="with-border-bottom">
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
-			</ul>
-		</div>
-	</div>
-</footer>
-<div class="container tsd-generator">
-	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
-</div>
-<div class="overlay"></div>
-<script src="assets/js/main.js"></script>
+  <div id="container">
+    <h2>XOR EXAMPLE</h2>
+    <h4>shape: [2, [6, 'Tanh'], [6, 'Tanh'], [2, 'Softmax']]</h4>
+    <h4>rate: 0.1</h4>
+    <h4>mode: sgd</h4>
+    <canvas id="canvas"></canvas>
+    <div id="buts">
+      <button>TRAIN</button>
+      <button>1, 0</button>
+      <button>0, 1</button>
+      <button>0, 0</button>
+      <button>1, 1</button>
+    </div>
+    <pre><code id="code"></code></pre>
+  </div>
+  <script type="module" src="./xor.js"></script>
+  <script>
+    let code = document.getElementById('code')
+    fetch('./xor.js').then(t => t.text()).then(res => {
+      code.innerHTML = res
+    })
+  </script>
 </body>
+
 </html>

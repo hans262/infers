@@ -1,13 +1,13 @@
 import { upset } from "./common"
 import { Matrix } from "./matrix"
-import { FitConf, Mode, NetConfig, NetShape } from "./types"
+import { ActivationFunction, FitConf, Mode, NetConfig, NetShape } from "./types"
 
 export class BPNet {
   /**权值*/
   w: Matrix[]
   /**偏值*/
   b: Matrix[]
-  nlayer: number
+  hlayer: number //隐藏层层数
   /**缩放比*/
   scale?: Matrix
   mode: Mode = 'sgd'
@@ -17,14 +17,14 @@ export class BPNet {
     public readonly shape: NetShape,
     conf?: NetConfig
   ) {
-    this.nlayer = shape.length
-    if (this.nlayer < 2) {
+    this.hlayer = shape.length - 1
+    if (this.hlayer < 1) {
       throw new Error('The network has at least two layers')
     }
     //初始化权值偏值
     this.w = []
     this.b = []
-    for (let l = 1; l < this.shape.length; l++) {
+    for (let l = 0; l < this.hlayer; l++) {
       this.w[l] = Matrix.generate(this.unit(l), this.unit(l - 1))
       this.b[l] = Matrix.generate(1, this.unit(l))
     }
@@ -41,7 +41,7 @@ export class BPNet {
    * 获取当前层单元数
    */
   unit(l: number) {
-    let n = this.shape[l]
+    let n = this.shape[l + 1]
     return Array.isArray(n) ? n[0] : n
   }
 
@@ -49,15 +49,14 @@ export class BPNet {
    * 获取当前层激活函数
    */
   af(l: number) {
-    let n = this.shape[l]
+    let n = this.shape[l + 1]
     return Array.isArray(n) ? n[1] : undefined
   }
 
   /**
-   * 获取当前层激活函数
+   * 激活函数求值
    */
-  afn(x: number, l: number, rows: number[]) {
-    let af = this.af(l)
+  afn(x: number, rows: number[], af?: ActivationFunction) {
     switch (af) {
       case 'Sigmoid':
         return 1 / (1 + Math.exp(-x))
@@ -74,10 +73,9 @@ export class BPNet {
   }
 
   /**
-   * 获取当前层激活函数求导
+   * 激活函数求导
    */
-  afd(x: number, l: number) {
-    let af = this.af(l)
+  afd(x: number, af?: ActivationFunction) {
     switch (af) {
       case 'Sigmoid':
         return x * (1 - x)
@@ -92,6 +90,21 @@ export class BPNet {
   }
 
   /**
+   * @returns 模型JSON字符串
+   */
+  toJSON() {
+    const conf = {
+      mode: this.mode,
+      shape: this.shape,
+      rate: this.rate,
+      scale: this.scale ? this.scale.dataSync() : undefined,
+      w: this.w.map(w => w.dataSync()),
+      b: this.b.map(b => b.dataSync()),
+    }
+    return JSON.stringify(conf)
+  }
+
+  /**
    * 计算整个网络输出
    * - layer[hy][t-1] * w[t] + b
    * - hy =  θ1 * X1 + θ2 * X2 + ... + θn * Xn + b
@@ -99,19 +112,17 @@ export class BPNet {
    */
   calcnet(xs: Matrix) {
     let hy: Matrix[] = []
-    for (let l = 0; l < this.nlayer; l++) {
-      if (l === 0) {
-        hy[l] = xs
-        continue;
-      }
-      let tmp = hy[l - 1].multiply(this.w[l].T).atomicOperation((item, _, j) => item + this.b[l].get(0, j))
-      hy[l] = tmp.atomicOperation((item, i) => this.afn(item, l, tmp.getRow(i)))
+    for (let l = 0; l < this.hlayer; l++) {
+      let lastHy = l === 0 ? xs : hy[l - 1]
+      let af = this.af(l)
+      let tmp = lastHy.multiply(this.w[l].T).atomicOperation((item, _, j) => item + this.b[l].get(0, j))
+      hy[l] = tmp.atomicOperation((item, i) => this.afn(item, tmp.getRow(i), af))
     }
     return hy
   }
 
   /**
-   * 按照以前的缩放比，来缩放新的特征
+   * 按照缩放比缩放新的特征
    */
   scaled(xs: Matrix) {
     if (!this.scale) return xs
@@ -127,23 +138,26 @@ export class BPNet {
    * 预测函数，返回最后一层求值
    */
   predict(xs: Matrix) {
-    if (xs.shape[1] !== this.unit(0)) {
-      throw new Error(`Input matrix column number error, input shape -> ${this.unit(0)}.`)
+    if (xs.shape[1] !== this.shape[0]) {
+      throw new Error(`Input matrix column number error, input shape -> ${this.shape[0]}.`)
     }
-    return this.calcnet(this.scaled(xs))[this.nlayer - 1]
+    xs = this.scaled(xs)
+    let hy = this.calcnet(xs)
+    return hy[hy.length - 1]
   }
 
   /**
    * 多样本求导，求平均导数
    */
-  calcDerivativeMul(hy: Matrix[], ys: Matrix) {
+  calcDerivativeMul(hy: Matrix[], xs: Matrix, ys: Matrix) {
     let m = ys.shape[0]
     let dws: Matrix[] | null = null
     let dys: Matrix[] | null = null
     for (let n = 0; n < m; n++) {
       let nhy = hy.map(item => new Matrix([item.getRow(n)]))
+      let nxs = new Matrix([xs.getRow(n)])
       let nys = new Matrix([ys.getRow(n)])
-      let { dw, dy } = this.calcDerivative(nhy, nys)
+      let { dw, dy } = this.calcDerivative(nhy, nxs, nys)
       dws = dws ? dws.map((d, l) => d.addition(dw[l])) : dw
       dys = dys ? dys.map((d, l) => d.addition(dy[l])) : dy
     }
@@ -161,15 +175,17 @@ export class BPNet {
    * 如果有激活函数，需乘激活函数的导数
    * @returns [输出单元导数, 权重导数]
    */
-  calcDerivative(hy: Matrix[], ys: Matrix) {
+  calcDerivative(hy: Matrix[], xs: Matrix, ys: Matrix) {
     let dw = this.w.map(w => w.zeroed())
     let dy = this.b.map(b => b.zeroed())
-    for (let l = this.nlayer - 1; l > 0; l--) {
-      if (l === this.nlayer - 1) {
+    for (let l = this.hlayer - 1; l >= 0; l--) {
+      let lastHy = hy[l - 1] ? hy[l - 1] : xs
+      let af = this.af(l)
+      if (l === this.hlayer - 1) {
         for (let j = 0; j < this.unit(l); j++) {
-          dy[l].update(0, j, (hy[l].get(0, j) - ys.get(0, j)) * this.afd(hy[l].get(0, j), l))
+          dy[l].update(0, j, (hy[l].get(0, j) - ys.get(0, j)) * this.afd(hy[l].get(0, j), af))
           for (let k = 0; k < this.unit(l - 1); k++) {
-            dw[l].update(j, k, hy[l - 1].get(0, k) * dy[l].get(0, j))
+            dw[l].update(j, k, lastHy.get(0, k) * dy[l].get(0, j))
           }
         }
         continue;
@@ -178,9 +194,9 @@ export class BPNet {
         for (let i = 0; i < this.unit(l + 1); i++) {
           dy[l].update(0, j, dy[l + 1].get(0, i) * this.w[l + 1].get(i, j), '+=')
         }
-        dy[l].update(0, j, this.afd(hy[l].get(0, j), l), '*=')
+        dy[l].update(0, j, this.afd(hy[l].get(0, j), af), '*=')
         for (let k = 0; k < this.unit(l - 1); k++) {
-          dw[l].update(j, k, hy[l - 1].get(0, k) * dy[l].get(0, j))
+          dw[l].update(j, k, lastHy.get(0, k) * dy[l].get(0, j))
         }
       }
     }
@@ -193,10 +209,8 @@ export class BPNet {
    * - b = b - α * (∂J / ∂hy)
    */
   update(dy: Matrix[], dw: Matrix[]) {
-    for (let l = 1; l < this.nlayer; l++) {
-      this.w[l] = this.w[l].subtraction(dw[l].numberMultiply(this.rate))
-      this.b[l] = this.b[l].subtraction(dy[l].numberMultiply(this.rate))
-    }
+    this.w = this.w.map((w, l) => w.subtraction(dw[l].numberMultiply(this.rate)))
+    this.b = this.b.map((b, l) => b.subtraction(dy[l].numberMultiply(this.rate)))
   }
 
   /**
@@ -218,14 +232,14 @@ export class BPNet {
   async bgd(xs: Matrix, ys: Matrix, conf: FitConf) {
     for (let ep = 0; ep < conf.epochs; ep++) {
       let hy = this.calcnet(xs)
-      let { dy, dw } = this.calcDerivativeMul(hy, ys)
+      let { dy, dw } = this.calcDerivativeMul(hy, xs, ys)
       this.update(dy, dw)
       if (conf.onEpoch) {
-        conf.onEpoch(ep, this.cost(hy[this.nlayer - 1], ys))
+        conf.onEpoch(ep, this.cost(hy[hy.length - 1], ys))
         conf.async && await new Promise(resolve => setTimeout(resolve))
       }
       if (conf.onTrainEnd && ep === conf.epochs - 1) {
-        conf.onTrainEnd(this.cost(hy[this.nlayer - 1], ys))
+        conf.onTrainEnd(this.cost(hy[hy.length - 1], ys))
       }
     }
   }
@@ -242,9 +256,9 @@ export class BPNet {
         let xss = new Matrix([xs.getRow(n)])
         let yss = new Matrix([ys.getRow(n)])
         let hy = this.calcnet(xss)
-        const { dy, dw } = this.calcDerivative(hy, yss)
+        const { dy, dw } = this.calcDerivative(hy, xss, yss)
         this.update(dy, dw)
-        hys = hys ? hys.connect(hy[this.nlayer - 1]) : hy[this.nlayer - 1]
+        hys = hys ? hys.connect(hy[hy.length - 1]) : hy[hy.length - 1]
       }
       if (conf.onEpoch) {
         conf.onEpoch(ep, this.cost(hys!, ys))
@@ -262,11 +276,12 @@ export class BPNet {
    */
   async mbgd(xs: Matrix, ys: Matrix, conf: FitConf) {
     let m = ys.shape[0]
-    let batchSize = conf.batchSize ? conf.batchSize : 10
+    let defaultBatchSize = m < 10 ? m : 10
+    let batchSize = conf.batchSize ? conf.batchSize : defaultBatchSize
     let batch = Math.ceil(m / batchSize) //总批次
     for (let ep = 0; ep < conf.epochs; ep++) {
       let { xs: xst, ys: yst } = upset(xs, ys)
-      //必须每次打乱数据
+      //打乱数据加快拟合速度
       let eploss = 0
       for (let b = 0; b < batch; b++) {
         let start = b * batchSize
@@ -276,9 +291,9 @@ export class BPNet {
         let xss = xst.slice(start, end)
         let yss = yst.slice(start, end)
         let hy = this.calcnet(xss)
-        const { dy, dw } = this.calcDerivative(hy, yss)
+        const { dy, dw } = this.calcDerivativeMul(hy, xss, yss)
         this.update(dy, dw)
-        let bloss = this.cost(hy[this.nlayer - 1], yss)
+        let bloss = this.cost(hy[hy.length - 1], yss)
         eploss += bloss
         if (conf.onBatch) conf.onBatch(b, size, bloss)
       }
@@ -296,11 +311,12 @@ export class BPNet {
     if (xs.shape[0] !== ys.shape[0]) {
       throw new Error('The row number of input and output matrix is not uniform.')
     }
-    if (xs.shape[1] !== this.unit(0)) {
-      throw new Error(`Input matrix column number error, input shape -> ${this.unit(0)}.`)
+    if (xs.shape[1] !== this.shape[0]) {
+      throw new Error(`Input matrix column number error, input shape -> ${this.shape[0]}.`)
     }
-    if (ys.shape[1] !== this.unit(this.nlayer - 1)) {
-      throw new Error(`Output matrix column number error, output shape -> ${this.unit(this.nlayer - 1)}.`)
+
+    if (ys.shape[1] !== this.unit(this.hlayer - 1)) {
+      throw new Error(`Output matrix column number error, output shape -> ${this.unit(this.hlayer - 1)}.`)
     }
     if (conf.batchSize && conf.batchSize > ys.shape[0]) {
       throw new Error(`The batch size cannot be greater than the number of samples.`)

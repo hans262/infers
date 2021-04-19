@@ -1,7 +1,7 @@
 import { Matrix } from "./matrix";
 export declare type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh' | 'Softmax';
 export declare type Mode = 'sgd' | 'bgd' | 'mbgd';
-export declare type NetShape = (number | [number, ActivationFunction])[];
+export declare type NetShape = [number, (number | [number, ActivationFunction]), ...(number | [number, ActivationFunction])[]];
 export interface NetConfig {
     mode?: Mode;
     rate?: number;

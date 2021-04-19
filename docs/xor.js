@@ -33,18 +33,21 @@ function drawText(epoch, loss) {
 }
 
 function drawNet(model, xs) {
-  let xs2 = model.scaled(new Matrix([xs]))
+  xs = new Matrix([xs])
+  let xs2 = model.scaled(xs)
   let hy = model.calcnet(xs2)
+  hy = [xs, ...hy]
   ctx.fillStyle = "#f6f6f6"
   ctx.fillRect(0, 0, W, H)
   let max = Math.max(...model.shape.map(v => Array.isArray(v) ? v[0] : v))
   let left = 50
   let top = 70
   let wx = 300
-  for (let l = 0; l < model.nlayer; l++) {
-    let n = model.unit(l)
+  let nlayer = model.shape.length
+  for (let l = 0; l < nlayer; l++) {
+    let n = model.unit(l - 1)
     let pu = (max - n) / 2
-    let n2 = model.unit(l + 1)
+    let n2 = model.unit(l)
     let pu2 = (max - n2) / 2
     for (let j = 0; j < n; j++) {
       let x = left + wx * l

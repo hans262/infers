@@ -4,8 +4,8 @@ import { xor } from './xor'
 
 export namespace TestMatrix {
   export function run() {
-    // addition()
-    xor()
+    addition()
+    // xor()
     // iris()
     // saveIris()
   }
