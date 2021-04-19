@@ -7,7 +7,7 @@ export type ActivationFunction = 'Sigmoid' | 'Relu' | 'Tanh' | 'Softmax'
 export type Mode = 'sgd' | 'bgd' | 'mbgd'
 
 /**网络形状*/
-export type NetShape = (number | [number, ActivationFunction])[]
+export type NetShape = [number, (number | [number, ActivationFunction]), ...(number | [number, ActivationFunction])[]]
 
 /**模型配置*/
 export interface NetConfig {
