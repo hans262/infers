@@ -17,13 +17,13 @@ export function iris() {
     epochs: 100,
     batchSize: 10,
     onBatch: (batch, size, loss) => {
-      console.log('batch = ' + batch, size, loss)
+      console.log('batch:' + batch, 'size:', size, 'loss:', loss)
     },
     onEpoch: (epoch, loss) => {
-      console.log('epoch = ' + epoch, loss)
+      console.log('epoch:' + epoch, 'loss:', loss)
     },
     onTrainEnd: loss => {
-      console.log('train end', loss)
+      console.log('train end:', loss)
     }
   })
   let xs2 = new Matrix([

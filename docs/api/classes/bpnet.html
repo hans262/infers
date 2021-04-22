@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BPNet | infers - v1.3.0</title>
-	<meta name="description" content="Documentation for infers - v1.3.0">
+	<title>BPNet | infers - v1.3.1</title>
+	<meta name="description" content="Documentation for infers - v1.3.1">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">infers - v1.3.0</a>
+					<a href="../index.html" class="title">infers - v1.3.1</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,7 +52,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">infers - v1.3.0</a>
+					<a href="../modules.html">infers - v1.3.1</a>
 				</li>
 				<li>
 					<a href="bpnet.html">BPNet</a>
@@ -103,7 +103,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="bpnet.html#afn" class="tsd-kind-icon">afn</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="bpnet.html#bgd" class="tsd-kind-icon">bgd</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="bpnet.html#calcderivative" class="tsd-kind-icon">calc<wbr>Derivative</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="bpnet.html#calcderivativemul" class="tsd-kind-icon">calc<wbr>Derivative<wbr>Mul</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="bpnet.html#calcderivativemultiple" class="tsd-kind-icon">calc<wbr>Derivative<wbr>Multiple</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="bpnet.html#calcnet" class="tsd-kind-icon">calcnet</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="bpnet.html#cost" class="tsd-kind-icon">cost</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="bpnet.html#fit" class="tsd-kind-icon">fit</a></li>
@@ -131,7 +131,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L15">BPNet.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L17">BPNet.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -156,7 +156,7 @@
 					<div class="tsd-signature tsd-kind-icon">b<span class="tsd-signature-symbol">:</span> <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L9">BPNet.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L9">BPNet.ts:9</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -171,9 +171,14 @@
 					<div class="tsd-signature tsd-kind-icon">hlayer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L10">BPNet.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L11">BPNet.ts:11</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>隐藏层层数</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="mode" class="tsd-anchor"></a>
@@ -181,9 +186,14 @@
 					<div class="tsd-signature tsd-kind-icon">mode<span class="tsd-signature-symbol">:</span> <a href="../modules.html#mode" class="tsd-signature-type" data-tsd-kind="Type alias">Mode</a><span class="tsd-signature-symbol"> = &#x27;sgd&#x27;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L13">BPNet.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L15">BPNet.ts:15</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>梯度更新模式</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="rate" class="tsd-anchor"></a>
@@ -191,7 +201,7 @@
 					<div class="tsd-signature tsd-kind-icon">rate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.01</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L15">BPNet.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L17">BPNet.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -206,7 +216,7 @@
 					<div class="tsd-signature tsd-kind-icon">scale<span class="tsd-signature-symbol">:</span> <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L12">BPNet.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L13">BPNet.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -228,7 +238,7 @@
 					<div class="tsd-signature tsd-kind-icon">w<span class="tsd-signature-symbol">:</span> <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L7">BPNet.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L7">BPNet.ts:7</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -250,7 +260,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L51">BPNet.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L53">BPNet.ts:53</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -278,7 +288,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L78">BPNet.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L80">BPNet.ts:80</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -309,7 +319,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L59">BPNet.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L61">BPNet.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -343,7 +353,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L232">BPNet.ts:232</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L234">BPNet.ts:234</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -378,7 +388,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L178">BPNet.ts:178</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L180">BPNet.ts:180</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -418,21 +428,22 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="calcderivativemul" class="tsd-anchor"></a>
-					<h3>calc<wbr>Derivative<wbr>Mul</h3>
+					<a name="calcderivativemultiple" class="tsd-anchor"></a>
+					<h3>calc<wbr>Derivative<wbr>Multiple</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">calc<wbr>Derivative<wbr>Mul<span class="tsd-signature-symbol">(</span>hy<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span>, xs<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a>, ys<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>dw<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>dy<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span></li>
+						<li class="tsd-signature tsd-kind-icon">calc<wbr>Derivative<wbr>Multiple<span class="tsd-signature-symbol">(</span>hy<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span>, xs<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a>, ys<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>dw<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>dy<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L152">BPNet.ts:152</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L154">BPNet.ts:154</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>多样本求导，求平均导数</p>
+									<p>多样本求导，
+									计算单个样本倒数求和，然后计算平均倒数</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -469,7 +480,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L113">BPNet.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L114">BPNet.ts:114</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -504,7 +515,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L221">BPNet.ts:221</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L223">BPNet.ts:223</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -539,7 +550,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L310">BPNet.ts:310</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L313">BPNet.ts:313</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -568,7 +579,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L277">BPNet.ts:277</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L279">BPNet.ts:279</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -603,7 +614,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L140">BPNet.ts:140</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L141">BPNet.ts:141</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -631,7 +642,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L127">BPNet.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L128">BPNet.ts:128</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -659,7 +670,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L251">BPNet.ts:251</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L253">BPNet.ts:253</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -694,7 +705,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L95">BPNet.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L97">BPNet.ts:97</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -712,7 +723,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L43">BPNet.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L45">BPNet.ts:45</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -740,7 +751,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/969e34a/src/BPNet.ts#L211">BPNet.ts:211</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/30267de/src/BPNet.ts#L213">BPNet.ts:213</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -822,7 +833,7 @@
 								<a href="bpnet.html#calcderivative" class="tsd-kind-icon">calc<wbr>Derivative</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="bpnet.html#calcderivativemul" class="tsd-kind-icon">calc<wbr>Derivative<wbr>Mul</a>
+								<a href="bpnet.html#calcderivativemultiple" class="tsd-kind-icon">calc<wbr>Derivative<wbr>Multiple</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="bpnet.html#calcnet" class="tsd-kind-icon">calcnet</a>

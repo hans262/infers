@@ -2,21 +2,20 @@ import { Matrix } from "./matrix"
 
 export class Optimize {
   /**
-   * Cross entropy cost function
-   * To simulate the last layer is the sigmoid activation function
-   * Multiple outputs average multiple loss values  
+   * 交叉墒代价函数
+   * 用于最后一层激活函数是sigmoid
    * 输出值域必须是 {0, 1}
    * - J = 1 / m * ∑m Cost
    * - y = 1 ? Cost = - Math.log(H(X[i]))
    * - y = 0 ? Cost = -Math.log(1 - H(X[i]))
    */
-  crossCost(hy: Matrix[], ys: Matrix) {
+  crossCost(hy: Matrix, ys: Matrix) {
     let m = ys.shape[0]
-    let t = hy[hy.length - 1].atomicOperation((h, i, j) => {
+    let t = hy.atomicOperation((h, i, j) => {
       let y = ys.get(i, j)
       return y === 1 ? -Math.log(h) : -Math.log(1 - h)
     }).columnSum()
-    let tmp = t.getRow(0).map(v => (1 / m) * v)
+    let tmp = t.getRow(0).map(v => v / m)
     return tmp.reduce((p, c) => p + c) / tmp.length
   }
 

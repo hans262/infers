@@ -6,7 +6,7 @@ export function xor() {
   let model = new BPNet([2, [6, 'Tanh'], [1, 'Sigmoid']], { rate: 0.1, mode: 'sgd' })
   model.fit(xs, ys, {
     epochs: 5000, onEpoch: (epoch, loss) => {
-      if (epoch % 100 === 0) console.log('epoch = ' + epoch, loss)
+      if (epoch % 100 === 0) console.log('epoch:' + epoch, 'loss:', loss)
     }
   })
   model.predict(xs).print()

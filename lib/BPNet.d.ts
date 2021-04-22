@@ -17,7 +17,7 @@ export declare class BPNet {
     calcnet(xs: Matrix): Matrix[];
     scaled(xs: Matrix): Matrix;
     predict(xs: Matrix): Matrix;
-    calcDerivativeMul(hy: Matrix[], xs: Matrix, ys: Matrix): {
+    calcDerivativeMultiple(hy: Matrix[], xs: Matrix, ys: Matrix): {
         dy: Matrix[];
         dw: Matrix[];
     };

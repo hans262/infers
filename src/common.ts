@@ -2,9 +2,9 @@ import { Matrix } from "./matrix";
 import { BPNet } from "./BPNet";
 
 /**
- * 小数点取位 向下取整
- * @param num 源值
- * @param fix 位数
+ * 按小数位向下取整
+ * @param num 源
+ * @param fix 位
  */
 export function toFixed(num: number, fix: number): number {
   const amount = 10 ** fix
@@ -27,7 +27,7 @@ export function upset(xs: Matrix, ys: Matrix) {
 }
 
 /**
- * 加载模型
+ * 加载json化的模型
  * @param modelJson 模型json字符串
  * @returns BPNet
  */

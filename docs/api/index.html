@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>infers - v1.3.0</title>
-	<meta name="description" content="Documentation for infers - v1.3.0">
+	<title>infers - v1.3.1</title>
+	<meta name="description" content="Documentation for infers - v1.3.1">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 	<script async src="assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">infers - v1.3.0</a>
+					<a href="index.html" class="title">infers - v1.3.1</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<h1>infers - v1.3.0</h1>
+			<h1>infers - v1.3.1</h1>
 		</div>
 	</div>
 </header>
@@ -62,7 +62,10 @@
 					<h1>infers</h1>
 				</a>
 				<p>Matrix operation and machine learning library by TypesScript.</p>
-				<p>Here is an example of <a href="https://badgua.gitee.io/infers">XOR</a>.</p>
+				<ul>
+					<li><a href="https://badgua.gitee.io/infers">XOR EXAMPLE</a></li>
+					<li><a href="https://badgua.gitee.io/infers/api/">API DOC</a></li>
+				</ul>
 				<p><img src="https://gitee.com/badgua/infers/raw/main/docs/net.png" alt=""></p>
 				<a href="#installed" id="installed" style="color: inherit; text-decoration: none;">
 					<h2>Installed</h2>
@@ -83,6 +86,11 @@
 <span style="color: #000000">  [</span><span style="color: #098658">0</span><span style="color: #000000">, -</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">]</span>
 <span style="color: #000000">])</span>
 <span style="color: #001080">m</span><span style="color: #000000">.</span><span style="color: #0070C1">T</span><span style="color: #000000">.</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
+<span style="color: #008000">// Matrix 3x3 [</span>
+<span style="color: #008000">//  1, 2, 0, </span>
+<span style="color: #008000">//  5, 4, -2, </span>
+<span style="color: #008000">//  0, -1, 0, </span>
+<span style="color: #008000">// ]</span>
 </code></pre>
 				<p>BP neural network example of XOR, three-layer network: </p>
 				<pre><code class="language-ts"><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">xs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">], [</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">]])</span>
@@ -90,7 +98,7 @@
 <span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">BPNet</span><span style="color: #000000">([</span><span style="color: #098658">2</span><span style="color: #000000">, [</span><span style="color: #098658">6</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;Tanh&#039;</span><span style="color: #000000">], [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;Sigmoid&#039;</span><span style="color: #000000">]], { </span><span style="color: #001080">rate:</span><span style="color: #000000"> </span><span style="color: #098658">0.1</span><span style="color: #000000"> })</span>
 <span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">fit</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">, {</span>
 <span style="color: #000000">  </span><span style="color: #001080">epochs:</span><span style="color: #000000"> </span><span style="color: #098658">5000</span><span style="color: #000000">, </span><span style="color: #795E26">onEpoch</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">epoch</span><span style="color: #000000"> % </span><span style="color: #098658">100</span><span style="color: #000000"> === </span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;epoch = &#039;</span><span style="color: #000000"> + </span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">)</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">epoch</span><span style="color: #000000"> % </span><span style="color: #098658">100</span><span style="color: #000000"> === </span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;epoch:&#039;</span><span style="color: #000000"> + </span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;loss:&#039;</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">)</span>
 <span style="color: #000000">  }</span>
 <span style="color: #000000">})</span>
 <span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">).</span><span style="color: #795E26">print</span><span style="color: #000000">()</span>
@@ -107,7 +115,7 @@
 <span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">model</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">BPNet</span><span style="color: #000000">([</span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">6</span><span style="color: #000000">, </span><span style="color: #098658">6</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">], { </span><span style="color: #001080">mode:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;bgd&#039;</span><span style="color: #000000">, </span><span style="color: #001080">rate:</span><span style="color: #000000"> </span><span style="color: #098658">0.01</span><span style="color: #000000"> })</span>
 <span style="color: #001080">model</span><span style="color: #000000">.</span><span style="color: #795E26">fit</span><span style="color: #000000">(</span><span style="color: #001080">xs</span><span style="color: #000000">, </span><span style="color: #001080">ys</span><span style="color: #000000">, {</span>
 <span style="color: #000000">  </span><span style="color: #001080">epochs:</span><span style="color: #000000"> </span><span style="color: #098658">500</span><span style="color: #000000">, </span><span style="color: #795E26">onEpoch</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;epoch = &#039;</span><span style="color: #000000"> + </span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">)</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;epoch:&#039;</span><span style="color: #000000"> + </span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;loss:&#039;</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">)</span>
 <span style="color: #000000">  }</span>
 <span style="color: #000000">})</span>
 <span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">xs2</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Matrix</span><span style="color: #000000">([[</span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">8</span><span style="color: #000000">], [</span><span style="color: #098658">22</span><span style="color: #000000">, </span><span style="color: #098658">6</span><span style="color: #000000">], [-</span><span style="color: #098658">5</span><span style="color: #000000">, </span><span style="color: #098658">9</span><span style="color: #000000">], [-</span><span style="color: #098658">5</span><span style="color: #000000">, -</span><span style="color: #098658">4</span><span style="color: #000000">]])</span>
@@ -119,14 +127,16 @@
 <span style="color: #008000">//  -9.000000644547901,</span>
 <span style="color: #008000">// ]</span>
 </code></pre>
-				<p>Parameter introduction: </p>
+				<a href="#parameter-introduction" id="parameter-introduction" style="color: inherit; text-decoration: none;">
+					<h2>Parameter introduction:</h2>
+				</a>
 				<ul>
 					<li><strong>shape</strong>: The network hierarchical structure of the model includes the number of neurons in each layer, the type of activation function in each layer and the total number of layers. The more complex the network structure is, the more computation is needed for a single training, and it is easy to cause over fitting.</li>
 					<li><strong>rate</strong>: Learning rate is also known as training step. The lower the learning rate, the more training times are needed to achieve the optimal cost function. If the learning rate is too large, it may cross the optimal cost function due to too large span, resulting in the loss value approaching the positive infinite model and the problem that the model cannot converge.</li>
 					<li><strong>epochs</strong>: All the data of the whole training set are iterated once.</li>
-					<li><strong>mode</strong>: Three gradient descent methods are SGD, BGD and MBGD.</li>
+					<li><strong>mode</strong>: sgd | bgd | mbgd, training modes.</li>
 				</ul>
-				<p>The selection of the above parameters is also the process of model optimization. The learning rate, training times and network shape needed to deal with different problems are different, which need to be adjusted according to each solution of the cost function.</p>
+				<p>The selection of the above。parameters is also the process of model optimization. The learning rate, training times and network shape needed to deal with different problems are different, which need to be adjusted according to each solution of the cost function.</p>
 				<a href="#export" id="export" style="color: inherit; text-decoration: none;">
 					<h2>Export</h2>
 				</a>

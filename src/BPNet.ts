@@ -7,9 +7,11 @@ export class BPNet {
   w: Matrix[]
   /**偏值*/
   b: Matrix[]
-  hlayer: number //隐藏层层数
+  /**隐藏层层数*/
+  hlayer: number
   /**缩放比*/
   scale?: Matrix
+  /**梯度更新模式*/
   mode: Mode = 'sgd'
   /**学习率*/
   rate: number = 0.01
@@ -93,15 +95,14 @@ export class BPNet {
    * @returns 模型JSON字符串
    */
   toJSON() {
-    const conf = {
+    return JSON.stringify({
       mode: this.mode,
       shape: this.shape,
       rate: this.rate,
       scale: this.scale ? this.scale.dataSync() : undefined,
       w: this.w.map(w => w.dataSync()),
       b: this.b.map(b => b.dataSync()),
-    }
-    return JSON.stringify(conf)
+    })
   }
 
   /**
@@ -138,8 +139,8 @@ export class BPNet {
    * 预测函数，返回最后一层求值
    */
   predict(xs: Matrix) {
-    if (xs.shape[1] !== this.shape[0]) {
-      throw new Error(`Input matrix column number error, input shape -> ${this.shape[0]}.`)
+    if (xs.shape[1] !== this.unit(-1)) {
+      throw new Error(`Input matrix column number error, input shape -> ${this.unit(-1)}.`)
     }
     xs = this.scaled(xs)
     let hy = this.calcnet(xs)
@@ -147,9 +148,10 @@ export class BPNet {
   }
 
   /**
-   * 多样本求导，求平均导数
+   * 多样本求导，
+   * 计算单个样本倒数求和，然后计算平均倒数
    */
-  calcDerivativeMul(hy: Matrix[], xs: Matrix, ys: Matrix) {
+  calcDerivativeMultiple(hy: Matrix[], xs: Matrix, ys: Matrix) {
     let m = ys.shape[0]
     let dws: Matrix[] | null = null
     let dys: Matrix[] | null = null
@@ -157,13 +159,13 @@ export class BPNet {
       let nhy = hy.map(item => new Matrix([item.getRow(n)]))
       let nxs = new Matrix([xs.getRow(n)])
       let nys = new Matrix([ys.getRow(n)])
-      let { dw, dy } = this.calcDerivative(nhy, nxs, nys)
-      dws = dws ? dws.map((d, l) => d.addition(dw[l])) : dw
-      dys = dys ? dys.map((d, l) => d.addition(dy[l])) : dy
+      let { dw: ndw, dy: ndy } = this.calcDerivative(nhy, nxs, nys)
+      dws = dws ? dws.map((d, l) => d.addition(ndw[l])) : ndw
+      dys = dys ? dys.map((d, l) => d.addition(ndy[l])) : ndy
     }
-    dws = dws!.map(d => d.atomicOperation(item => item / m))
-    dys = dys!.map(d => d.atomicOperation(item => item / m))
-    return { dy: dys, dw: dws }
+    let dw = dws!.map(d => d.atomicOperation(item => item / m))
+    let dy = dys!.map(d => d.atomicOperation(item => item / m))
+    return { dy, dw }
   }
 
   /**
@@ -220,8 +222,8 @@ export class BPNet {
    */
   cost(hy: Matrix, ys: Matrix) {
     let m = ys.shape[0]
-    let sub = hy.subtraction(ys).atomicOperation(item => item ** 2).columnSum()
-    let tmp = sub.getRow(0).map(v => v / (2 * m))
+    let sub = hy.subtraction(ys).atomicOperation(item => (item ** 2) / 2).columnSum()
+    let tmp = sub.getRow(0).map(v => v / m)
     return tmp.reduce((p, c) => p + c) / tmp.length
   }
 
@@ -232,7 +234,7 @@ export class BPNet {
   async bgd(xs: Matrix, ys: Matrix, conf: FitConf) {
     for (let ep = 0; ep < conf.epochs; ep++) {
       let hy = this.calcnet(xs)
-      let { dy, dw } = this.calcDerivativeMul(hy, xs, ys)
+      let { dy, dw } = this.calcDerivativeMultiple(hy, xs, ys)
       this.update(dy, dw)
       if (conf.onEpoch) {
         conf.onEpoch(ep, this.cost(hy[hy.length - 1], ys))
@@ -253,10 +255,10 @@ export class BPNet {
     for (let ep = 0; ep < conf.epochs; ep++) {
       let hys: Matrix | null = null
       for (let n = 0; n < m; n++) {
-        let xss = new Matrix([xs.getRow(n)])
-        let yss = new Matrix([ys.getRow(n)])
-        let hy = this.calcnet(xss)
-        const { dy, dw } = this.calcDerivative(hy, xss, yss)
+        let nxs = new Matrix([xs.getRow(n)])
+        let nys = new Matrix([ys.getRow(n)])
+        let hy = this.calcnet(nxs)
+        const { dy, dw } = this.calcDerivative(hy, nxs, nys)
         this.update(dy, dw)
         hys = hys ? hys.connect(hy[hy.length - 1]) : hy[hy.length - 1]
       }
@@ -288,12 +290,13 @@ export class BPNet {
         let end = start + batchSize
         end = end > m ? m : end
         let size = end - start
-        let xss = xst.slice(start, end)
-        let yss = yst.slice(start, end)
-        let hy = this.calcnet(xss)
-        const { dy, dw } = this.calcDerivativeMul(hy, xss, yss)
+        let bxs = xst.slice(start, end)
+        let bys = yst.slice(start, end)
+        let hy = this.calcnet(bxs)
+        let lastHy = hy[hy.length - 1]
+        const { dy, dw } = this.calcDerivativeMultiple(hy, bxs, bys)
         this.update(dy, dw)
-        let bloss = this.cost(hy[hy.length - 1], yss)
+        let bloss = this.cost(lastHy, bys)
         eploss += bloss
         if (conf.onBatch) conf.onBatch(b, size, bloss)
       }
@@ -311,10 +314,9 @@ export class BPNet {
     if (xs.shape[0] !== ys.shape[0]) {
       throw new Error('The row number of input and output matrix is not uniform.')
     }
-    if (xs.shape[1] !== this.shape[0]) {
-      throw new Error(`Input matrix column number error, input shape -> ${this.shape[0]}.`)
+    if (xs.shape[1] !== this.unit(-1)) {
+      throw new Error(`Input matrix column number error, input shape -> ${this.unit(-1)}.`)
     }
-
     if (ys.shape[1] !== this.unit(this.hlayer - 1)) {
       throw new Error(`Output matrix column number error, output shape -> ${this.unit(this.hlayer - 1)}.`)
     }
