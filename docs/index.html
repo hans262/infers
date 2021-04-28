@@ -5,27 +5,41 @@
   <meta charset="utf-8" />
   <title>xor example</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: sans-serif;
       background: #f1f1f1;
+      color: #3d3537;
+      font-size: 25px;
     }
 
     h2 {
       font-size: 70px;
       padding-left: 20px;
-      color: #3d3537;
       transform: scaleY(.5);
       margin: 0;
       letter-spacing: 10px;
     }
 
     h4 {
-      color: #3a3435;
-      font-size: 25px;
       padding-left: 20px;
       margin: 5px 0;
+      line-height: 36px;
       letter-spacing: 4px;
+    }
+
+    h4 input,
+    h4 select {
+      width: 100px;
+      height: 32px;
+      padding: 3px;
+      line-height: 32px;
+      vertical-align: baseline;
+      font-size: 20px;
     }
 
     #container {
@@ -35,11 +49,16 @@
       margin: 0 auto;
     }
 
+    #canvas,
     #buts {
-      padding: 20px 0 0 20px;
+      margin-top: 15px;
     }
 
-    button {
+    #buts {
+      padding-left: 20px;
+    }
+
+    #buts button {
       margin-right: 10px;
       color: #3d3537;
       font-size: 30px;
@@ -48,8 +67,9 @@
     pre {
       font-size: 20px;
       color: #5c5c5d;
-      padding: 50px 20px;
+      padding: 40px 20px;
       overflow-x: auto;
+      margin: 0;
     }
   </style>
 </head>
@@ -57,9 +77,13 @@
 <body>
   <div id="container">
     <h2>XOR EXAMPLE</h2>
-    <h4>shape: [2, [6, 'Tanh'], [6, 'Tanh'], [2, 'Softmax']]</h4>
-    <h4>rate: 0.1</h4>
-    <h4>mode: sgd</h4>
+    <h4>SHAPE: [2, [6, 'Tanh'], [6, 'Tanh'], [2, 'Softmax']]</h4>
+    <h4>mode: <select id="mode">
+        <option>sgd</option>
+        <option>bgd</option>
+        <option>mbgd</option>
+      </select> rate: <input id="rate" type="number" value="0.1" /> epochs: <input id="epochs" type="number"
+        value="1000" /></h4>
     <canvas id="canvas"></canvas>
     <div id="buts">
       <button>TRAIN</button>

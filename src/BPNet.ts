@@ -153,54 +153,46 @@ export class BPNet {
    */
   calcDerivativeMultiple(hy: Matrix[], xs: Matrix, ys: Matrix) {
     let m = ys.shape[0]
-    let dws: Matrix[] | null = null
-    let dys: Matrix[] | null = null
+    let dws = this.w.map(w => w.zeroed())
+    let dys = this.b.map(b => b.zeroed())
     for (let n = 0; n < m; n++) {
       let nhy = hy.map(item => new Matrix([item.getRow(n)]))
       let nxs = new Matrix([xs.getRow(n)])
       let nys = new Matrix([ys.getRow(n)])
       let { dw: ndw, dy: ndy } = this.calcDerivative(nhy, nxs, nys)
-      dws = dws ? dws.map((d, l) => d.addition(ndw[l])) : ndw
-      dys = dys ? dys.map((d, l) => d.addition(ndy[l])) : ndy
+      dws = dws.map((d, l) => d.addition(ndw[l]))
+      dys = dys.map((d, l) => d.addition(ndy[l]))
     }
-    let dw = dws!.map(d => d.atomicOperation(item => item / m))
-    let dy = dys!.map(d => d.atomicOperation(item => item / m))
+    let dw = dws.map(d => d.atomicOperation(item => item / m))
+    let dy = dys.map(d => d.atomicOperation(item => item / m))
     return { dy, dw }
   }
+
 
   /**
    * 单样本求导，对每个输出单元的求导，对每个权重的求导
    * - J = 1 / 2 * (hy - y)^2
-   * - ∂J / ∂hy = (1 / 2) * 2 * (hy - y) = hy - y  最后一层节点求导
-   * - ∂J / ∂w = 输入节点 * 输出节点导数   
-   * 遵循链式求导法则：分支节点相加；链路节点相乘法；反向的计算过程
-   * 如果有激活函数，需乘激活函数的导数
-   * @returns [输出单元导数, 权重导数]
+   * - ∂J / ∂hy[last] = (1 / 2) * 2 * (hy - y) = (hy - y) * hy[激活函数求导]
+   * - ∂J / ∂w = dy.T * lastHy
+   * - ∂J / ∂hy[now] = (nextDy * nextW) * hy[激活函数求导]
+   * 
+   * 链式求导法则：
+   *  - 反向的计算过程；
+   *  - 分支节点相加；链路节点相乘法；
+   *  - 如有激活函数需乘激活函数的导数；
+   * @returns [神经单元导数, 权重导数]
    */
   calcDerivative(hy: Matrix[], xs: Matrix, ys: Matrix) {
-    let dw = this.w.map(w => w.zeroed())
-    let dy = this.b.map(b => b.zeroed())
+    let dw: Matrix[] = [], dy: Matrix[] = []
     for (let l = this.hlayer - 1; l >= 0; l--) {
       let lastHy = hy[l - 1] ? hy[l - 1] : xs
       let af = this.af(l)
       if (l === this.hlayer - 1) {
-        for (let j = 0; j < this.unit(l); j++) {
-          dy[l].update(0, j, (hy[l].get(0, j) - ys.get(0, j)) * this.afd(hy[l].get(0, j), af))
-          for (let k = 0; k < this.unit(l - 1); k++) {
-            dw[l].update(j, k, lastHy.get(0, k) * dy[l].get(0, j))
-          }
-        }
-        continue;
+        dy[l] = hy[l].atomicOperation((item, r, c) => (item - ys.get(r, c)) * this.afd(item, af))
+      } else {
+        dy[l] = dy[l + 1].multiply(this.w[l + 1]).atomicOperation((item, r, c) => item * this.afd(hy[l].get(r, c), af))
       }
-      for (let j = 0; j < this.unit(l); j++) {
-        for (let i = 0; i < this.unit(l + 1); i++) {
-          dy[l].update(0, j, dy[l + 1].get(0, i) * this.w[l + 1].get(i, j), '+=')
-        }
-        dy[l].update(0, j, this.afd(hy[l].get(0, j), af), '*=')
-        for (let k = 0; k < this.unit(l - 1); k++) {
-          dw[l].update(j, k, lastHy.get(0, k) * dy[l].get(0, j))
-        }
-      }
+      dw[l] = dy[l].T.multiply(lastHy)
     }
     return { dy, dw }
   }
@@ -225,6 +217,16 @@ export class BPNet {
     let sub = hy.subtraction(ys).atomicOperation(item => (item ** 2) / 2).columnSum()
     let tmp = sub.getRow(0).map(v => v / m)
     return tmp.reduce((p, c) => p + c) / tmp.length
+  }
+
+  /**
+   * 计算一组样本的当前损失
+   */
+  calcLoss(xs: Matrix, ys: Matrix) {
+    this.checkSample(xs, ys)
+    xs = this.scaled(xs)
+    let hy = this.calcnet(xs)
+    return this.cost(hy[hy.length - 1], ys)
   }
 
   /**
@@ -310,7 +312,7 @@ export class BPNet {
     }
   }
 
-  fit(xs: Matrix, ys: Matrix, conf: FitConf) {
+  checkSample(xs: Matrix, ys: Matrix) {
     if (xs.shape[0] !== ys.shape[0]) {
       throw new Error('The row number of input and output matrix is not uniform.')
     }
@@ -320,6 +322,10 @@ export class BPNet {
     if (ys.shape[1] !== this.unit(this.hlayer - 1)) {
       throw new Error(`Output matrix column number error, output shape -> ${this.unit(this.hlayer - 1)}.`)
     }
+  }
+
+  fit(xs: Matrix, ys: Matrix, conf: FitConf) {
+    this.checkSample(xs, ys)
     if (conf.batchSize && conf.batchSize > ys.shape[0]) {
       throw new Error(`The batch size cannot be greater than the number of samples.`)
     }
