@@ -42,7 +42,6 @@ buts.forEach(but => {
           drawNet(ctx, model, calcHy(xs))
           drawText(ctx, epoch, loss)
         }, onTrainEnd: () => {
-          console.log(model)
           but.disabled = false
         }
       })

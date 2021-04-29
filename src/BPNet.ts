@@ -139,9 +139,7 @@ export class BPNet {
    * 预测函数，返回最后一层求值
    */
   predict(xs: Matrix) {
-    if (xs.shape[1] !== this.unit(-1)) {
-      throw new Error(`Input matrix column number error, input shape -> ${this.unit(-1)}.`)
-    }
+    this.checkInput(xs)
     xs = this.scaled(xs)
     let hy = this.calcnet(xs)
     return hy[hy.length - 1]
@@ -224,9 +222,8 @@ export class BPNet {
    */
   calcLoss(xs: Matrix, ys: Matrix) {
     this.checkSample(xs, ys)
-    xs = this.scaled(xs)
-    let hy = this.calcnet(xs)
-    return this.cost(hy[hy.length - 1], ys)
+    let lastHy = this.predict(xs)
+    return this.cost(lastHy, ys)
   }
 
   /**
@@ -312,12 +309,16 @@ export class BPNet {
     }
   }
 
-  checkSample(xs: Matrix, ys: Matrix) {
-    if (xs.shape[0] !== ys.shape[0]) {
-      throw new Error('The row number of input and output matrix is not uniform.')
-    }
+  checkInput(xs: Matrix) {
     if (xs.shape[1] !== this.unit(-1)) {
       throw new Error(`Input matrix column number error, input shape -> ${this.unit(-1)}.`)
+    }
+  }
+
+  checkSample(xs: Matrix, ys: Matrix) {
+    this.checkInput(xs)
+    if (xs.shape[0] !== ys.shape[0]) {
+      throw new Error('The row number of input and output matrix is not uniform.')
     }
     if (ys.shape[1] !== this.unit(this.hlayer - 1)) {
       throw new Error(`Output matrix column number error, output shape -> ${this.unit(this.hlayer - 1)}.`)
