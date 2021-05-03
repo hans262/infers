@@ -1,6 +1,5 @@
-import { Matrix, BPNet, loadBPNet } from '../src'
+import { Matrix, BPNet } from '../src'
 import { data } from './irisData'
-import * as  fs from 'fs'
 
 export function iris() {
   let xs = new Matrix(data.map(d => d[0]))
@@ -36,14 +35,8 @@ export function iris() {
 }
 
 export function saveIris() {
-  let path = '/desktop/develop/infers/example/model.json'
-  let path2 = '/Users/macbookair/Desktop/develop/infers/example/model.json'
-  //save
-  let modelJson = iris().toJSON()
-  fs.writeFileSync(path2, modelJson)
-  //load
-  let modelJson2 = fs.readFileSync(path2).toString()
-  let model = loadBPNet(modelJson2)
+  let json = iris().toJSON()
+  let model = BPNet.fromJSON(json)
   //test
   let xs2 = new Matrix([
     [4.4, 2.9, 1.4, 0.2], // Setosa     [1, 0, 0]

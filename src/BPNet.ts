@@ -1,6 +1,12 @@
 import { upset } from "./common"
 import { Matrix } from "./matrix"
-import { ActivationFunction, FitConf, Mode, NetConfig, NetShape } from "./types"
+import { ActivationFunction, TrainingOptions, Mode, BPNetOptions, NetShape } from "./types"
+
+export const defaultTrainingOptions = (m: number): TrainingOptions => ({
+  epochs: 100,
+  batchSize: m > 10 ? 10 : m,
+  async: false
+})
 
 export class BPNet {
   /**权值*/
@@ -17,7 +23,7 @@ export class BPNet {
   rate: number = 0.01
   constructor(
     public readonly shape: NetShape,
-    conf?: NetConfig
+    opt: BPNetOptions = {}
   ) {
     this.hlayer = shape.length - 1
     if (this.hlayer < 1) {
@@ -30,13 +36,11 @@ export class BPNet {
       this.w[l] = Matrix.generate(this.unit(l), this.unit(l - 1))
       this.b[l] = Matrix.generate(1, this.unit(l))
     }
-    if (conf) {
-      if (conf.mode) this.mode = conf.mode
-      if (conf.rate) this.rate = conf.rate
-      if (conf.w) this.w = conf.w
-      if (conf.b) this.b = conf.b
-      if (conf.scale) this.scale = conf.scale
-    }
+    if (opt.mode) this.mode = opt.mode
+    if (opt.rate) this.rate = opt.rate
+    if (opt.w) this.w = opt.w
+    if (opt.b) this.b = opt.b
+    if (opt.scale) this.scale = opt.scale
   }
 
   /**
@@ -92,7 +96,7 @@ export class BPNet {
   }
 
   /**
-   * @returns 模型JSON字符串
+   * @returns json字符串
    */
   toJSON() {
     return JSON.stringify({
@@ -102,6 +106,22 @@ export class BPNet {
       scale: this.scale ? this.scale.dataSync() : undefined,
       w: this.w.map(w => w.dataSync()),
       b: this.b.map(b => b.dataSync()),
+    })
+  }
+
+  /**
+   * 加载json化的模型
+   * @returns BPNet
+   */
+  static fromJSON(json: string) {
+    let tmp = JSON.parse(json)
+    let w: Matrix[] = tmp.w.map((w: any) => new Matrix(w))
+    let b: Matrix[] = tmp.b.map((b: any) => new Matrix(b))
+    let scale = tmp.scale ? new Matrix(tmp.scale) : undefined
+    return new BPNet(tmp.shape, {
+      mode: tmp.mode,
+      rate: tmp.mode,
+      w, b, scale
     })
   }
 
@@ -196,11 +216,11 @@ export class BPNet {
   }
 
   /**
-   * 更新权值偏值
+   * 调整权值偏值
    * - w = w - α * (∂J / ∂w)
    * - b = b - α * (∂J / ∂hy)
    */
-  update(dy: Matrix[], dw: Matrix[]) {
+  adjust(dy: Matrix[], dw: Matrix[]) {
     this.w = this.w.map((w, l) => w.subtraction(dw[l].numberMultiply(this.rate)))
     this.b = this.b.map((b, l) => b.subtraction(dy[l].numberMultiply(this.rate)))
   }
@@ -230,17 +250,17 @@ export class BPNet {
    * 标准梯度下降，
    * 全部样本导数的平均值
    */
-  async bgd(xs: Matrix, ys: Matrix, conf: FitConf) {
-    for (let ep = 0; ep < conf.epochs; ep++) {
+  async bgd(xs: Matrix, ys: Matrix, opt: TrainingOptions) {
+    for (let ep = 0; ep < opt.epochs; ep++) {
       let hy = this.calcnet(xs)
       let { dy, dw } = this.calcDerivativeMultiple(hy, xs, ys)
-      this.update(dy, dw)
-      if (conf.onEpoch) {
-        conf.onEpoch(ep, this.cost(hy[hy.length - 1], ys))
-        conf.async && await new Promise(resolve => setTimeout(resolve))
+      this.adjust(dy, dw)
+      if (opt.onEpoch) {
+        opt.onEpoch(ep, this.cost(hy[hy.length - 1], ys))
+        opt.async && await new Promise(resolve => setTimeout(resolve))
       }
-      if (conf.onTrainEnd && ep === conf.epochs - 1) {
-        conf.onTrainEnd(this.cost(hy[hy.length - 1], ys))
+      if (opt.onTrainEnd && ep === opt.epochs - 1) {
+        opt.onTrainEnd(this.cost(hy[hy.length - 1], ys))
       }
     }
   }
@@ -249,24 +269,24 @@ export class BPNet {
    * 随机梯度下降，
    * 单个样本的导数
    */
-  async sgd(xs: Matrix, ys: Matrix, conf: FitConf) {
+  async sgd(xs: Matrix, ys: Matrix, opt: TrainingOptions) {
     let m = ys.shape[0]
-    for (let ep = 0; ep < conf.epochs; ep++) {
+    for (let ep = 0; ep < opt.epochs; ep++) {
       let hys: Matrix | null = null
       for (let n = 0; n < m; n++) {
         let nxs = new Matrix([xs.getRow(n)])
         let nys = new Matrix([ys.getRow(n)])
         let hy = this.calcnet(nxs)
         const { dy, dw } = this.calcDerivative(hy, nxs, nys)
-        this.update(dy, dw)
+        this.adjust(dy, dw)
         hys = hys ? hys.connect(hy[hy.length - 1]) : hy[hy.length - 1]
       }
-      if (conf.onEpoch) {
-        conf.onEpoch(ep, this.cost(hys!, ys))
-        conf.async && await new Promise(resolve => setTimeout(resolve))
+      if (opt.onEpoch) {
+        opt.onEpoch(ep, this.cost(hys!, ys))
+        opt.async && await new Promise(resolve => setTimeout(resolve))
       }
-      if (conf.onTrainEnd && ep === conf.epochs - 1) {
-        conf.onTrainEnd(this.cost(hys!, ys))
+      if (opt.onTrainEnd && ep === opt.epochs - 1) {
+        opt.onTrainEnd(this.cost(hys!, ys))
       }
     }
   }
@@ -275,12 +295,11 @@ export class BPNet {
    * 批量梯度下降，
    * 多个样本导数的平均值
    */
-  async mbgd(xs: Matrix, ys: Matrix, conf: FitConf) {
+  async mbgd(xs: Matrix, ys: Matrix, opt: TrainingOptions) {
     let m = ys.shape[0]
-    let defaultBatchSize = m < 10 ? m : 10
-    let batchSize = conf.batchSize ? conf.batchSize : defaultBatchSize
+    let batchSize = opt.batchSize
     let batch = Math.ceil(m / batchSize) //总批次
-    for (let ep = 0; ep < conf.epochs; ep++) {
+    for (let ep = 0; ep < opt.epochs; ep++) {
       let { xs: xst, ys: yst } = upset(xs, ys)
       //打乱数据加快拟合速度
       let eploss = 0
@@ -294,17 +313,17 @@ export class BPNet {
         let hy = this.calcnet(bxs)
         let lastHy = hy[hy.length - 1]
         const { dy, dw } = this.calcDerivativeMultiple(hy, bxs, bys)
-        this.update(dy, dw)
+        this.adjust(dy, dw)
         let bloss = this.cost(lastHy, bys)
         eploss += bloss
-        if (conf.onBatch) conf.onBatch(b, size, bloss)
+        if (opt.onBatch) opt.onBatch(b, size, bloss)
       }
-      if (conf.onEpoch) {
-        conf.onEpoch(ep, eploss / batch)
-        conf.async && await new Promise(resolve => setTimeout(resolve))
+      if (opt.onEpoch) {
+        opt.onEpoch(ep, eploss / batch)
+        opt.async && await new Promise(resolve => setTimeout(resolve))
       }
-      if (conf.onTrainEnd && ep === conf.epochs - 1) {
-        conf.onTrainEnd(eploss / batch)
+      if (opt.onTrainEnd && ep === opt.epochs - 1) {
+        opt.onTrainEnd(eploss / batch)
       }
     }
   }
@@ -325,9 +344,11 @@ export class BPNet {
     }
   }
 
-  fit(xs: Matrix, ys: Matrix, conf: FitConf) {
+  fit(xs: Matrix, ys: Matrix, opt: Partial<TrainingOptions> = {}) {
+    let m = ys.shape[0]
+    let nopt = { ...defaultTrainingOptions(m), ...opt }
     this.checkSample(xs, ys)
-    if (conf.batchSize && conf.batchSize > ys.shape[0]) {
+    if (nopt.batchSize > m) {
       throw new Error(`The batch size cannot be greater than the number of samples.`)
     }
     const [nxs, scale] = xs.normalization()
@@ -335,12 +356,12 @@ export class BPNet {
     xs = nxs
     switch (this.mode) {
       case 'bgd':
-        return this.bgd(xs, ys, conf)
+        return this.bgd(xs, ys, nopt)
       case 'mbgd':
-        return this.mbgd(xs, ys, conf)
+        return this.mbgd(xs, ys, nopt)
       case 'sgd':
       default:
-        return this.sgd(xs, ys, conf)
+        return this.sgd(xs, ys, nopt)
     }
   }
 }
