@@ -21,7 +21,7 @@ export interface BPNetOptions {
 /**训练配置*/
 export interface TrainingOptions {
   epochs: number
-  batchSize: number //1.用户未定义：样本数小于10 = 样本数；样本数大于10 = 10 2. 用户定义了，大于样本数 = 抛出异常；小于样本数 = 用户输入
+  batchSize: number
   /**是否异步训练*/
   async: boolean
   onBatch?: (batch: number, size: number, loss: number) => void

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>demo</title>
+	<style>
+		body {
+			padding: 20px;
+		}
+
+		#container {
+			max-width: 1000px;
+			margin: 0 auto;
+		}
+
+		.abutton {
+			padding: 5px 10px;
+		}
+	</style>
+	<script src="./neural.js"></script>
+</head>
+
+<body>
+	<div id="container">
+		<div class="heading">Input text:</div>
+		<div id="charactersFound"></div>
+		<div class="heading">Options:</div>
+		<button id="learn" class="abutton">learn/restart</button>
+		<button id="stop" class="abutton">pause</button>
+		<div id="epochs"></div>
+		<div id="costPerplexity"></div>
+		<h2>生成的句子</h2>
+		<div id="samples"></div>
+		<h2>渴望的句子</h2>
+		<div id="greedySamples"></div>
+	</div>
+	<script type="text/javascript">
+		/*
+		* parameter for the neural network and variable declarations
+		*/
+		var letterSize = 5, // size of letter embeddings
+			regularizationConstant = 0.000001, // L2 regularization strength
+			initialLearningRate = 0.001,
+			learningRate = initialLearningRate,
+			clipValue = 1, // clip gradients at this value
+			numberSamples = 5,
+			learningRateAnnealing = 0.99,
+			dataSentences = [],
+			letterToIndex = [],
+			indexToLetter = [],
+			network = {},
+			vocabularySize = -1,
+			outputSize = -1,
+			epochSize = -1,
+			maxCharsGenerated = 100,
+			tickCount = 0;
+
+		function initVocabulary(sentences, countThreshold) {
+			var text = sentences.join('');
+			// count all characters
+			var d = {};
+			for (var i = 0, n = text.length; i < n; i++) {
+				var textI = text[i];
+				if (textI in d) { d[textI] += 1; }
+				else { d[textI] = 1; }
+			}
+
+			// filter by countThreshold
+			let vocabulary = [];
+			letterToIndex = {};
+			indexToLetter = {};
+			// start at one because zero will be for start and end tokens
+			var q = 1;
+			for (var character in d) {
+				if (d.hasOwnProperty(character)) {
+					if (d[character] >= countThreshold) {
+						// add character to vocabulary
+						letterToIndex[character] = q;
+						indexToLetter[q] = character;
+						vocabulary.push(character);
+						q++;
+					}
+				}
+			}
+
+			vocabularySize = vocabulary.length + 1;
+			outputSize = vocabulary.length + 1;
+			epochSize = sentences.length;
+
+		}
+
+
+
+		/*
+				*  function that calculates the perplexity and cost for a single sentence
+				*  - also performs forward passes for every character
+				*/
+		function costFunction(network, sentence) {
+
+			var inputVectorArray = [],
+				targetIndexArray = [],
+				i,
+				n = sentence.length,
+				sourceIndex,
+				targetIndex,
+				result
+			for (i = -1; i < n; i++) {
+				sourceIndex = (i === -1 ? 0 : letterToIndex[sentence[i]]);
+				targetIndex = (i === n - 1 ? 0 : letterToIndex[sentence[i + 1]]);
+				inputVectorArray.push(network.getInputVector(sourceIndex));
+				targetIndexArray.push(targetIndex);
+			}
+			result = network.batchCostFunction(inputVectorArray, targetIndexArray);
+			document.getElementById('costPerplexity').innerHTML = 'perplexity: ' + result.perplexity.toFixed(1) + ' cost: ' + result.cost.toFixed(1)
+		}
+
+		/*
+			* function that creates a sentence as predicted by the network
+			*/
+		function getSentence(network, useSampling) {
+			var string = '马上';
+			while (true) {
+				var index = string.length === 0 ? 0 : letterToIndex[string[string.length - 1]];
+				var sourceVector = network.getInputVector(index);
+				var prediction = network.predictOutput(sourceVector, useSampling, 1.0);
+
+
+				if (prediction === 0) break;
+				if (string.length > maxCharsGenerated) break;
+				string += indexToLetter[prediction];
+
+			}
+			return string;
+		}
+
+		/*
+				*  function that gets called in a loop while the user has not hit pause
+				*  it performs one full cycle of the neural network with one sentence as batch of input
+				*/
+		function tick() {
+			// sample sentence from data
+			var sentenceIndex = Math.floor(Math.random() * dataSentences.length);
+			var sentence = dataSentences[sentenceIndex];
+
+			// evaluate cost of a sentence
+			costFunction(network, sentence);
+
+			//compute backpropagation
+			network.backward();
+
+			// perform parameter update - learning Rate not optional
+			network.parameterUpdate(learningRate, regularizationConstant, clipValue);
+
+
+			tickCount++;
+			if (tickCount) {
+				document.getElementById('epochs').innerHTML = 'Epoch: ' + (tickCount / epochSize).toFixed(2)
+			}
+			if (tickCount % (Math.floor(epochSize)) === 0) {
+				// anneals the learning rate slowly over time
+				learningRate *= learningRateAnnealing;
+			}
+
+			if (tickCount % 5 === 0) {
+				let node = document.getElementById('samples')
+				node.innerHTML = ''
+				var prediction;
+				var predictionDiv;
+				for (var j = 0; j < numberSamples; j++) {
+					prediction = getSentence(network, true);
+					predictionDiv = document.createElement('div')
+					predictionDiv.innerHTML = prediction
+
+					node.appendChild(predictionDiv)
+				}
+				prediction = getSentence(network, false);
+				predictionDiv = document.createElement('div')
+				predictionDiv.innerHTML = prediction
+				document.getElementById('greedySamples').appendChild(predictionDiv)
+			}
+		}
+
+		//初始化网络
+		function reinit() {
+			initVocabulary(dataSentences, 1)
+			network = new Neuraljs.NeuralNetwork('RNN') // RNN | LSTM | GRU
+
+			network.initialize(letterSize, [20, 20], outputSize)
+			network.generateInputMatrix(vocabularySize);
+
+			tickCount = 0;
+			learningRate = initialLearningRate;
+		}
+
+		dataSentences = [
+			"无论即将到来的是大数据时代还是人工智能时代",
+			"亦或是传统行业使用人工智能在云上处理大数据的时代",
+			"作为一个有理想有追求的程序员",
+			"不懂深度学习这个超热的技术",
+			"会不会感觉马上就out了"
+		]
+
+		document.getElementById('charactersFound').innerHTML = dataSentences.join('<br/>')
+
+		var iid = null
+		document.getElementById('learn').onclick = () => {
+			reinit()
+			if (iid) { clearInterval(iid) }
+			iid = setInterval(tick, 100)
+		}
+		document.getElementById('stop').onclick = () => {
+			if (iid) { clearInterval(iid) }
+			iid = null
+		}
+	</script>
+</body>
+
+</html>
