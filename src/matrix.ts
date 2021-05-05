@@ -113,7 +113,7 @@ export class Matrix {
     for (let i = 0; i < row; i++) {
       let m = []
       for (let j = 0; j < col; j++) {
-        m.push(f ? f : 0.5 - Math.random())
+        m.push(typeof f === 'number' ? f : 0.5 - Math.random())
       }
       n.push(m)
     }

@@ -1,8 +1,7 @@
 const math = require('./math');
-const seedrandom = require('seedrandom');
 const RNN = require('./rnn');
 
-let rng = seedrandom(1234);
+let rng = undefined
 
 function main() {
 

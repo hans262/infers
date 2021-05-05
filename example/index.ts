@@ -25,7 +25,7 @@ export namespace TestMatrix {
   }
 
   function mrnn() {
-    let data = '今天天气怎么样我发现你是真的很皮呢'
+    let data = ['hello', 'huahua', 'goudan', 'name beichuan', 'is']
     let net = new MRNN(data)
     net.fit()
     net.predict()
