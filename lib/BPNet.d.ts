@@ -16,14 +16,15 @@ export declare class BPNet {
     afd(x: number, af?: ActivationFunction): number;
     toJSON(): string;
     static fromJSON(json: string): BPNet;
-    calcnet(xs: Matrix): Matrix[];
+    forwardPropagation(xs: Matrix): Matrix[];
     scaled(xs: Matrix): Matrix;
     predict(xs: Matrix): Matrix;
-    calcDerivativeMultiple(hy: Matrix[], xs: Matrix, ys: Matrix): {
+    predictNet(xs: Matrix): Matrix[];
+    backPropagationMultiple(hy: Matrix[], xs: Matrix, ys: Matrix): {
         dy: Matrix[];
         dw: Matrix[];
     };
-    calcDerivative(hy: Matrix[], xs: Matrix, ys: Matrix): {
+    backPropagation(hy: Matrix[], xs: Matrix, ys: Matrix): {
         dy: Matrix[];
         dw: Matrix[];
     };
@@ -34,6 +35,7 @@ export declare class BPNet {
     sgd(xs: Matrix, ys: Matrix, opt: TrainingOptions): Promise<void>;
     mbgd(xs: Matrix, ys: Matrix, opt: TrainingOptions): Promise<void>;
     checkInput(xs: Matrix): void;
+    checkOutput(ys: Matrix): void;
     checkSample(xs: Matrix, ys: Matrix): void;
     fit(xs: Matrix, ys: Matrix, opt?: Partial<TrainingOptions>): Promise<void>;
 }

@@ -25,8 +25,9 @@ function init() {
   W = container.getBoundingClientRect().width
   canvas.width = W
   canvas.height = H
-  drawNet(ctx, model, calcHy(xs))
-  drawText(ctx, '--', model.calcLoss(xs, ys))
+  let hy = model.predictNet(xs)
+  let loss = model.calcLoss(xs, ys)
+  drawNet(ctx, model, hy, loss)
 }
 
 window.onresize = init
@@ -39,8 +40,7 @@ buts.forEach(but => {
       let epochs = Number(document.getElementById('epochs').value)
       model.fit(xs, ys, {
         epochs, async: true, onEpoch: (epoch, loss) => {
-          drawNet(ctx, model, calcHy(xs))
-          drawText(ctx, epoch, loss)
+          drawNet(ctx, model, model.predictNet(xs), loss, epoch)
         }, onTrainEnd: () => {
           but.disabled = false
         }
@@ -49,8 +49,8 @@ buts.forEach(but => {
     }
     let tmp = but.innerHTML.split(', ').map(v => Number(v))
     let nxs = new Matrix([tmp])
-    drawNet(ctx, model, calcHy(nxs))
-    drawText(ctx, '--', model.calcLoss(xs, ys))
+    let loss = model.calcLoss(xs, ys)
+    drawNet(ctx, model, model.predictNet(nxs), loss)
   })
 })
 
@@ -86,19 +86,6 @@ function drawLine(ctx, p1, p2) {
 
 /**
  * @param {CanvasRenderingContext2D} ctx 
- * @param {number} epoch 
- * @param {number} loss 
- */
-function drawText(ctx, epoch, loss) {
-  ctx.beginPath()
-  ctx.fillStyle = '#222'
-  ctx.font = "30px sans-serif";
-  let n = 'epoch: ' + epoch + ', loss: ' + loss
-  ctx.fillText(n, 100, 480)
-}
-
-/**
- * @param {CanvasRenderingContext2D} ctx 
  */
 function clearCtx(ctx) {
   ctx.fillStyle = "#f6f6f6"
@@ -106,27 +93,19 @@ function clearCtx(ctx) {
 }
 
 /**
- * @param {Matrix} xs 
- * @returns {Matrix[]}
- */
-function calcHy(xs) {
-  let sxs = model.scaled(xs)
-  let hy = model.calcnet(sxs)
-  return [xs, ...hy]
-}
-
-/**
  * @param {CanvasRenderingContext2D} ctx 
  * @param {BPNet} model 
  * @param {Matrix[]} hy 
+ * @param {number} loss
+ * @param {number} epoch
  */
-function drawNet(ctx, model, hy) {
+function drawNet(ctx, model, hy, loss, epoch = 0) {
   clearCtx(ctx)
   let maxUnit = Math.max(...model.shape.map(v => Array.isArray(v) ? v[0] : v))
   let unitw = W / 24
   let [top, left, spaceX, spaceY] = [50, 1 * unitw, 6.5 * unitw, 70]
 
-  let nlayer = model.shape.length
+  let nlayer = model.hlayer + 1
   for (let l = 0; l < nlayer; l++) {
     let unit = model.unit(l - 1)
     let nextUnit = model.unit(l)
@@ -143,4 +122,9 @@ function drawNet(ctx, model, hy) {
       drawCircle(ctx, x, y, 20, toFixed(hy[l].get(0, j), 5))
     }
   }
+  ctx.beginPath()
+  ctx.fillStyle = '#222'
+  ctx.font = "30px sans-serif";
+  let n = 'epoch: ' + epoch + ', loss: ' + loss
+  ctx.fillText(n, 100, 480)
 }

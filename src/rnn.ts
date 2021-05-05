@@ -2,7 +2,7 @@ import { Matrix } from '../src'
 
 type ActivationFunction = 'Tanh' | 'Softmax'
 
-export class MRNN {
+export class RNN {
   U: Matrix //隐藏层权值
   W: Matrix //上一时刻连接隐藏层权值
   V: Matrix //输出层权值

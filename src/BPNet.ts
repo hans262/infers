@@ -131,7 +131,7 @@ export class BPNet {
    * - hy =  θ1 * X1 + θ2 * X2 + ... + θn * Xn + b
    * @param xs inputs
    */
-  calcnet(xs: Matrix) {
+  forwardPropagation(xs: Matrix) {
     let hy: Matrix[] = []
     for (let l = 0; l < this.hlayer; l++) {
       let lastHy = l === 0 ? xs : hy[l - 1]
@@ -156,20 +156,28 @@ export class BPNet {
   }
 
   /**
-   * 预测函数，返回最后一层求值
+   * 预测最后一层输出
    */
   predict(xs: Matrix) {
+    let hy = this.predictNet(xs)
+    return hy[hy.length - 1]
+  }
+
+  /**
+   * 预测整个网络，包含输入层
+   */
+  predictNet(xs: Matrix) {
     this.checkInput(xs)
     xs = this.scaled(xs)
-    let hy = this.calcnet(xs)
-    return hy[hy.length - 1]
+    let hy = this.forwardPropagation(xs)
+    return [xs, ...hy]
   }
 
   /**
    * 多样本求导，
    * 计算单个样本倒数求和，然后计算平均倒数
    */
-  calcDerivativeMultiple(hy: Matrix[], xs: Matrix, ys: Matrix) {
+  backPropagationMultiple(hy: Matrix[], xs: Matrix, ys: Matrix) {
     let m = ys.shape[0]
     let dws = this.w.map(w => w.zeroed())
     let dys = this.b.map(b => b.zeroed())
@@ -177,7 +185,7 @@ export class BPNet {
       let nhy = hy.map(item => new Matrix([item.getRow(n)]))
       let nxs = new Matrix([xs.getRow(n)])
       let nys = new Matrix([ys.getRow(n)])
-      let { dw: ndw, dy: ndy } = this.calcDerivative(nhy, nxs, nys)
+      let { dw: ndw, dy: ndy } = this.backPropagation(nhy, nxs, nys)
       dws = dws.map((d, l) => d.addition(ndw[l]))
       dys = dys.map((d, l) => d.addition(ndy[l]))
     }
@@ -185,7 +193,6 @@ export class BPNet {
     let dy = dys.map(d => d.atomicOperation(item => item / m))
     return { dy, dw }
   }
-
 
   /**
    * 单样本求导，对每个输出单元的求导，对每个权重的求导
@@ -200,7 +207,7 @@ export class BPNet {
    *  - 如有激活函数需乘激活函数的导数；
    * @returns [神经单元导数, 权重导数]
    */
-  calcDerivative(hy: Matrix[], xs: Matrix, ys: Matrix) {
+  backPropagation(hy: Matrix[], xs: Matrix, ys: Matrix) {
     let dw: Matrix[] = [], dy: Matrix[] = []
     for (let l = this.hlayer - 1; l >= 0; l--) {
       let lastHy = hy[l - 1] ? hy[l - 1] : xs
@@ -252,8 +259,8 @@ export class BPNet {
    */
   async bgd(xs: Matrix, ys: Matrix, opt: TrainingOptions) {
     for (let ep = 0; ep < opt.epochs; ep++) {
-      let hy = this.calcnet(xs)
-      let { dy, dw } = this.calcDerivativeMultiple(hy, xs, ys)
+      let hy = this.forwardPropagation(xs)
+      let { dy, dw } = this.backPropagationMultiple(hy, xs, ys)
       this.adjust(dy, dw)
       if (opt.onEpoch) {
         opt.onEpoch(ep, this.cost(hy[hy.length - 1], ys))
@@ -276,8 +283,8 @@ export class BPNet {
       for (let n = 0; n < m; n++) {
         let nxs = new Matrix([xs.getRow(n)])
         let nys = new Matrix([ys.getRow(n)])
-        let hy = this.calcnet(nxs)
-        const { dy, dw } = this.calcDerivative(hy, nxs, nys)
+        let hy = this.forwardPropagation(nxs)
+        const { dy, dw } = this.backPropagation(hy, nxs, nys)
         this.adjust(dy, dw)
         hys = hys ? hys.connect(hy[hy.length - 1]) : hy[hy.length - 1]
       }
@@ -310,9 +317,9 @@ export class BPNet {
         let size = end - start
         let bxs = xst.slice(start, end)
         let bys = yst.slice(start, end)
-        let hy = this.calcnet(bxs)
+        let hy = this.forwardPropagation(bxs)
         let lastHy = hy[hy.length - 1]
-        const { dy, dw } = this.calcDerivativeMultiple(hy, bxs, bys)
+        const { dy, dw } = this.backPropagationMultiple(hy, bxs, bys)
         this.adjust(dy, dw)
         let bloss = this.cost(lastHy, bys)
         eploss += bloss
@@ -334,14 +341,18 @@ export class BPNet {
     }
   }
 
-  checkSample(xs: Matrix, ys: Matrix) {
-    this.checkInput(xs)
-    if (xs.shape[0] !== ys.shape[0]) {
-      throw new Error('The row number of input and output matrix is not uniform.')
-    }
+  checkOutput(ys: Matrix) {
     if (ys.shape[1] !== this.unit(this.hlayer - 1)) {
       throw new Error(`Output matrix column number error, output shape -> ${this.unit(this.hlayer - 1)}.`)
     }
+  }
+
+  checkSample(xs: Matrix, ys: Matrix) {
+    if (xs.shape[0] !== ys.shape[0]) {
+      throw new Error('The row number of input and output matrix is not uniform.')
+    }
+    this.checkInput(xs)
+    this.checkOutput(ys)
   }
 
   fit(xs: Matrix, ys: Matrix, opt: Partial<TrainingOptions> = {}) {
