@@ -196,9 +196,7 @@ export class RNN {
         this.backPropagation(hy, xs, ys)
         e += this.cost(hy, ys)
       }
-      if (onEpochs) {
-        onEpochs(i, e / this.trainData.length)
-      }
+      if (onEpochs) onEpochs(i, e / this.trainData.length)
     }
   }
 }

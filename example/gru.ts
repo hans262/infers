@@ -92,6 +92,6 @@ function integer(ys: number[]) {
   return ys.map(v => v > 0.5 ? 1 : 0)
 }
 
-export function testgru() {
+export function gru() {
   train()
 }

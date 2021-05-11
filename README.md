@@ -69,20 +69,21 @@ model.predict(xs2).print()
 ```
 RNN: Recurrent neural network example
 ```ts
-let trainData = ['Hello RNN', 'morning', 'I love 🍎', '我的🍎在哪里', '我的🍊被人偷了']
+let trainData = ['hello rnn', 'good morning', 'I love 🍎!', 'I eat 🍊!']
 let net = new RNN({ trainData })
 net.fit({
-  epochs: 1500,
-  onEpochs: (epoch, loss) => {
+  epochs: 1500, onEpochs: (epoch, loss) => {
     if (epoch % 10 === 0) console.log('epoch: ', epoch, 'loss: ', loss)
   }
 })
-console.log(net.predict('我的🍎'))
-console.log(net.predict('我的🍊'))
-console.log(net.predict('Hel'))
-// 在哪里/n
-// 被人偷了/n
-// lo RNN/n
+console.log(net.predict('I love'))
+console.log(net.predict('I eat'))
+console.log(net.predict('hel'))
+console.log(net.predict('good'))
+//  🍊!/n
+//  🍎!/n
+// lo rnn/n
+//  morning/n
 ```
 ## Parameter introduction: 
  - **shape**: The network hierarchical structure of the model includes the number of neurons in each layer, the type of activation function in each layer and the total number of layers. The more complex the network structure is, the more computation is needed for a single training, and it is easy to cause over fitting.
@@ -102,3 +103,4 @@ The selection of the above。parameters is also the process of model optimizatio
   - Linear regression and Logical classification
 - class RNN
   - Recurrent neural network
+  - Natural Language Processing

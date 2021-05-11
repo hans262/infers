@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "watch": "tsc -w",
-    "build": "tsc --project tsconfig.production.json",
+    "build": "tsc --project tsconfig.pro.json",
     "get-registry": "npm get registry",
     "login": "npm login",
     "pub": "npm publish",
