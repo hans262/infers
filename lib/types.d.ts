@@ -17,3 +17,15 @@ export interface TrainingOptions {
     onEpoch?: (epoch: number, loss: number) => void;
     onTrainEnd?: (loss: number) => void;
 }
+export interface RNNOptions {
+    trainData: string[];
+    rate?: number;
+}
+export interface RNNTrainingOptions {
+    epochs?: number;
+    onEpochs?: (epoch: number, loss: number) => void;
+}
+export interface RNNForwardResult {
+    st: Matrix;
+    yt: Matrix;
+}

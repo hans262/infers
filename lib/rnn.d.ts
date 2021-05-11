@@ -1,5 +1,5 @@
 import { Matrix } from '../src';
-declare type ActivationFunction = 'Tanh' | 'Softmax';
+import type { ActivationFunction, RNNOptions, RNNTrainingOptions, RNNForwardResult } from './types';
 export declare class RNN {
     U: Matrix;
     W: Matrix;
@@ -12,49 +12,23 @@ export declare class RNN {
     };
     trainData: string[][];
     inputSize: number;
-    hideSize: number;
-    constructor(data: string[]);
+    hidenSize: number;
+    firstSt: Matrix;
+    rate: number;
+    constructor(opt: RNNOptions);
     afn(x: number, rows: number[], af?: ActivationFunction): number;
     afd(x: number, af?: ActivationFunction): number;
-    oneHotXs(inputIndex: number): Matrix;
-    oneHotYs(outputIndex: number): Matrix;
-    forwardPropagation(data: {
-        xs: Matrix;
-        ys: Matrix;
-    }[]): {
-        xs: Matrix;
-        ys: Matrix;
+    oneHotX(inputIndex: number): Matrix;
+    oneHotXs(input: string[]): Matrix[];
+    oneHotY(outputIndex: number): Matrix;
+    oneHotYs(input: string[]): Matrix[];
+    forwardPropagation(xs: Matrix[]): RNNForwardResult[];
+    calcForward(xs: Matrix, lastSt?: Matrix): {
         st: Matrix;
         yt: Matrix;
-        lastSt: Matrix;
-    }[];
-    backPropagation(hys: {
-        xs: Matrix;
-        ys: Matrix;
-        st: Matrix;
-        yt: Matrix;
-        lastSt: Matrix;
-    }[]): void;
-    predict(): void;
-    maxIndex(d: number[]): number;
-    showWords(hys: {
-        xs: Matrix;
-        ys: Matrix;
-        st: Matrix;
-        yt: Matrix;
-        lastSt: Matrix;
-    }[]): string[];
-    cost(hys: {
-        xs: Matrix;
-        ys: Matrix;
-        st: Matrix;
-        yt: Matrix;
-        lastSt: Matrix;
-    }[]): number;
-    onehot(input: string[]): {
-        xs: Matrix;
-        ys: Matrix;
-    }[];
-    fit(): void;
+    };
+    backPropagation(hy: RNNForwardResult[], xs: Matrix[], ys: Matrix[]): void;
+    predict(input: string, max?: number): string | undefined;
+    cost(hy: RNNForwardResult[], ys: Matrix[]): number;
+    fit(opt?: RNNTrainingOptions): void;
 }
-export {};

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BPNetOptions | infers - v1.3.4</title>
+	<title>RNNForwardResult | infers - v1.3.4</title>
 	<meta name="description" content="Documentation for infers - v1.3.4">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,28 +55,21 @@
 					<a href="../modules.html">infers - v1.3.4</a>
 				</li>
 				<li>
-					<a href="bpnetoptions.html">BPNetOptions</a>
+					<a href="rnnforwardresult.html">RNNForwardResult</a>
 				</li>
 			</ul>
-			<h1>Interface BPNetOptions</h1>
+			<h1>Interface RNNForwardResult</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>模型配置</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">BPNetOptions</span>
+						<span class="target">RNNForwardResult</span>
 					</li>
 				</ul>
 			</section>
@@ -87,11 +80,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bpnetoptions.html#b" class="tsd-kind-icon">b</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bpnetoptions.html#mode" class="tsd-kind-icon">mode</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bpnetoptions.html#rate" class="tsd-kind-icon">rate</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bpnetoptions.html#scale" class="tsd-kind-icon">scale</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bpnetoptions.html#w" class="tsd-kind-icon">w</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rnnforwardresult.html#st" class="tsd-kind-icon">st</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rnnforwardresult.html#yt" class="tsd-kind-icon">yt</a></li>
 							</ul>
 						</section>
 					</div>
@@ -100,52 +90,22 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="b" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> b</h3>
-					<div class="tsd-signature tsd-kind-icon">b<span class="tsd-signature-symbol">:</span> <a href="../classes/matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="st" class="tsd-anchor"></a>
+					<h3>st</h3>
+					<div class="tsd-signature tsd-kind-icon">st<span class="tsd-signature-symbol">:</span> <a href="../classes/matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/87727c5/src/types.ts#L17">types.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/87727c5/src/types.ts#L43">types.ts:43</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="mode" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> mode</h3>
-					<div class="tsd-signature tsd-kind-icon">mode<span class="tsd-signature-symbol">:</span> <a href="../modules.html#mode" class="tsd-signature-type" data-tsd-kind="Type alias">Mode</a></div>
+					<a name="yt" class="tsd-anchor"></a>
+					<h3>yt</h3>
+					<div class="tsd-signature tsd-kind-icon">yt<span class="tsd-signature-symbol">:</span> <a href="../classes/matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/87727c5/src/types.ts#L14">types.ts:14</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="rate" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> rate</h3>
-					<div class="tsd-signature tsd-kind-icon">rate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/87727c5/src/types.ts#L15">types.ts:15</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="scale" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> scale</h3>
-					<div class="tsd-signature tsd-kind-icon">scale<span class="tsd-signature-symbol">:</span> <a href="../classes/matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/87727c5/src/types.ts#L18">types.ts:18</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="w" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> w</h3>
-					<div class="tsd-signature tsd-kind-icon">w<span class="tsd-signature-symbol">:</span> <a href="../classes/matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/87727c5/src/types.ts#L16">types.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/87727c5/src/types.ts#L44">types.ts:44</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -182,33 +142,24 @@
 					<li class=" tsd-kind-class">
 						<a href="../classes/rnn.html" class="tsd-kind-icon">RNN</a>
 					</li>
+					<li class=" tsd-kind-interface">
+						<a href="bpnetoptions.html" class="tsd-kind-icon">BPNet<wbr>Options</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="bpnetoptions.html" class="tsd-kind-icon">BPNet<wbr>Options</a>
+						<a href="rnnforwardresult.html" class="tsd-kind-icon">RNNForward<wbr>Result</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="bpnetoptions.html#b" class="tsd-kind-icon">b</a>
+								<a href="rnnforwardresult.html#st" class="tsd-kind-icon">st</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="bpnetoptions.html#mode" class="tsd-kind-icon">mode</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="bpnetoptions.html#rate" class="tsd-kind-icon">rate</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="bpnetoptions.html#scale" class="tsd-kind-icon">scale</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="bpnetoptions.html#w" class="tsd-kind-icon">w</a>
+								<a href="rnnforwardresult.html#yt" class="tsd-kind-icon">yt</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface">
-						<a href="rnnforwardresult.html" class="tsd-kind-icon">RNNForward<wbr>Result</a>
-					</li>
 					<li class=" tsd-kind-interface">
 						<a href="rnnoptions.html" class="tsd-kind-icon">RNNOptions</a>
 					</li>

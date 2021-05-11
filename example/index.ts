@@ -2,6 +2,7 @@ import { addition } from './addition'
 import { iris, saveIris } from './iris'
 import { xor } from './xor'
 import { rnn } from './rnn'
+import { testgru } from './grn'
 
 export namespace TestMatrix {
   export function run() {
@@ -9,7 +10,8 @@ export namespace TestMatrix {
     // xor()
     // iris()
     // saveIris()
-    rnn()
+    // rnn()
+    testgru()
   }
 }
 TestMatrix.run()

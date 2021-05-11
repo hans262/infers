@@ -1,6 +1,9 @@
 import { upset } from "./common"
 import { Matrix } from "./matrix"
-import { ActivationFunction, TrainingOptions, Mode, BPNetOptions, NetShape } from "./types"
+import type {
+  ActivationFunction, TrainingOptions,
+  Mode, BPNetOptions, NetShape
+} from "./types"
 
 export const defaultTrainingOptions = (m: number): TrainingOptions => ({
   epochs: 100,

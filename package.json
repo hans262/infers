@@ -1,6 +1,6 @@
 {
   "name": "infers",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Matrix operation and machine learning library by TypesScript.",
   "main": "./lib/index.js",
   "keywords": [

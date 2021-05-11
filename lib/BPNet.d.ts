@@ -1,5 +1,5 @@
 import { Matrix } from "./matrix";
-import { ActivationFunction, TrainingOptions, Mode, BPNetOptions, NetShape } from "./types";
+import type { ActivationFunction, TrainingOptions, Mode, BPNetOptions, NetShape } from "./types";
 export declare const defaultTrainingOptions: (m: number) => TrainingOptions;
 export declare class BPNet {
     readonly shape: NetShape;

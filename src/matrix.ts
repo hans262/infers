@@ -16,6 +16,22 @@ export class Matrix {
   }
 
   /**
+   * 返回行的最大值索引
+   */
+  argMax(row: number) {
+    let d = this.getRow(row)
+    let max = d[0]
+    let index = 0
+    for (let i = 0; i < d.length; i++) {
+      if (d[i] > max) {
+        max = d[i]
+        index = i
+      }
+    }
+    return index
+  }
+
+  /**
    * 连接两个矩阵
    * 从底部连接
    */

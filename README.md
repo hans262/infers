@@ -67,6 +67,23 @@ model.predict(xs2).print()
 //  -9.000000644547901,
 // ]
 ```
+RNN: Recurrent neural network example
+```ts
+let trainData = ['Hello RNN', 'morning', 'I love 🍎', '我的🍎在哪里', '我的🍊被人偷了']
+let net = new RNN({ trainData })
+net.fit({
+  epochs: 1500,
+  onEpochs: (epoch, loss) => {
+    if (epoch % 10 === 0) console.log('epoch: ', epoch, 'loss: ', loss)
+  }
+})
+console.log(net.predict('我的🍎'))
+console.log(net.predict('我的🍊'))
+console.log(net.predict('Hel'))
+// 在哪里/n
+// 被人偷了/n
+// lo RNN/n
+```
 ## Parameter introduction: 
  - **shape**: The network hierarchical structure of the model includes the number of neurons in each layer, the type of activation function in each layer and the total number of layers. The more complex the network structure is, the more computation is needed for a single training, and it is easy to cause over fitting.
  - **rate**: Learning rate is also known as training step. The lower the learning rate, the more training times are needed to achieve the optimal cost function. If the learning rate is too large, it may cross the optimal cost function due to too large span, resulting in the loss value approaching the positive infinite model and the problem that the model cannot converge.
@@ -83,3 +100,5 @@ The selection of the above。parameters is also the process of model optimizatio
   - Multi-layer network model of CNN
   - Support multiple activation functions
   - Linear regression and Logical classification
+- class RNN
+  - Recurrent neural network

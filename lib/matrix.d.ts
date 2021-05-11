@@ -3,6 +3,7 @@ export declare class Matrix {
     private self;
     constructor(data: number[][]);
     slice(start: number, end: number): Matrix;
+    argMax(row: number): number;
     connect(b: Matrix): Matrix;
     zeroed(): Matrix;
     clone(): Matrix;

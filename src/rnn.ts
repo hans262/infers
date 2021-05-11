@@ -1,22 +1,25 @@
 import { Matrix } from '../src'
-
-type ActivationFunction = 'Tanh' | 'Softmax'
+import type {
+  ActivationFunction, RNNOptions,
+  RNNTrainingOptions, RNNForwardResult
+} from './types'
 
 export class RNN {
-  U: Matrix //隐藏层权值
-  W: Matrix //上一时刻连接隐藏层权值
-  V: Matrix //输出层权值
+  U: Matrix // input -> hiden
+  W: Matrix // last hiden -> hiden
+  V: Matrix // hiden -> output
 
   indexWord: { [index: string]: number } = {}
   wordIndex: { [index: number]: string } = {}
-  /**[['h', 'e', 'l', 'l', 'o'], ['h', 'u', 'a', 'h', 'u', 'a'], ...]*/
   trainData: string[][]
+  inputSize: number
+  hidenSize = 10
 
-  inputSize: number // 输入层大小
-  hideSize = 8 // 隐藏层大小
-
-  constructor(data: string[]) {
-    this.trainData = data.map(v => v.split(''))
+  firstSt: Matrix
+  rate = 0.01
+  constructor(opt: RNNOptions) {
+    this.trainData = opt.trainData.map(v => v.split(''))
+    if (opt.rate) this.rate = opt.rate
 
     let temp = Array.from(new Set(this.trainData.flat(1)))
     for (let i = 0; i < temp.length; i++) {
@@ -28,15 +31,17 @@ export class RNN {
     this.indexWord['/n'] = temp.length
 
     let outputSize = this.inputSize + 1
-    this.U = Matrix.generate(this.hideSize, this.inputSize)
-    this.W = Matrix.generate(this.hideSize, this.hideSize)
-    this.V = Matrix.generate(outputSize, this.hideSize)
+    this.U = Matrix.generate(this.hidenSize, this.inputSize)
+    this.W = Matrix.generate(this.hidenSize, this.hidenSize)
+    this.V = Matrix.generate(outputSize, this.hidenSize)
+
+    this.firstSt = Matrix.generate(1, this.hidenSize, 0)
   }
 
   afn(x: number, rows: number[], af?: ActivationFunction) {
     switch (af) {
       case 'Tanh':
-        return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x))
+        return Math.tanh(x)
       case 'Softmax':
         let d = Math.max(...rows) //防止指数过大
         return Math.exp(x - d) / rows.reduce((p, c) => p + Math.exp(c - d), 0)
@@ -48,134 +53,152 @@ export class RNN {
   afd(x: number, af?: ActivationFunction) {
     switch (af) {
       case 'Tanh':
-        return 1 - ((Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x))) ** 2
+        return 1 - Math.tanh(x) ** 2
       case 'Softmax':
       default:
         return 1
     }
   }
 
-  //编码
-  oneHotXs(inputIndex: number) {
+  // encode xs
+  oneHotX(inputIndex: number) {
     let xs = Matrix.generate(1, this.inputSize, 0)
     xs.update(0, inputIndex, 1)
     return xs
   }
 
-  oneHotYs(outputIndex: number) {
-    let ys = Matrix.generate(1, this.inputSize + 1, 0)
-    if (outputIndex < 0) {
-      ys.update(0, this.inputSize, 1)
-    } else {
-      ys.update(0, outputIndex, 1)
-    }
-    return ys
-  }
-
-  // 向前传播
-  forwardPropagation(data: { xs: Matrix, ys: Matrix }[]) {
-    //初始化st
-    let lastSt = Matrix.generate(1, this.hideSize, 0)
-    //求出每个时刻的值
-    return data.map(v => {
-      let { xs, ys } = v
-      let st = xs.multiply(this.U.T).addition(lastSt.multiply(this.W.T))
-      st = st.atomicOperation((item, i) => this.afn(item, st.getRow(i), 'Tanh'))
-      let yt = st.multiply(this.V.T)
-      yt = yt.atomicOperation((item, i) => this.afn(item, yt.getRow(i), 'Softmax'))
-      let lastStCopy = lastSt
-      lastSt = st //保存上一时刻st
-      return { xs, ys, st, yt, lastSt: lastStCopy }
+  oneHotXs(input: string[]) {
+    return input.map(s => {
+      let nowIndex = this.indexWord[s]
+      return this.oneHotX(nowIndex)
     })
   }
 
-  // 反向传播
-  backPropagation(hys: { xs: Matrix, ys: Matrix, st: Matrix, yt: Matrix, lastSt: Matrix }[]) {
+  // encode ys
+  oneHotY(outputIndex: number) {
+    let ys = Matrix.generate(1, this.inputSize + 1, 0)
+    ys.update(0, outputIndex, 1)
+    return ys
+  }
+
+  oneHotYs(input: string[]) {
+    return input.map((_, i) => {
+      let nextWord = input[i + 1] ? input[i + 1] : '/n'
+      let nextIndex = this.indexWord[nextWord]
+      return this.oneHotY(nextIndex)
+    })
+  }
+
+  forwardPropagation(xs: Matrix[]): RNNForwardResult[] {
+    let result: RNNForwardResult[] = []
+    for (let i = 0; i < xs.length; i++) {
+      let xst = xs[i]
+      let lastSt = i === 0 ? this.firstSt : result[i - 1].st
+      let { st, yt } = this.calcForward(xst, lastSt)
+      result.push({ st, yt })
+    }
+    return result
+  }
+
+  calcForward(xs: Matrix, lastSt = this.firstSt) {
+    let st = xs.multiply(this.U.T).addition(lastSt.multiply(this.W.T))
+    st = st.atomicOperation((item, i) => this.afn(item, st.getRow(i), 'Tanh'))
+    let yt = st.multiply(this.V.T)
+    yt = yt.atomicOperation((item, i) => this.afn(item, yt.getRow(i), 'Softmax'))
+    return { st, yt }
+  }
+
+  backPropagation(hy: RNNForwardResult[], xs: Matrix[], ys: Matrix[]) {
     let dv = this.V.zeroed()
     let du = this.U.zeroed()
     let dw = this.W.zeroed()
-    //求出每个时刻的倒数项目
-    hys.forEach(hy => {
-      let { xs, ys, st, yt, lastSt } = hy
-      let dyt = yt.atomicOperation((item, r, c) => (item - ys.get(r, c)) * this.afd(item, 'Softmax'))
+    //求出每个时刻的导数项目
+    for (let i = 0; i < hy.length; i++) {
+      let { st, yt } = hy[i]
+      let xst = xs[i]
+      let yst = ys[i]
+
+      let lastSt = i === 0 ? this.firstSt : hy[i - 1].st
+      let dyt = yt.atomicOperation((item, r, c) => (item - yst.get(r, c)) * this.afd(item, 'Softmax'))
 
       let dst = dyt.multiply(this.V)
       dst = dst.atomicOperation((item, r, c) => item * this.afd(st.get(r, c), 'Tanh'))
 
       let ndv = dyt.T.multiply(st)
-      let ndu = dst.T.multiply(xs)
+      let ndu = dst.T.multiply(xst)
       let ndw = dst.T.multiply(lastSt)
 
       dv = dv.addition(ndv)
       du = du.addition(ndu)
       dw = dw.addition(ndw)
-    })
-
-    // //更新
-    let rate = 0.01
-    this.U = this.U.subtraction(du.numberMultiply(rate))
-    this.W = this.W.subtraction(dw.numberMultiply(rate))
-    this.V = this.V.subtraction(dv.numberMultiply(rate))
-  }
-
-  predict() {
-    let input = 'gou'.split('')
-    let data = this.onehot(input)
-    let hys = this.forwardPropagation(data)
-    console.log(this.showWords(hys))
-  }
-
-  maxIndex(d: number[]) {
-    var max = d[0]
-    var index = 0
-    for (var i = 0; i < d.length; i++) {
-      if (d[i] > max) {
-        max = d[i]
-        index = i
-      }
     }
-    return index
+
+    this.U = this.U.subtraction(du.numberMultiply(this.rate))
+    this.W = this.W.subtraction(dw.numberMultiply(this.rate))
+    this.V = this.V.subtraction(dv.numberMultiply(this.rate))
   }
 
-  showWords(hys: { xs: Matrix, ys: Matrix, st: Matrix, yt: Matrix, lastSt: Matrix }[]) {
-    return hys.map(hy => {
-      let index = this.maxIndex(hy.yt.getRow(0))
-      if (!this.wordIndex[index]) debugger
-      return this.wordIndex[index]
-    })
+  /**
+   * @param input 
+   * @param max 最大返回字符数
+   */
+  predict(input: string, max: number = 10) {
+    let data = input.split('')
+    let s = data.find(d => this.indexWord[d] === undefined)
+    //检测 没有在词典中的单词
+    if (s) {
+      console.error(`检测到有未在词典中的字：${s}`)
+      return undefined
+    }
+
+    let xs = this.oneHotXs(data)
+    let hy = this.forwardPropagation(xs)
+    let lastHy = hy[hy.length - 1]
+
+    let nextIndex = lastHy.yt.argMax(0)
+    let nextSt = lastHy.st
+
+    let result = ''
+    result += this.wordIndex[nextIndex]
+
+    if (nextIndex === this.inputSize) return result
+
+    for (let i = 0; i < max - 1; i++) {
+      let nextXs = this.oneHotX(nextIndex)
+      let hy = this.calcForward(nextXs, nextSt)
+      nextIndex = hy.yt.argMax(0)
+      nextSt = hy.st
+      result += this.wordIndex[nextIndex]
+      if (nextIndex === this.inputSize) break
+    }
+    return result
   }
 
-  cost(hys: { xs: Matrix, ys: Matrix, st: Matrix, yt: Matrix, lastSt: Matrix }[]) {
-    let m = hys.map(hy => {
-      let { yt, ys } = hy
-      let tmp = yt.subtraction(ys).atomicOperation(item => (item ** 2) / 2).getRow(0)
+  cost(hy: RNNForwardResult[], ys: Matrix[]) {
+    let res = hy.map((nhy, i) => {
+      let { yt } = nhy
+      let yst = ys[i]
+      let tmp = yt.subtraction(yst).atomicOperation(item => (item ** 2) / 2).getRow(0)
       return tmp.reduce((a, b) => a + b) / tmp.length
     })
-    return m.reduce((a, b) => a + b)
+    return res.reduce((a, b) => a + b)
   }
 
-  onehot(input: string[]) {
-    return input.map((s, i) => {
-      let inputIndex = this.indexWord[s]
-      let nextWord = input[i + 1] ? input[i + 1] : '/n'
-      let outoutIndex = this.indexWord[nextWord]
-      let xs = this.oneHotXs(inputIndex)
-      let ys = this.oneHotYs(outoutIndex)
-      return { xs, ys }
-    })
-  }
-
-  fit() {
-    for (let i = 0; i < 5000; i++) {
+  fit(opt: RNNTrainingOptions = {}) {
+    const { epochs = 1000, onEpochs } = opt
+    for (let i = 0; i < epochs; i++) {
       let e = 0
       for (let n = 0; n < this.trainData.length; n++) {
         let input = this.trainData[n]
-        let data = this.onehot(input)
-        let hys = this.forwardPropagation(data)
-        this.backPropagation(hys)
-        e += this.cost(hys)
+        let xs = this.oneHotXs(input)
+        let ys = this.oneHotYs(input)
+        let hy = this.forwardPropagation(xs)
+        this.backPropagation(hy, xs, ys)
+        e += this.cost(hy, ys)
       }
-      if (i % 100 === 0) console.log('enpoch: ', i, 'loss: ', e / this.trainData.length)
+      if (onEpochs) {
+        onEpochs(i, e / this.trainData.length)
+      }
     }
   }
 }
