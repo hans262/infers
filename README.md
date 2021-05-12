@@ -98,7 +98,7 @@ The selection of the above。parameters is also the process of model optimizatio
   - addition, subtraction, multiply, transpose
   - determinant, normalization
 - class BPNet
-  - Multi-layer network model of CNN
+  - Multi-layer network model
   - Support multiple activation functions
   - Linear regression and Logical classification
 - class RNN
