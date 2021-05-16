@@ -37,9 +37,11 @@ export class Optimize {
    */
   adaGrad(xs: Matrix[], ys: Matrix) { }
   /**
-   * adaDelta AdaGrad改进版
+   * adaDelta AdaGrad改进版 
+   * 该方法就是rmsprop
    * 解决后期学习率趋近于0的情况
    * 增加一个衰减系数z，一般z = 0.999
+   * 默认的h[t-1] 可置为0
    * - h[t] = z * h[t-1] + (1- z)(∂J / ∂w) ** 2
    * - w = w - (α / (Math.sqrt(h[t]) + 1e-07)) * (∂J / ∂w)
    */
