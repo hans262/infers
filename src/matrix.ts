@@ -335,7 +335,7 @@ export class Matrix {
   }
 
   /**
-   * 转置
+   * transpose
    */
   get T() {
     let a = []
@@ -372,7 +372,7 @@ export class Matrix {
   }
 
   /**
-   * 格式化输出矩阵
+   * format print
    */
   print() {
     console.log(`Matrix ${this.shape[0]}x${this.shape[1]} [`)

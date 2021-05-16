@@ -140,9 +140,9 @@ export class RNN {
 
   /**
    * @param input 
-   * @param max 最大返回字符数
+   * @param length 最大返回字符长度
    */
-  predict(input: string, max: number = 10) {
+  predict(input: string, length: number = 10) {
     let data = input.split('')
     let s = data.find(d => this.indexWord[d] === undefined)
     //检测 没有在词典中的单词
@@ -163,7 +163,7 @@ export class RNN {
 
     if (nextIndex === this.inputSize) return result
 
-    for (let i = 0; i < max - 1; i++) {
+    for (let i = 0; i < length - 1; i++) {
       let nextXs = this.oneHotX(nextIndex)
       let hy = this.calcForward(nextXs, nextSt)
       nextIndex = hy.yt.argMax(0)

@@ -72,7 +72,7 @@ export class BPNet {
       case 'Relu':
         return x >= 0 ? x : 0
       case 'Tanh':
-        return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x))
+        return Math.tanh(x)
       case 'Softmax':
         let d = Math.max(...rows) //防止指数过大
         return Math.exp(x - d) / rows.reduce((p, c) => p + Math.exp(c - d), 0)
@@ -91,8 +91,10 @@ export class BPNet {
       case 'Relu':
         return x >= 0 ? 1 : 0
       case 'Tanh':
-        return 1 - ((Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x))) ** 2
+        return 1 - Math.tanh(x) ** 2
       case 'Softmax':
+      // 只能用在最后一层，因为要保证y的值属于 0/1
+      // dy = [y = 1] -> hy - 1 ; [y = 0] -> hy ; -> hy - y
       default:
         return 1
     }

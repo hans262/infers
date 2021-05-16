@@ -40,7 +40,9 @@ buts.forEach(but => {
       let epochs = Number(document.getElementById('epochs').value)
       model.fit(xs, ys, {
         epochs, async: true, onEpoch: (epoch, loss) => {
-          drawNet(ctx, model, model.predictNet(xs), loss, epoch)
+          let hy = model.predictNet(xs)
+          hy[0] = xs
+          drawNet(ctx, model, hy, loss, epoch)
         }, onTrainEnd: () => {
           but.disabled = false
         }
@@ -50,7 +52,9 @@ buts.forEach(but => {
     let tmp = but.innerHTML.split(', ').map(v => Number(v))
     let nxs = new Matrix([tmp])
     let loss = model.calcLoss(xs, ys)
-    drawNet(ctx, model, model.predictNet(nxs), loss)
+    let hy = model.predictNet(nxs)
+    hy[0] = nxs
+    drawNet(ctx, model, hy, loss)
   })
 })
 
