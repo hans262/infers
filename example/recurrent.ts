@@ -1,9 +1,4 @@
 class Tool {
-  //随取整数 范围内
-  static randi(a: number, b: number) {
-    return Math.floor(Math.random() * (b - a) + a)
-  }
-
   //返回数组中最大值的索引
   static maxi(w: number[]) {
     let maxv = w[0]
@@ -70,18 +65,19 @@ function forwardRNN(G: Graph, model: Model, hidden_size: number, x: Mat, prev_hi
 }
 
 class Graph {
-  backprop: any = []
+  backprop: (() => void)[] = []
   constructor(public needs_backprop: boolean) { }
 
   backward() {
     for (let i = this.backprop.length - 1; i >= 0; i--) {
-      this.backprop[i](); // tick!
+      this.backprop[i]()
     }
   }
+
   rowPluck(m: Mat, ix: number) {
     let d = m.d;
-    let out = new Mat(d, 1);
-    for (let i = 0, n = d; i < n; i++) { out.w[i] = m.w[d * ix + i]; } // copy over the data
+    let out = new Mat(d, 1)
+    for (let i = 0, n = d; i < n; i++) { out.w[i] = m.w[d * ix + i]; } // copy
 
     if (this.needs_backprop) {
       let backward = function () {
@@ -139,7 +135,7 @@ class Graph {
     }
     return out;
   }
-  
+
   add(m1: Mat, m2: Mat) {
     let out = new Mat(m1.n, m1.d);
     for (let i = 0, n = m1.w.length; i < n; i++) {
@@ -172,10 +168,8 @@ interface Model {
 class RNN {
   hidden_size = 20; // hidden layers
   letter_size = 5; // 字母大小
-
   learning_rate = 0.02 // learning rate
 
-  epoch_size: number
   input_size: number
   output_size: number
 
@@ -195,7 +189,6 @@ class RNN {
     }
     this.input_size = temp.length + 1
     this.output_size = temp.length + 1
-    this.epoch_size = this.tarin_data.length
 
     this.model = this.initRNN(this.input_size, this.letter_size, this.hidden_size, this.output_size)
   }
@@ -269,16 +262,16 @@ class RNN {
 
   train() {
     for (let i = 0; i < 2000; i++) {
-      let sentix = Tool.randi(0, this.tarin_data.length)
-      let sent = this.tarin_data[sentix]
-      let cost_struct = this.cost(sent)
-      cost_struct.graph.backward()
-      this.adjust()
-
+      let cost = 0
+      for (let n = 0; n < this.tarin_data.length; n++) {
+        let sent = this.tarin_data[n]
+        let cost_struct = this.cost(sent)
+        cost_struct.graph.backward()
+        this.adjust()
+        cost += cost_struct.cost
+      }
       if (i % 10 === 0) {
-        let epoch = (i / this.epoch_size).toFixed(2)
-        let cost = cost_struct.cost.toFixed(2)
-        console.log('epoch: ', epoch, 'perplexity: ', 'cost: ', cost)
+        console.log('epoch: ', i, 'cost: ', cost / this.tarin_data.length)
       }
     }
   }
