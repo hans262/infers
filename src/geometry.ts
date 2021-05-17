@@ -53,22 +53,6 @@ export class Edge {
   }
 }
 
-export class Path {
-  constructor(public pts: Point[]) {
-    if (pts.length < 2) {
-      throw new Error('至少两个点')
-    }
-    const n = pts.find((pt, i) => {
-      const next = pts[i + 1] as Point | undefined
-      if (!next) return false
-      return pt.contrast(next)
-    })
-    if (n) {
-      throw new Error('不能有连续重合的点')
-    }
-  }
-}
-
 export class Polygon {
   points: Point[]
   constructor(pts: [number, number][]) {
@@ -135,14 +119,4 @@ export class Polygon {
     }
     return result;
   }
-}
-
-interface Rect {
-  point: Point,
-  width: number,
-  height: number
-}
-
-export type {
-  Rect
 }

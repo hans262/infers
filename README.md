@@ -1,5 +1,5 @@
 # infers
-Matrix operation and machine learning library by TypesScript.
+Machine learning and Matrix operation library by TypeScript.
 - [XOR EXAMPLE](https://badgua.gitee.io/infers)
 - [API DOC](https://badgua.gitee.io/infers/api/)
 
@@ -67,7 +67,7 @@ model.predict(xs2).print()
 //  -9.000000644547901,
 // ]
 ```
-RNN: Recurrent neural network example
+RNN: Recurrent neural network example:
 ```ts
 let trainData = ['hello rnn', 'good morning', 'I love 🍎!', 'I eat 🍊!']
 let net = new RNN({ trainData })
@@ -95,12 +95,11 @@ The selection of the above。parameters is also the process of model optimizatio
 
 ## Export
 - class Matrix
-  - addition, subtraction, multiply, transpose
-  - determinant, normalization
+  - Mathematical operation of matrix
+  - addition, subtraction, multiply, transpose, determinant
 - class BPNet
+  - Fully connected neural network
   - Multi-layer network model
-  - Support multiple activation functions
-  - Linear regression and Logical classification
 - class RNN
   - Recurrent neural network
-  - Natural Language Processing
+  - Natural language processing

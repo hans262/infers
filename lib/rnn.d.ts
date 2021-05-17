@@ -28,7 +28,7 @@ export declare class RNN {
         yt: Matrix;
     };
     backPropagation(hy: RNNForwardResult[], xs: Matrix[], ys: Matrix[]): void;
-    predict(input: string, max?: number): string | undefined;
+    predict(input: string, length?: number): string | undefined;
     cost(hy: RNNForwardResult[], ys: Matrix[]): number;
     fit(opt?: RNNTrainingOptions): void;
 }

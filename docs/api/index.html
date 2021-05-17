@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>infers - v1.3.4</title>
-	<meta name="description" content="Documentation for infers - v1.3.4">
+	<title>infers - v1.3.5</title>
+	<meta name="description" content="Documentation for infers - v1.3.5">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 	<script async src="assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">infers - v1.3.4</a>
+					<a href="index.html" class="title">infers - v1.3.5</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<h1>infers - v1.3.4</h1>
+			<h1>infers - v1.3.5</h1>
 		</div>
 	</div>
 </header>
@@ -61,7 +61,7 @@
 				<a href="#infers" id="infers" style="color: inherit; text-decoration: none;">
 					<h1>infers</h1>
 				</a>
-				<p>Matrix operation and machine learning library by TypesScript.</p>
+				<p>Machine learning and Matrix operation library by TypeScript.</p>
 				<ul>
 					<li><a href="https://badgua.gitee.io/infers">XOR EXAMPLE</a></li>
 					<li><a href="https://badgua.gitee.io/infers/api/">API DOC</a></li>
@@ -127,21 +127,22 @@
 <span style="color: #008000">//  -9.000000644547901,</span>
 <span style="color: #008000">// ]</span>
 </code></pre>
-				<p>RNN: Recurrent neural network example</p>
-				<pre><code class="language-ts"><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">trainData</span><span style="color: #000000"> = [</span><span style="color: #A31515">&#039;Hello RNN&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;morning&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;I love 🍎&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;我的🍎在哪里&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;我的🍊被人偷了&#039;</span><span style="color: #000000">]</span>
+				<p>RNN: Recurrent neural network example:</p>
+				<pre><code class="language-ts"><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">trainData</span><span style="color: #000000"> = [</span><span style="color: #A31515">&#039;hello rnn&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;good morning&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;I love 🍎!&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;I eat 🍊!&#039;</span><span style="color: #000000">]</span>
 <span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">net</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">RNN</span><span style="color: #000000">({ </span><span style="color: #001080">trainData</span><span style="color: #000000"> })</span>
 <span style="color: #001080">net</span><span style="color: #000000">.</span><span style="color: #795E26">fit</span><span style="color: #000000">({</span>
-<span style="color: #000000">  </span><span style="color: #001080">epochs:</span><span style="color: #000000"> </span><span style="color: #098658">1500</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #795E26">onEpochs</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">epochs:</span><span style="color: #000000"> </span><span style="color: #098658">1500</span><span style="color: #000000">, </span><span style="color: #795E26">onEpochs</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">    </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">epoch</span><span style="color: #000000"> % </span><span style="color: #098658">10</span><span style="color: #000000"> === </span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;epoch: &#039;</span><span style="color: #000000">, </span><span style="color: #001080">epoch</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;loss: &#039;</span><span style="color: #000000">, </span><span style="color: #001080">loss</span><span style="color: #000000">)</span>
 <span style="color: #000000">  }</span>
 <span style="color: #000000">})</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">net</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;我的🍎&#039;</span><span style="color: #000000">))</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">net</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;我的🍊&#039;</span><span style="color: #000000">))</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">net</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Hel&#039;</span><span style="color: #000000">))</span>
-<span style="color: #008000">// 在哪里/n</span>
-<span style="color: #008000">// 被人偷了/n</span>
-<span style="color: #008000">// lo RNN/n</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">net</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;I love&#039;</span><span style="color: #000000">))</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">net</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;I eat&#039;</span><span style="color: #000000">))</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">net</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;hel&#039;</span><span style="color: #000000">))</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">net</span><span style="color: #000000">.</span><span style="color: #795E26">predict</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;good&#039;</span><span style="color: #000000">))</span>
+<span style="color: #008000">//  🍊!/n</span>
+<span style="color: #008000">//  🍎!/n</span>
+<span style="color: #008000">// lo rnn/n</span>
+<span style="color: #008000">//  morning/n</span>
 </code></pre>
 				<a href="#parameter-introduction" id="parameter-introduction" style="color: inherit; text-decoration: none;">
 					<h2>Parameter introduction:</h2>
@@ -158,18 +159,18 @@
 				</a>
 				<ul>
 					<li>class Matrix<ul>
-							<li>addition, subtraction, multiply, transpose</li>
-							<li>determinant, normalization</li>
+							<li>Mathematical operation of matrix</li>
+							<li>addition, subtraction, multiply, transpose, determinant</li>
 						</ul>
 					</li>
 					<li>class BPNet<ul>
-							<li>Multi-layer network model of CNN</li>
-							<li>Support multiple activation functions</li>
-							<li>Linear regression and Logical classification</li>
+							<li>Fully connected neural network</li>
+							<li>Multi-layer network model</li>
 						</ul>
 					</li>
 					<li>class RNN<ul>
 							<li>Recurrent neural network</li>
+							<li>Natural language processing</li>
 						</ul>
 					</li>
 				</ul>
@@ -195,9 +196,6 @@
 						<a href="classes/matrix.html" class="tsd-kind-icon">Matrix</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/path.html" class="tsd-kind-icon">Path</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="classes/point.html" class="tsd-kind-icon">Point</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -217,9 +215,6 @@
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/rnntrainingoptions.html" class="tsd-kind-icon">RNNTraining<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/rect.html" class="tsd-kind-icon">Rect</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/trainingoptions.html" class="tsd-kind-icon">Training<wbr>Options</a>

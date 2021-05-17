@@ -1,5 +1,15 @@
 import { Point, Edge, Polygon } from '../src'
 
+describe('test -> point', () => {
+  test('点重合验证', () => {
+    let p = new Point(1, 2)
+    let p2 = new Point(1, 2)
+    let p3 = new Point(5, 2)
+    expect(p.contrast(p2)).toBeTruthy()
+    expect(p.contrast(p3)).toBeFalsy()
+  })
+})
+
 describe('test -> edge', () => {
   test('点在边的斜率上', () => {
     let edge = new Edge([0, 0], [3, 3])

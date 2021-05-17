@@ -13,18 +13,8 @@ export declare class Edge {
     testPointIn(pt: Point): boolean;
     testPointInside(pt: Point): boolean;
 }
-export declare class Path {
-    pts: Point[];
-    constructor(pts: Point[]);
-}
 export declare class Polygon {
     points: Point[];
     constructor(pts: [number, number][]);
     testPointInsidePolygon(pt: Point): number;
 }
-interface Rect {
-    point: Point;
-    width: number;
-    height: number;
-}
-export type { Rect };
