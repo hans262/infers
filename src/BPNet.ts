@@ -1,8 +1,7 @@
-import { upset } from "./common"
+import { upset, afd, afn } from "./common"
 import { Matrix } from "./matrix"
 import type {
-  ActivationFunction, TrainingOptions,
-  Mode, BPNetOptions, NetShape
+  TrainingOptions, Mode, BPNetOptions, NetShape
 } from "./types"
 
 export const defaultTrainingOptions = (m: number): TrainingOptions => ({
@@ -63,44 +62,6 @@ export class BPNet {
   }
 
   /**
-   * 激活函数求值
-   */
-  afn(x: number, rows: number[], af?: ActivationFunction) {
-    switch (af) {
-      case 'Sigmoid':
-        return 1 / (1 + Math.exp(-x))
-      case 'Relu':
-        return x >= 0 ? x : 0
-      case 'Tanh':
-        return Math.tanh(x)
-      case 'Softmax':
-        let d = Math.max(...rows) //防止指数过大
-        return Math.exp(x - d) / rows.reduce((p, c) => p + Math.exp(c - d), 0)
-      default:
-        return x
-    }
-  }
-
-  /**
-   * 激活函数求导
-   */
-  afd(x: number, af?: ActivationFunction) {
-    switch (af) {
-      case 'Sigmoid':
-        return x * (1 - x)
-      case 'Relu':
-        return x >= 0 ? 1 : 0
-      case 'Tanh':
-        return 1 - Math.tanh(x) ** 2
-      case 'Softmax':
-      // 只能用在最后一层，因为要保证y的值属于 0/1
-      // dy = [y = 1] -> hy - 1 ; [y = 0] -> hy ; -> hy - y
-      default:
-        return 1
-    }
-  }
-
-  /**
    * @returns json字符串
    */
   toJSON() {
@@ -142,7 +103,7 @@ export class BPNet {
       let lastHy = l === 0 ? xs : hy[l - 1]
       let af = this.af(l)
       let tmp = lastHy.multiply(this.w[l].T).atomicOperation((item, _, j) => item + this.b[l].get(0, j))
-      hy[l] = tmp.atomicOperation((item, i) => this.afn(item, tmp.getRow(i), af))
+      hy[l] = tmp.atomicOperation((item, i) => afn(item, tmp.getRow(i), af))
     }
     return hy
   }
@@ -218,9 +179,9 @@ export class BPNet {
       let lastHy = hy[l - 1] ? hy[l - 1] : xs
       let af = this.af(l)
       if (l === this.hlayer - 1) {
-        dy[l] = hy[l].atomicOperation((item, r, c) => (item - ys.get(r, c)) * this.afd(item, af))
+        dy[l] = hy[l].atomicOperation((item, r, c) => (item - ys.get(r, c)) * afd(item, af))
       } else {
-        dy[l] = dy[l + 1].multiply(this.w[l + 1]).atomicOperation((item, r, c) => item * this.afd(hy[l].get(r, c), af))
+        dy[l] = dy[l + 1].multiply(this.w[l + 1]).atomicOperation((item, r, c) => item * afd(hy[l].get(r, c), af))
       }
       dw[l] = dy[l].T.multiply(lastHy)
     }

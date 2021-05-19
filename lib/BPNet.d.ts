@@ -1,5 +1,5 @@
 import { Matrix } from "./matrix";
-import type { ActivationFunction, TrainingOptions, Mode, BPNetOptions, NetShape } from "./types";
+import type { TrainingOptions, Mode, BPNetOptions, NetShape } from "./types";
 export declare const defaultTrainingOptions: (m: number) => TrainingOptions;
 export declare class BPNet {
     readonly shape: NetShape;
@@ -11,9 +11,7 @@ export declare class BPNet {
     rate: number;
     constructor(shape: NetShape, opt?: BPNetOptions);
     unit(l: number): number;
-    af(l: number): ActivationFunction | undefined;
-    afn(x: number, rows: number[], af?: ActivationFunction): number;
-    afd(x: number, af?: ActivationFunction): number;
+    af(l: number): import("./types").ActivationFunction | undefined;
     toJSON(): string;
     static fromJSON(json: string): BPNet;
     forwardPropagation(xs: Matrix): Matrix[];

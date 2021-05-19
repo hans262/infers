@@ -7,10 +7,10 @@ import { run } from './recurrent'
 
 (() => {
   // addition()
-  // xor()
+  xor()
   // iris()
   // saveIris()
   // rnn()
   // gru()
-  run()
+  // run()
 })()

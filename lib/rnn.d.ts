@@ -1,5 +1,5 @@
 import { Matrix } from '../src';
-import type { ActivationFunction, RNNOptions, RNNTrainingOptions, RNNForwardResult } from './types';
+import type { RNNOptions, RNNTrainingOptions, RNNForwardResult } from './types';
 export declare class RNN {
     U: Matrix;
     W: Matrix;
@@ -16,8 +16,6 @@ export declare class RNN {
     firstSt: Matrix;
     rate: number;
     constructor(opt: RNNOptions);
-    afn(x: number, rows: number[], af?: ActivationFunction): number;
-    afd(x: number, af?: ActivationFunction): number;
     oneHotX(inputIndex: number): Matrix;
     oneHotXs(input: string[]): Matrix[];
     oneHotY(outputIndex: number): Matrix;

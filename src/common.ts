@@ -1,3 +1,4 @@
+import { ActivationFunction } from "./types";
 import { Matrix } from "./matrix";
 
 /**
@@ -23,4 +24,45 @@ export function upset(xs: Matrix, ys: Matrix) {
     [yss[i], yss[random]] = [yss[random], yss[i]];
   }
   return { xs: new Matrix(xss), ys: new Matrix(yss) }
+}
+
+/**
+ * 激活函数求值
+ * @param x 目标
+ * @param rows 该层的多个输出值
+ * @param af 激活函数类型
+ */
+export function afn(x: number, rows: number[], af?: ActivationFunction) {
+  switch (af) {
+    case 'Sigmoid':
+      return 1 / (1 + Math.exp(-x))
+    case 'Relu':
+      return x >= 0 ? x : 0
+    case 'Tanh':
+      return Math.tanh(x)
+    case 'Softmax':
+      let d = Math.max(...rows) //防止指数过大
+      return Math.exp(x - d) / rows.reduce((p, c) => p + Math.exp(c - d), 0)
+    default:
+      return x
+  }
+}
+
+/**
+ * 激活函数求导
+ */
+export function afd(x: number, af?: ActivationFunction) {
+  switch (af) {
+    case 'Sigmoid':
+      return x * (1 - x)
+    case 'Relu':
+      return x >= 0 ? 1 : 0
+    case 'Tanh':
+      return 1 - Math.tanh(x) ** 2
+    case 'Softmax':
+    // only last-layer, y must is 0/1
+    // d = (y=1) ? hy - 1; (y=0) ? hy - y; d = hy - y
+    default:
+      return 1
+  }
 }

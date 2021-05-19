@@ -1,7 +1,6 @@
-import { Matrix } from '../src'
+import { Matrix, afn, afd } from '../src'
 import type {
-  ActivationFunction, RNNOptions,
-  RNNTrainingOptions, RNNForwardResult
+  RNNOptions, RNNTrainingOptions, RNNForwardResult
 } from './types'
 
 export class RNN {
@@ -36,28 +35,6 @@ export class RNN {
     this.V = Matrix.generate(outputSize, this.hidenSize)
 
     this.firstSt = Matrix.generate(1, this.hidenSize, 0)
-  }
-
-  afn(x: number, rows: number[], af?: ActivationFunction) {
-    switch (af) {
-      case 'Tanh':
-        return Math.tanh(x)
-      case 'Softmax':
-        let d = Math.max(...rows) //防止指数过大
-        return Math.exp(x - d) / rows.reduce((p, c) => p + Math.exp(c - d), 0)
-      default:
-        return x
-    }
-  }
-
-  afd(x: number, af?: ActivationFunction) {
-    switch (af) {
-      case 'Tanh':
-        return 1 - Math.tanh(x) ** 2
-      case 'Softmax':
-      default:
-        return 1
-    }
   }
 
   // encode xs
@@ -102,9 +79,9 @@ export class RNN {
 
   calcForward(xs: Matrix, lastSt = this.firstSt) {
     let st = xs.multiply(this.U.T).addition(lastSt.multiply(this.W.T))
-    st = st.atomicOperation((item, i) => this.afn(item, st.getRow(i), 'Tanh'))
+    st = st.atomicOperation((item, i) => afn(item, st.getRow(i), 'Tanh'))
     let yt = st.multiply(this.V.T)
-    yt = yt.atomicOperation((item, i) => this.afn(item, yt.getRow(i), 'Softmax'))
+    yt = yt.atomicOperation((item, i) => afn(item, yt.getRow(i), 'Softmax'))
     return { st, yt }
   }
 
@@ -119,10 +96,10 @@ export class RNN {
       let yst = ys[i]
 
       let lastSt = i === 0 ? this.firstSt : hy[i - 1].st
-      let dyt = yt.atomicOperation((item, r, c) => (item - yst.get(r, c)) * this.afd(item, 'Softmax'))
+      let dyt = yt.atomicOperation((item, r, c) => (item - yst.get(r, c)) * afd(item, 'Softmax'))
 
       let dst = dyt.multiply(this.V)
-      dst = dst.atomicOperation((item, r, c) => item * this.afd(st.get(r, c), 'Tanh'))
+      dst = dst.atomicOperation((item, r, c) => item * afd(st.get(r, c), 'Tanh'))
 
       let ndv = dyt.T.multiply(st)
       let ndu = dst.T.multiply(xst)

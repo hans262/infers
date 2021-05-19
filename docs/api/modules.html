@@ -93,6 +93,8 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-function"><a href="modules.html#afd" class="tsd-kind-icon">afd</a></li>
+								<li class="tsd-kind-function"><a href="modules.html#afn" class="tsd-kind-icon">afn</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#defaulttrainingoptions" class="tsd-kind-icon">default<wbr>Training<wbr>Options</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#tofixed" class="tsd-kind-icon">to<wbr>Fixed</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#upset" class="tsd-kind-icon">upset</a></li>
@@ -109,7 +111,7 @@
 					<div class="tsd-signature tsd-kind-icon">Activation<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;Sigmoid&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Relu&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Tanh&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Softmax&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/6750fce/src/types.ts#L4">types.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/types.ts#L4">types.ts:4</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -124,7 +126,7 @@
 					<div class="tsd-signature tsd-kind-icon">Mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;sgd&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;bgd&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;mbgd&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/6750fce/src/types.ts#L7">types.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/types.ts#L7">types.ts:7</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -139,7 +141,7 @@
 					<div class="tsd-signature tsd-kind-icon">Net<wbr>Shape<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><a href="modules.html#activationfunction" class="tsd-signature-type" data-tsd-kind="Type alias">ActivationFunction</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">...</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><a href="modules.html#activationfunction" class="tsd-signature-type" data-tsd-kind="Type alias">ActivationFunction</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/6750fce/src/types.ts#L10">types.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/types.ts#L10">types.ts:10</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -152,6 +154,80 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="afd" class="tsd-anchor"></a>
+					<h3>afd</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">afd<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, af<span class="tsd-signature-symbol">?: </span><a href="modules.html#activationfunction" class="tsd-signature-type" data-tsd-kind="Type alias">ActivationFunction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/common.ts#L54">common.ts:54</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>激活函数求导</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>x: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> af: <a href="modules.html#activationfunction" class="tsd-signature-type" data-tsd-kind="Type alias">ActivationFunction</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="afn" class="tsd-anchor"></a>
+					<h3>afn</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">afn<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, rows<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span>, af<span class="tsd-signature-symbol">?: </span><a href="modules.html#activationfunction" class="tsd-signature-type" data-tsd-kind="Type alias">ActivationFunction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/common.ts#L35">common.ts:35</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>激活函数求值</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>x: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>目标</p>
+									</div>
+								</li>
+								<li>
+									<h5>rows: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>该层的多个输出值</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> af: <a href="modules.html#activationfunction" class="tsd-signature-type" data-tsd-kind="Type alias">ActivationFunction</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>激活函数类型</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
 					<a name="defaulttrainingoptions" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> default<wbr>Training<wbr>Options</h3>
 					<ul class="tsd-signatures tsd-kind-function">
@@ -161,7 +237,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in bpnet.ts:8</li>
+									<li>Defined in bpnet.ts:7</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -184,7 +260,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/6750fce/src/common.ts#L8">common.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/common.ts#L9">common.ts:9</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -221,7 +297,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/6750fce/src/common.ts#L17">common.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/common.ts#L18">common.ts:18</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -304,6 +380,12 @@
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#netshape" class="tsd-kind-icon">Net<wbr>Shape</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#afd" class="tsd-kind-icon">afd</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#afn" class="tsd-kind-icon">afn</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#defaulttrainingoptions" class="tsd-kind-icon">default<wbr>Training<wbr>Options</a>
