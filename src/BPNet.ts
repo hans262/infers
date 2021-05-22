@@ -143,15 +143,16 @@ export class BPNet {
    * 多样本求导，
    * 计算单个样本倒数求和，然后计算平均倒数
    */
-  backPropagationMultiple(hy: Matrix[], xs: Matrix, ys: Matrix) {
+  backPropagation(hy: Matrix[], xs: Matrix, ys: Matrix) {
     let m = ys.shape[0]
+    if (m === 1) return this.calcBackPropagation(hy, xs, ys)
     let dws = this.w.map(w => w.zeroed())
     let dys = this.b.map(b => b.zeroed())
     for (let n = 0; n < m; n++) {
       let nhy = hy.map(item => new Matrix([item.getRow(n)]))
       let nxs = new Matrix([xs.getRow(n)])
       let nys = new Matrix([ys.getRow(n)])
-      let { dw: ndw, dy: ndy } = this.backPropagation(nhy, nxs, nys)
+      let { dw: ndw, dy: ndy } = this.calcBackPropagation(nhy, nxs, nys)
       dws = dws.map((d, l) => d.addition(ndw[l]))
       dys = dys.map((d, l) => d.addition(ndy[l]))
     }
@@ -173,7 +174,7 @@ export class BPNet {
    *  - 如有激活函数需乘激活函数的导数；
    * @returns [神经单元导数, 权重导数]
    */
-  backPropagation(hy: Matrix[], xs: Matrix, ys: Matrix) {
+  calcBackPropagation(hy: Matrix[], xs: Matrix, ys: Matrix) {
     let dw: Matrix[] = [], dy: Matrix[] = []
     for (let l = this.hlayer - 1; l >= 0; l--) {
       let lastHy = hy[l - 1] ? hy[l - 1] : xs
@@ -226,7 +227,7 @@ export class BPNet {
   async bgd(xs: Matrix, ys: Matrix, opt: TrainingOptions) {
     for (let ep = 0; ep < opt.epochs; ep++) {
       let hy = this.forwardPropagation(xs)
-      let { dy, dw } = this.backPropagationMultiple(hy, xs, ys)
+      let { dy, dw } = this.backPropagation(hy, xs, ys)
       this.adjust(dy, dw)
       if (opt.onEpoch) {
         opt.onEpoch(ep, this.cost(hy[hy.length - 1], ys))
@@ -285,7 +286,7 @@ export class BPNet {
         let bys = yst.slice(start, end)
         let hy = this.forwardPropagation(bxs)
         let lastHy = hy[hy.length - 1]
-        const { dy, dw } = this.backPropagationMultiple(hy, bxs, bys)
+        const { dy, dw } = this.backPropagation(hy, bxs, bys)
         this.adjust(dy, dw)
         let bloss = this.cost(lastHy, bys)
         eploss += bloss
