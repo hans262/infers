@@ -18,11 +18,11 @@ export declare class BPNet {
     scaled(xs: Matrix): Matrix;
     predict(xs: Matrix): Matrix;
     predictNet(xs: Matrix): Matrix[];
-    backPropagationMultiple(hy: Matrix[], xs: Matrix, ys: Matrix): {
+    backPropagation(hy: Matrix[], xs: Matrix, ys: Matrix): {
         dy: Matrix[];
         dw: Matrix[];
     };
-    backPropagation(hy: Matrix[], xs: Matrix, ys: Matrix): {
+    calcBackPropagation(hy: Matrix[], xs: Matrix, ys: Matrix): {
         dy: Matrix[];
         dw: Matrix[];
     };

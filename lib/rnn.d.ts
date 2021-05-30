@@ -10,23 +10,25 @@ export declare class RNN {
     wordIndex: {
         [index: number]: string;
     };
-    trainData: string[][];
+    trainData: string[];
     inputSize: number;
+    outputSize: number;
     hidenSize: number;
     firstSt: Matrix;
+    finis: string;
     rate: number;
     constructor(opt: RNNOptions);
-    oneHotX(inputIndex: number): Matrix;
-    oneHotXs(input: string[]): Matrix[];
-    oneHotY(outputIndex: number): Matrix;
-    oneHotYs(input: string[]): Matrix[];
+    oneHotXs(inputIndex: number): Matrix;
+    oneHotYs(outputIndex: number): Matrix;
+    generateXs(input: string): Matrix[];
+    generateYs(input: string): Matrix[];
     forwardPropagation(xs: Matrix[]): RNNForwardResult[];
-    calcForward(xs: Matrix, lastSt?: Matrix): {
+    calcForward(xs: Matrix, lastSt: Matrix): {
         st: Matrix;
         yt: Matrix;
     };
     backPropagation(hy: RNNForwardResult[], xs: Matrix[], ys: Matrix[]): void;
-    predict(input: string, length?: number): string | undefined;
+    predict(input: string, length?: number): string;
     cost(hy: RNNForwardResult[], ys: Matrix[]): number;
     fit(opt?: RNNTrainingOptions): void;
 }

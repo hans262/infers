@@ -86,7 +86,7 @@ console.log(net.predict('good'))
 //  morning/n
 ```
 
-## Parameter introduction: 
+## Parameter: 
  - **shape**: The hierarchical structure of the network model, It includes the number of neurons in each layer, the type of activation function and the total number of layers.
  - **rate**: The learning rate is the update step of every gradient descent, generally between 0 and 1.
  - **epochs**: All the data of the whole training set are iterated once.
