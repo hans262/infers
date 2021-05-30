@@ -10,59 +10,68 @@ export class RNN {
 
   indexWord: { [index: string]: number } = {}
   wordIndex: { [index: number]: string } = {}
-  trainData: string[][]
+  trainData: string[]
   inputSize: number
+  outputSize: number
   hidenSize = 10
 
   firstSt: Matrix
+  finis = '/n' //end character
   rate = 0.01
   constructor(opt: RNNOptions) {
-    this.trainData = opt.trainData.map(v => v.split(''))
+    this.trainData = opt.trainData
     if (opt.rate) this.rate = opt.rate
 
-    let temp = Array.from(new Set(this.trainData.flat(1)))
+    //remove repeat and flat from string array
+    let temp = Array.from(new Set(
+      this.trainData.map(v => v.split('')).flat(1)
+    ))
     for (let i = 0; i < temp.length; i++) {
       this.indexWord[temp[i]] = i
       this.wordIndex[i] = temp[i]
     }
-    this.inputSize = temp.length
-    this.wordIndex[temp.length] = '/n'
-    this.indexWord['/n'] = temp.length
 
-    let outputSize = this.inputSize + 1
+    this.inputSize = temp.length
+    this.outputSize = this.inputSize + 1
+    this.wordIndex[temp.length] = this.finis
+    this.indexWord[this.finis] = temp.length
+
     this.U = Matrix.generate(this.hidenSize, this.inputSize)
     this.W = Matrix.generate(this.hidenSize, this.hidenSize)
-    this.V = Matrix.generate(outputSize, this.hidenSize)
+    this.V = Matrix.generate(this.outputSize, this.hidenSize)
 
     this.firstSt = Matrix.generate(1, this.hidenSize, 0)
   }
 
   // encode xs
-  oneHotX(inputIndex: number) {
+  oneHotXs(inputIndex: number) {
     let xs = Matrix.generate(1, this.inputSize, 0)
     xs.update(0, inputIndex, 1)
     return xs
   }
 
-  oneHotXs(input: string[]) {
-    return input.map(s => {
-      let nowIndex = this.indexWord[s]
-      return this.oneHotX(nowIndex)
-    })
-  }
-
   // encode ys
-  oneHotY(outputIndex: number) {
-    let ys = Matrix.generate(1, this.inputSize + 1, 0)
+  oneHotYs(outputIndex: number) {
+    let ys = Matrix.generate(1, this.outputSize, 0)
     ys.update(0, outputIndex, 1)
     return ys
   }
 
-  oneHotYs(input: string[]) {
-    return input.map((_, i) => {
-      let nextWord = input[i + 1] ? input[i + 1] : '/n'
+  generateXs(input: string) {
+    let temp = input.split('')
+    return temp.map(s => {
+      let nowIndex = this.indexWord[s]
+      if (isNaN(nowIndex)) throw new Error(`检测到未在词典中的字符：${s}`)
+      return this.oneHotXs(nowIndex)
+    })
+  }
+
+  generateYs(input: string) {
+    let temp = input.split('')
+    return temp.map((_, i) => {
+      let nextWord = temp[i + 1] ? temp[i + 1] : this.finis
       let nextIndex = this.indexWord[nextWord]
-      return this.oneHotY(nextIndex)
+      return this.oneHotYs(nextIndex)
     })
   }
 
@@ -77,7 +86,7 @@ export class RNN {
     return result
   }
 
-  calcForward(xs: Matrix, lastSt = this.firstSt) {
+  calcForward(xs: Matrix, lastSt: Matrix) {
     let st = xs.multiply(this.U.T).addition(lastSt.multiply(this.W.T))
     st = st.atomicOperation((item, i) => afn(item, st.getRow(i), 'Tanh'))
     let yt = st.multiply(this.V.T)
@@ -89,7 +98,7 @@ export class RNN {
     let dv = this.V.zeroed()
     let du = this.U.zeroed()
     let dw = this.W.zeroed()
-    //求出每个时刻的导数项目
+    // calc every loop derivative sum
     for (let i = 0; i < hy.length; i++) {
       let { st, yt } = hy[i]
       let xst = xs[i]
@@ -117,23 +126,15 @@ export class RNN {
 
   /**
    * @param input 
-   * @param length 最大返回字符长度
+   * @param length return character of max length
    */
   predict(input: string, length: number = 10) {
-    let data = input.split('')
-    let s = data.find(d => this.indexWord[d] === undefined)
-    //检测 没有在词典中的单词
-    if (s) {
-      console.error(`检测到有未在词典中的字：${s}`)
-      return undefined
-    }
-
-    let xs = this.oneHotXs(data)
+    let xs = this.generateXs(input)
     let hy = this.forwardPropagation(xs)
     let lastHy = hy[hy.length - 1]
 
     let nextIndex = lastHy.yt.argMax(0)
-    let nextSt = lastHy.st
+    let nextLastSt = lastHy.st
 
     let result = ''
     result += this.wordIndex[nextIndex]
@@ -141,10 +142,10 @@ export class RNN {
     if (nextIndex === this.inputSize) return result
 
     for (let i = 0; i < length - 1; i++) {
-      let nextXs = this.oneHotX(nextIndex)
-      let hy = this.calcForward(nextXs, nextSt)
+      let nextXs = this.oneHotXs(nextIndex)
+      let hy = this.calcForward(nextXs, nextLastSt)
       nextIndex = hy.yt.argMax(0)
-      nextSt = hy.st
+      nextLastSt = hy.st
       result += this.wordIndex[nextIndex]
       if (nextIndex === this.inputSize) break
     }
@@ -167,8 +168,8 @@ export class RNN {
       let e = 0
       for (let n = 0; n < this.trainData.length; n++) {
         let input = this.trainData[n]
-        let xs = this.oneHotXs(input)
-        let ys = this.oneHotYs(input)
+        let xs = this.generateXs(input)
+        let ys = this.generateYs(input)
         let hy = this.forwardPropagation(xs)
         this.backPropagation(hy, xs, ys)
         e += this.cost(hy, ys)

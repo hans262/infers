@@ -63,8 +63,9 @@ function backPropagation(data: ReturnType<typeof forwardPropagation>) {
 }
 
 function train() {
+  var xs = [0, 1, 1, 1, 0, 1, 0, 1, 0, 1]
+ 
   for (let i = 0; i < 50000; i++) {
-    var xs = [0, 1, 1, 1, 0, 1, 0, 1, 0, 1]
     let data = forwardPropagation(xs)
     backPropagation(data)
     let ys = data.ys
@@ -74,10 +75,9 @@ function train() {
     }
   }
 
-  let data = forwardPropagation([1, 1, 1, 0])
+  let data = forwardPropagation(xs)
   let ys = integer(data.ys)
-  console.log('ys: ', ys)
-
+  console.log('ys: ', ys) 
 }
 
 function calcLoss(xs: number[], ys: number[]) {

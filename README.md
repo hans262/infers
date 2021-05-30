@@ -85,11 +85,12 @@ console.log(net.predict('good'))
 // lo rnn/n
 //  morning/n
 ```
+
 ## Parameter introduction: 
- - **shape**: The network hierarchical structure of the model includes the number of neurons in each layer, the type of activation function in each layer and the total number of layers. The more complex the network structure is, the more computation is needed for a single training, and it is easy to cause over fitting.
- - **rate**: Learning rate is also known as training step. The lower the learning rate, the more training times are needed to achieve the optimal cost function. If the learning rate is too large, it may cross the optimal cost function due to too large span, resulting in the loss value approaching the positive infinite model and the problem that the model cannot converge.
+ - **shape**: The hierarchical structure of the network model, It includes the number of neurons in each layer, the type of activation function and the total number of layers.
+ - **rate**: The learning rate is the update step of every gradient descent, generally between 0 and 1.
  - **epochs**: All the data of the whole training set are iterated once.
- - **mode**: sgd | bgd | mbgd, training modes.
+ - **mode**: training modes, sgd | bgd | mbgd.
 
 The selection of the above。parameters is also the process of model optimization. The learning rate, training times and network shape needed to deal with different problems are different, which need to be adjusted according to each solution of the cost function.
 
@@ -102,4 +103,4 @@ The selection of the above。parameters is also the process of model optimizatio
   - Multi-layer network model
 - class RNN
   - Recurrent neural network
-  - Natural language processing
+  - Used natural language processing

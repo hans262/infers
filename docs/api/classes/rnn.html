@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RNN | infers - v1.3.5</title>
-	<meta name="description" content="Documentation for infers - v1.3.5">
+	<title>RNN | infers - v1.3.6</title>
+	<meta name="description" content="Documentation for infers - v1.3.6">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">infers - v1.3.5</a>
+					<a href="../index.html" class="title">infers - v1.3.6</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,7 +52,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">infers - v1.3.5</a>
+					<a href="../modules.html">infers - v1.3.6</a>
 				</li>
 				<li>
 					<a href="rnn.html">RNN</a>
@@ -89,10 +89,12 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#u" class="tsd-kind-icon">U</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#v" class="tsd-kind-icon">V</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#w" class="tsd-kind-icon">W</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#finis" class="tsd-kind-icon">finis</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#firstst" class="tsd-kind-icon">first<wbr>St</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#hidensize" class="tsd-kind-icon">hiden<wbr>Size</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#indexword" class="tsd-kind-icon">index<wbr>Word</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#inputsize" class="tsd-kind-icon">input<wbr>Size</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#outputsize" class="tsd-kind-icon">output<wbr>Size</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#rate" class="tsd-kind-icon">rate</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#traindata" class="tsd-kind-icon">train<wbr>Data</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rnn.html#wordindex" class="tsd-kind-icon">word<wbr>Index</a></li>
@@ -106,9 +108,9 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rnn.html#cost" class="tsd-kind-icon">cost</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rnn.html#fit" class="tsd-kind-icon">fit</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rnn.html#forwardpropagation" class="tsd-kind-icon">forward<wbr>Propagation</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rnn.html#onehotx" class="tsd-kind-icon">one<wbr>HotX</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rnn.html#generatexs" class="tsd-kind-icon">generate<wbr>Xs</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rnn.html#generateys" class="tsd-kind-icon">generate<wbr>Ys</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rnn.html#onehotxs" class="tsd-kind-icon">one<wbr>Hot<wbr>Xs</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rnn.html#onehoty" class="tsd-kind-icon">one<wbr>HotY</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rnn.html#onehotys" class="tsd-kind-icon">one<wbr>Hot<wbr>Ys</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rnn.html#predict" class="tsd-kind-icon">predict</a></li>
 							</ul>
@@ -128,7 +130,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L18">rnn.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L20">rnn.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -150,7 +152,7 @@
 					<div class="tsd-signature tsd-kind-icon">U<span class="tsd-signature-symbol">:</span> <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L7">rnn.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L7">rnn.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -160,7 +162,7 @@
 					<div class="tsd-signature tsd-kind-icon">V<span class="tsd-signature-symbol">:</span> <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L9">rnn.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L9">rnn.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -170,7 +172,17 @@
 					<div class="tsd-signature tsd-kind-icon">W<span class="tsd-signature-symbol">:</span> <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L8">rnn.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L8">rnn.ts:8</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="finis" class="tsd-anchor"></a>
+					<h3>finis</h3>
+					<div class="tsd-signature tsd-kind-icon">finis<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &#x27;/n&#x27;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L19">rnn.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -180,7 +192,7 @@
 					<div class="tsd-signature tsd-kind-icon">first<wbr>St<span class="tsd-signature-symbol">:</span> <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L17">rnn.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L18">rnn.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -190,7 +202,7 @@
 					<div class="tsd-signature tsd-kind-icon">hiden<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L15">rnn.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L16">rnn.ts:16</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -200,7 +212,7 @@
 					<div class="tsd-signature tsd-kind-icon">index<wbr>Word<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> = {}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L11">rnn.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L11">rnn.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -218,7 +230,17 @@
 					<div class="tsd-signature tsd-kind-icon">input<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L14">rnn.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L14">rnn.ts:14</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="outputsize" class="tsd-anchor"></a>
+					<h3>output<wbr>Size</h3>
+					<div class="tsd-signature tsd-kind-icon">output<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L15">rnn.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -228,17 +250,17 @@
 					<div class="tsd-signature tsd-kind-icon">rate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.01</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L18">rnn.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L20">rnn.ts:20</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="traindata" class="tsd-anchor"></a>
 					<h3>train<wbr>Data</h3>
-					<div class="tsd-signature tsd-kind-icon">train<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">train<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L13">rnn.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L13">rnn.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -248,7 +270,7 @@
 					<div class="tsd-signature tsd-kind-icon">word<wbr>Index<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> = {}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L12">rnn.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L12">rnn.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -273,7 +295,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L88">rnn.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L97">rnn.ts:97</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -296,13 +318,13 @@
 					<a name="calcforward" class="tsd-anchor"></a>
 					<h3>calc<wbr>Forward</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">calc<wbr>Forward<span class="tsd-signature-symbol">(</span>xs<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a>, lastSt<span class="tsd-signature-symbol">?: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>st<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">; </span>yt<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol"> }</span></li>
+						<li class="tsd-signature tsd-kind-icon">calc<wbr>Forward<span class="tsd-signature-symbol">(</span>xs<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a>, lastSt<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>st<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">; </span>yt<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol"> }</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L80">rnn.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L89">rnn.ts:89</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -311,7 +333,7 @@
 									<h5>xs: <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></h5>
 								</li>
 								<li>
-									<h5>lastSt: <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>lastSt: <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>st<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">; </span>yt<span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol"> }</span></h4>
@@ -336,7 +358,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L154">rnn.ts:154</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L155">rnn.ts:155</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -362,7 +384,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L164">rnn.ts:164</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L165">rnn.ts:165</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -385,7 +407,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L69">rnn.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L78">rnn.ts:78</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -399,16 +421,62 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="onehotx" class="tsd-anchor"></a>
-					<h3>one<wbr>HotX</h3>
+					<a name="generatexs" class="tsd-anchor"></a>
+					<h3>generate<wbr>Xs</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">one<wbr>HotX<span class="tsd-signature-symbol">(</span>inputIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></li>
+						<li class="tsd-signature tsd-kind-icon">generate<wbr>Xs<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L41">rnn.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L60">rnn.ts:60</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="generateys" class="tsd-anchor"></a>
+					<h3>generate<wbr>Ys</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">generate<wbr>Ys<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L69">rnn.ts:69</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="onehotxs" class="tsd-anchor"></a>
+					<h3>one<wbr>Hot<wbr>Xs</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">one<wbr>Hot<wbr>Xs<span class="tsd-signature-symbol">(</span>inputIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L47">rnn.ts:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -422,39 +490,16 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="onehotxs" class="tsd-anchor"></a>
-					<h3>one<wbr>Hot<wbr>Xs</h3>
+					<a name="onehotys" class="tsd-anchor"></a>
+					<h3>one<wbr>Hot<wbr>Ys</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">one<wbr>Hot<wbr>Xs<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">one<wbr>Hot<wbr>Ys<span class="tsd-signature-symbol">(</span>outputIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L47">rnn.ts:47</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>input: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="onehoty" class="tsd-anchor"></a>
-					<h3>one<wbr>HotY</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">one<wbr>HotY<span class="tsd-signature-symbol">(</span>outputIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L55">rnn.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L54">rnn.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -468,39 +513,16 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="onehotys" class="tsd-anchor"></a>
-					<h3>one<wbr>Hot<wbr>Ys</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">one<wbr>Hot<wbr>Ys<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L61">rnn.ts:61</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>input: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="matrix.html" class="tsd-signature-type" data-tsd-kind="Class">Matrix</a><span class="tsd-signature-symbol">[]</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="predict" class="tsd-anchor"></a>
 					<h3>predict</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">predict<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, length<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon">predict<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, length<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ounana/infers/blob/626df8f/src/rnn.ts#L122">rnn.ts:122</a></li>
+									<li>Defined in <a href="https://github.com/ounana/infers/blob/31a2b4a/src/rnn.ts#L131">rnn.ts:131</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -511,11 +533,11 @@
 								<li>
 									<h5>length: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>最大返回字符长度</p>
+										<p>return character of max length</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -564,6 +586,9 @@
 								<a href="rnn.html#w" class="tsd-kind-icon">W</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rnn.html#finis" class="tsd-kind-icon">finis</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="rnn.html#firstst" class="tsd-kind-icon">first<wbr>St</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -574,6 +599,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="rnn.html#inputsize" class="tsd-kind-icon">input<wbr>Size</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rnn.html#outputsize" class="tsd-kind-icon">output<wbr>Size</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="rnn.html#rate" class="tsd-kind-icon">rate</a>
@@ -600,13 +628,13 @@
 								<a href="rnn.html#forwardpropagation" class="tsd-kind-icon">forward<wbr>Propagation</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="rnn.html#onehotx" class="tsd-kind-icon">one<wbr>HotX</a>
+								<a href="rnn.html#generatexs" class="tsd-kind-icon">generate<wbr>Xs</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="rnn.html#generateys" class="tsd-kind-icon">generate<wbr>Ys</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="rnn.html#onehotxs" class="tsd-kind-icon">one<wbr>Hot<wbr>Xs</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="rnn.html#onehoty" class="tsd-kind-icon">one<wbr>HotY</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="rnn.html#onehotys" class="tsd-kind-icon">one<wbr>Hot<wbr>Ys</a>
