@@ -1,3 +1,8 @@
+export interface GenerateMatrixOptions {
+  range: [number, number],
+  integer?: boolean
+}
+
 export class Matrix {
   shape: [number, number]
   private self: number[][]
@@ -68,6 +73,19 @@ export class Matrix {
   }
 
   /**
+   * 矩阵所有值求和
+   */
+  sum() {
+    let s = 0
+    for (let i = 0; i < this.shape[0]; i++) {
+      for (let j = 0; j < this.shape[1]; j++) {
+        s += this.get(i, j)
+      }
+    }
+    return s
+  }
+
+  /**
    * 矩阵mxn每列求和
    * @returns Matrix 1 x n
    */
@@ -122,14 +140,25 @@ export class Matrix {
    * 生成矩阵
    * @param row 
    * @param col 
-   * @param f 默认为-0.5 ~ 0.5随机值
+   * @param opt //默认为-0.5 ~ 0.5随机值
    */
-  static generate(row: number, col: number, f?: number) {
+  static generate(row: number, col: number, opt: GenerateMatrixOptions | number = { range: [-0.5, 0.5] }) {
     let n = []
     for (let i = 0; i < row; i++) {
       let m = []
       for (let j = 0; j < col; j++) {
-        m.push(typeof f === 'number' ? f : 0.5 - Math.random())
+        let v = 0
+        if (typeof opt === 'number') {
+          v = opt
+        } else {
+          let [min, max] = [Math.min(...opt.range), Math.max(...opt.range)]
+          let b = min < 0 || max < 0 ? -1 : 0
+          v = Math.random() * (max - min) + min + b
+          if (opt.integer) {
+            v = ~~v
+          }
+        }
+        m.push(v)
       }
       n.push(m)
     }
@@ -163,19 +192,24 @@ export class Matrix {
   }
 
   /**
-   * 向矩阵左右追加一列
+   * 向矩阵上下左右追加一列/行
    * @param n 
    * @param position 
    */
-  expand(n: number, position: 'L' | 'R') {
-    let m = []
+  expand(n: number, position: 'L' | 'R' | 'T' | 'B') {
+    let m: number[][] = []
     for (let i = 0; i < this.shape[0]; i++) {
-      if (position === 'L') {
-        m.push([n, ...this.getRow(i)])
-      } else {
-        m.push([...this.getRow(i), n])
-      }
+      let rows = position === 'L' ? [n, ...this.getRow(i)] :
+        position === 'R' ? [...this.getRow(i), n] : [...this.getRow(i)]
+      m.push(rows)
     }
+
+    if (position === 'T') {
+      m.unshift(new Array<number>(m[0].length).fill(n))
+    } else if (position === 'B') {
+      m.push(new Array<number>(m[0].length).fill(n))
+    }
+
     return new Matrix(m)
   }
 
@@ -269,7 +303,7 @@ export class Matrix {
    * 同位操作
    * @param b 
    */
-  coLocationOperation(b: Matrix, oper: 'add' | 'sub') {
+  coLocationOperation(b: Matrix, oper: 'add' | 'sub' | 'mul' | 'exp') {
     if (!this.equalsShape(b)) {
       throw new Error('必须满足两个矩阵是同形矩阵')
     }
@@ -277,7 +311,11 @@ export class Matrix {
     for (let i = 0; i < this.shape[0]; i++) {
       let m = []
       for (let j = 0; j < this.shape[1]; j++) {
-        let c = oper === 'add' ? this.get(i, j) + b.get(i, j) : this.get(i, j) - b.get(i, j)
+        let [x, y] = [this.get(i, j), b.get(i, j)]
+        let c = oper === 'add' ? x + y :
+          oper === 'sub' ? x - y :
+            oper === 'mul' ? x * y :
+              oper === 'exp' ? x / y : x
         m.push(c)
       }
       n.push(m)

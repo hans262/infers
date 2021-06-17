@@ -61,7 +61,7 @@ export class RNN {
     let temp = input.split('')
     return temp.map(s => {
       let nowIndex = this.indexWord[s]
-      if (isNaN(nowIndex)) throw new Error(`检测到未在词典中的字符：${s}`)
+      if (isNaN(nowIndex)) throw new Error(`checked word non-existent from dictionary is ${s}`)
       return this.oneHotXs(nowIndex)
     })
   }

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RNNOptions | infers - v1.3.8</title>
+	<title>GenerateMatrixOptions | infers - v1.3.8</title>
 	<meta name="description" content="Documentation for infers - v1.3.8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">infers - v1.3.8</a>
 				</li>
 				<li>
-					<a href="rnnoptions.html">RNNOptions</a>
+					<a href="generatematrixoptions.html">GenerateMatrixOptions</a>
 				</li>
 			</ul>
-			<h1>Interface RNNOptions</h1>
+			<h1>Interface GenerateMatrixOptions</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">RNNOptions</span>
+						<span class="target">GenerateMatrixOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -80,8 +80,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rnnoptions.html#rate" class="tsd-kind-icon">rate</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="rnnoptions.html#traindata" class="tsd-kind-icon">train<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="generatematrixoptions.html#integer" class="tsd-kind-icon">integer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="generatematrixoptions.html#range" class="tsd-kind-icon">range</a></li>
 							</ul>
 						</section>
 					</div>
@@ -90,22 +90,22 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="rate" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> rate</h3>
-					<div class="tsd-signature tsd-kind-icon">rate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="integer" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> integer</h3>
+					<div class="tsd-signature tsd-kind-icon">integer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/293f14c/src/types.ts#L34">types.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/293f14c/src/matrix.ts#L3">matrix.ts:3</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="traindata" class="tsd-anchor"></a>
-					<h3>train<wbr>Data</h3>
-					<div class="tsd-signature tsd-kind-icon">train<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<a name="range" class="tsd-anchor"></a>
+					<h3>range</h3>
+					<div class="tsd-signature tsd-kind-icon">range<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ounana/infers/blob/293f14c/src/types.ts#L33">types.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/ounana/infers/blob/293f14c/src/matrix.ts#L2">matrix.ts:2</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -142,27 +142,27 @@
 					<li class=" tsd-kind-interface">
 						<a href="bpnetoptions.html" class="tsd-kind-icon">BPNet<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface">
-						<a href="generatematrixoptions.html" class="tsd-kind-icon">Generate<wbr>Matrix<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="rnnforwardresult.html" class="tsd-kind-icon">RNNForward<wbr>Result</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="rnnoptions.html" class="tsd-kind-icon">RNNOptions</a>
+						<a href="generatematrixoptions.html" class="tsd-kind-icon">Generate<wbr>Matrix<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="rnnoptions.html#rate" class="tsd-kind-icon">rate</a>
+								<a href="generatematrixoptions.html#integer" class="tsd-kind-icon">integer</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="rnnoptions.html#traindata" class="tsd-kind-icon">train<wbr>Data</a>
+								<a href="generatematrixoptions.html#range" class="tsd-kind-icon">range</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface">
+						<a href="rnnforwardresult.html" class="tsd-kind-icon">RNNForward<wbr>Result</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="rnnoptions.html" class="tsd-kind-icon">RNNOptions</a>
+					</li>
 					<li class=" tsd-kind-interface">
 						<a href="rnntrainingoptions.html" class="tsd-kind-icon">RNNTraining<wbr>Options</a>
 					</li>
