@@ -103,5 +103,26 @@ describe('test -> Matrix', () => {
     ])
     expect(a.columnSum().equals(ab)).toBeTruthy()
   })
-  
+
+  test('矩阵的逆', () => {
+    let a = new Matrix([
+      [0, 1, 2],
+      [1, 0, 3],
+      [4, -3, 8]
+    ])
+    expect(a.inverse().equals(new Matrix([
+      [-4.5, 7, -1.5],
+      [-2, 4, -1],
+      [1.5, -2, 0.5]
+    ]))).toBeTruthy()
+
+    let b = new Matrix([
+      [3, 4],
+      [5, 6]
+    ])
+    expect(b.inverse().equals(new Matrix([
+      [-3, 2],
+      [2.5, -1.5]
+    ]))).toBeTruthy()
+  })
 })

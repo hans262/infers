@@ -7,8 +7,10 @@ export class Matrix {
   shape: [number, number]
   private self: number[][]
   constructor(data: number[][]) {
+    if (!data[0]) throw new Error('矩阵至少一行')
     let t = data.find((d, i) => data[i - 1] && d.length !== data[i - 1].length)
     if (t) throw new Error('矩阵列不正确')
+    if (!data[0].length) throw new Error('矩阵每行至少一个元素')
     this.shape = [data.length, data[0].length]
     this.self = data
   }
@@ -247,12 +249,43 @@ export class Matrix {
   }
 
   /**
+   * 伴随矩阵
+   * - n阶矩阵：A(i,j) = (-1)^(i+j) * M(i,j)
+   * - 2阶矩阵：主对角线元素互换，副对角线元素变号
+   * - 1阶矩阵：伴随矩阵为一阶单位方阵
+   */
+  adjugate() {
+    if (this.shape[0] !== this.shape[1]) throw new Error('只有方阵才能求伴随矩阵')
+    if (this.shape[0] === 1) return new Matrix([[1]])
+    if (this.shape[0] === 2) {
+      return new Matrix([
+        [this.get(1, 1), this.get(0, 1) * -1],
+        [this.get(1, 0) * -1, this.get(0, 0)]
+      ])
+    }
+    return this.clone().atomicOperation((_, r, c) =>
+      this.cominor(r, c).det() * ((-1) ** (r + c + 2))
+    ).T
+  }
+
+  /**
+   * 矩阵的逆  
+   * 克拉默法则: A-1 = adjA / detA
+   */
+  inverse() {
+    if (this.shape[0] !== this.shape[1]) throw new Error('只有方阵才能求逆')
+    let det = this.det()
+    if (det === 0) throw new Error('该矩阵不可逆')
+    let ad = this.adjugate()
+    return ad.atomicOperation(item => item / det)
+  }
+
+  /**
    * 行列式计算
    */
   det() {
-    if (this.shape[0] !== this.shape[1]) {
-      throw new Error('只有方阵才能计算行列式')
-    }
+    if (this.shape[0] !== this.shape[1]) throw new Error('只有方阵才能计算行列式')
+    if (this.shape[0] === 1) throw new Error('矩阵行必须大于1')
     if (this.shape[0] === 2 && this.shape[1] === 2) {
       return this.get(0, 0) * this.get(1, 1) - this.get(0, 1) * this.get(1, 0)
     } else {
