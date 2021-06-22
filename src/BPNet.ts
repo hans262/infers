@@ -195,8 +195,8 @@ export class BPNet {
    * - b = b - α * (∂J / ∂hy)
    */
   adjust(dy: Matrix[], dw: Matrix[]) {
-    this.w = this.w.map((w, l) => w.subtraction(dw[l].numberMultiply(this.rate)))
-    this.b = this.b.map((b, l) => b.subtraction(dy[l].numberMultiply(this.rate)))
+    this.w = this.w.map((w, l) => w.subtraction(dw[l].multiply(this.rate)))
+    this.b = this.b.map((b, l) => b.subtraction(dy[l].multiply(this.rate)))
   }
 
   /**

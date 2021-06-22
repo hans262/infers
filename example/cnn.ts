@@ -64,7 +64,7 @@ export function cnn() {
       }
     }
     dh = dh.atomicOperation(item => item / (dy.shape[0] * dy.shape[1]))
-    h = h.subtraction(dh.numberMultiply(0.001))
+    h = h.subtraction(dh.multiply(0.001))
   }
 
   for (let i = 0; i < 200; i++) {

@@ -119,9 +119,9 @@ export class RNN {
       dw = dw.addition(ndw)
     }
 
-    this.U = this.U.subtraction(du.numberMultiply(this.rate))
-    this.W = this.W.subtraction(dw.numberMultiply(this.rate))
-    this.V = this.V.subtraction(dv.numberMultiply(this.rate))
+    this.U = this.U.subtraction(du.multiply(this.rate))
+    this.W = this.W.subtraction(dw.multiply(this.rate))
+    this.V = this.V.subtraction(dv.multiply(this.rate))
   }
 
   /**

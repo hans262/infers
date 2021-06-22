@@ -7,10 +7,10 @@ export class Matrix {
   shape: [number, number]
   private self: number[][]
   constructor(data: number[][]) {
-    if (!data[0]) throw new Error('矩阵至少一行')
+    if (!data[0]) throw new Error('Matrix at least one row')
     let t = data.find((d, i) => data[i - 1] && d.length !== data[i - 1].length)
-    if (t) throw new Error('矩阵列不正确')
-    if (!data[0].length) throw new Error('矩阵每行至少一个元素')
+    if (t) throw new Error('Matrix column inconsistent')
+    if (!data[0].length) throw new Error('Matrix has at least one element from row')
     this.shape = [data.length, data[0].length]
     this.self = data
   }
@@ -66,11 +66,10 @@ export class Matrix {
 
   /**
    * 获取某一行的均值
-   * @param i 
-   * @returns 
+   * @param row
    */
-  getMeanOfRow(i: number) {
-    let tmp = this.getRow(i)
+  getMeanOfRow(row: number) {
+    let tmp = this.getRow(row)
     return tmp.reduce((p, c) => p + c) / tmp.length
   }
 
@@ -217,30 +216,30 @@ export class Matrix {
 
   /**
    * 根据索引获取元素
-   * @param i 
-   * @param j 
+   * @param row 
+   * @param col 
    */
-  get(i: number, j: number) {
-    return this.self[i][j]
+  get(row: number, col: number) {
+    return this.self[row][col]
   }
 
   /**
    * 根据索引获取行
-   * @param i 
+   * @param row 
    */
-  getRow(i: number) {
-    return [...this.self[i]]
+  getRow(row: number) {
+    return [...this.self[row]]
   }
 
   /**
    * 根据索引获取列
-   * @param k 
+   * @param col 
    */
-  getCol(k: number) {
+  getCol(col: number) {
     let n = []
     for (let i = 0; i < this.shape[0]; i++) {
       for (let j = 0; j < this.shape[1]; j++) {
-        if (j === k) {
+        if (j === col) {
           n.push(this.get(i, j))
         }
       }
@@ -250,9 +249,9 @@ export class Matrix {
 
   /**
    * 伴随矩阵
-   * - n阶矩阵：A(i,j) = (-1)^(i+j) * M(i,j)
-   * - 2阶矩阵：主对角线元素互换，副对角线元素变号
-   * - 1阶矩阵：伴随矩阵为一阶单位方阵
+   * - n阶：A(i,j) = (-1)^(i+j) * M(i,j)
+   * - 2阶：主对角线元素互换，副对角线元素变号
+   * - 1阶：伴随矩阵为一阶单位方阵
    */
   adjugate() {
     if (this.shape[0] !== this.shape[1]) throw new Error('只有方阵才能求伴随矩阵')
@@ -301,18 +300,18 @@ export class Matrix {
   }
 
   /**
-   * 筛选余子式
-   * @param rowi 行
-   * @param coli 列
+   * 筛选余子式矩阵
+   * @param row 行
+   * @param col 列
    */
-  cominor(rowi: number, coli: number) {
+  cominor(row: number, col: number) {
     if (this.shape[0] < 2 || this.shape[1] < 2) {
       throw new Error('求余子式行和列必须大于2才有意义')
     }
     let n = this.dataSync().map((v) => {
-      v = v.filter((_, j) => j !== coli)
+      v = v.filter((_, j) => j !== col)
       return v
-    }).filter((_, i) => i !== rowi)
+    }).filter((_, i) => i !== row)
     return new Matrix(n)
   }
 
@@ -373,18 +372,13 @@ export class Matrix {
   }
 
   /**
-   * 数乘
+   * 矩阵乘法 ｜ 数乘
    * @param b 
    */
-  numberMultiply(b: number) {
-    return this.atomicOperation(item => item * b)
-  }
-
-  /**
-   * 乘法
-   * @param b 
-   */
-  multiply(b: Matrix) {
+  multiply(b: Matrix | number) {
+    if (typeof b === 'number') {
+      return this.atomicOperation(item => item * b)
+    }
     if (this.shape[1] !== b.shape[0]) {
       throw new Error('当矩阵A的列数等于矩阵B的行数，A与B才可以相乘')
     }
@@ -406,7 +400,7 @@ export class Matrix {
   }
 
   /**
-   * transpose
+   * 专置
    */
   get T() {
     let a = []
@@ -443,7 +437,7 @@ export class Matrix {
   }
 
   /**
-   * format print
+   * 格式化输出
    */
   print() {
     console.log(`Matrix ${this.shape[0]}x${this.shape[1]} [`)

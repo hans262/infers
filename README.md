@@ -86,18 +86,22 @@ console.log(net.predict('good'))
 //  morning/n
 ```
 
-## Parameter: 
- - **shape**: The hierarchical structure of the network model, It includes the number of neurons in each layer, the type of activation function and the total number of layers.
- - **rate**: The learning rate is the update step of every gradient descent, generally between 0 and 1.
- - **epochs**: All the data of the whole training set are iterated once.
- - **mode**: training modes, sgd | bgd | mbgd.
+## API: 
+  - **NetShape**: `[number, (number | [number, ActivationFunction]), ...(number | [number, ActivationFunction])[]]`  
+  The hierarchical structure of the network model, It includes the number of neurons in each layer, the type of activation function and the total number of layers.
+  - **rate**: `number`  
+  The learning rate is the update step of every gradient descent, generally between 0 and 1.
+  - **epochs**: `number`  
+  All the data of the whole training set are iterated once.
+  - **ActivationFunction**: `'Sigmoid' | 'Relu' | 'Tanh' | 'Softmax'`
+  - **Mode**: `'sgd' | 'bgd' | 'mbgd'`
 
-The selection of the above。parameters is also the process of model optimization. The learning rate, training times and network shape needed to deal with different problems are different, which need to be adjusted according to each solution of the cost function.
+Different learning rates, iterations and network shapes are needed to deal with different problems, which need to be adjusted according to the cost function. Parameter optimization is also the process of model optimization.
 
 ## Export
 - class Matrix
   - Mathematical operation of matrix
-  - addition, subtraction, multiply, transpose, determinant
+  - addition, multiply, transpose, determinant, inverse
 - class BPNet
   - Fully connected neural network
   - Multi-layer network model
