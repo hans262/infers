@@ -60,7 +60,7 @@ model.fit(xs, ys, {
 })
 let xs2 = new Matrix([[5, 8], [22, 6], [-5, 9], [-5, -4]])
 model.predict(xs2).print()
-// Matrix 2x1 [
+// Matrix 4x1 [
 //  12.994745740521667, 
 //  27.99134620596921, 
 //  3.9987224114576856, 
@@ -86,7 +86,7 @@ console.log(net.predict('good'))
 //  morning/n
 ```
 
-## API: 
+## API
   - **NetShape**: `[number, (number | [number, ActivationFunction]), ...(number | [number, ActivationFunction])[]]`  
   The hierarchical structure of the network model, It includes the number of neurons in each layer, the type of activation function and the total number of layers.
   - **rate**: `number`  

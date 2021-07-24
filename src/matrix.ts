@@ -6,6 +6,7 @@ export interface GenerateMatrixOptions {
 export class Matrix {
   shape: [number, number]
   private self: number[][]
+
   constructor(data: number[][]) {
     if (!data[0]) throw new Error('Matrix at least one row')
     let t = data.find((d, i) => data[i - 1] && d.length !== data[i - 1].length)
@@ -44,7 +45,7 @@ export class Matrix {
    */
   connect(b: Matrix) {
     if (this.shape[1] !== b.shape[1]) {
-      throw new Error('列数不统一')
+      throw new Error('Matrix column inconsistent')
     }
     let tmp = this.dataSync().concat(b.dataSync())
     return new Matrix(tmp)
@@ -135,6 +136,19 @@ export class Matrix {
       }
     }
     return true
+  }
+
+  /**
+   * 生成nxn单位矩阵
+   * @param row 
+   */
+  static generateIdentity(row: number) {
+    let t = this.generate(row, row, 0)
+    let col = 0
+    for (let n = 0; n < t.shape[0]; n++) {
+      t.update(n, col++, 1)
+    }
+    return t
   }
 
   /**
@@ -415,21 +429,23 @@ export class Matrix {
   }
 
   /**
-   * 归一化  
-   * - X = X - average / range
-   * @returns [归一化矩阵，缩放比矩阵]
+   * 特征缩放  
+   * - X' = X - average / range  -0.5 ~ 0.5
+   * - X' = X - min / range  0 ~ 1
+   * @returns [归一化矩阵, 缩放比矩阵]
    */
-  normalization() {
+  normalization(type: 'average' | 'min' = 'average') {
     let t = this.T
     let n = []
     for (let i = 0; i < t.shape[0]; i++) {
-      const max = Math.max(...t.getRow(i))
-      const min = Math.min(...t.getRow(i))
-      const range = max - min
-      const average = min + (range / 2)
-      n.push([average, range])
+      let max = Math.max(...t.getRow(i))
+      let min = Math.min(...t.getRow(i))
+      let range = max - min
+      let average = min + (range / 2)
+      let temp = type === 'average' ? average : min
+      n.push([temp, range])
       for (let j = 0; j < t.shape[1]; j++) {
-        let s = range === 0 ? 0 : (t.get(i, j) - average) / range
+        let s = range === 0 ? 0 : (t.get(i, j) - temp) / range
         t.update(i, j, s)
       }
     }
