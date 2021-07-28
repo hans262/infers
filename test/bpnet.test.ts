@@ -54,7 +54,7 @@ describe('BPNet -> 测试bp网络', () => {
     let xs = new Matrix([[1, 0], [0, 1], [0, 0], [1, 1]])
     let ys = new Matrix([[1], [1], [0], [0]])
     let model = new BPNet([2, [6, 'Tanh'], [6, 'Tanh'], [1, 'Sigmoid']], { rate: 0.1, mode: 'sgd' })
-    model.fit(xs, ys, { epochs: 2000 })
+    model.fit(xs, ys, { epochs: 3000 })
     let result = model.predict(xs)
     // result.print()
     expect(result.get(0, 0)).toBeGreaterThan(0.8)
