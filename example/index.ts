@@ -12,7 +12,7 @@ import { Matrix } from '../src'
   // xor()
   // iris()
   // saveIris()
-  // rnn()
+  rnn()
   // rnn2()
   // gru()
   // run()
@@ -20,18 +20,18 @@ import { Matrix } from '../src'
 })();
 
 (() => {
-  let a = new Matrix([
-    [1, 0, 0],
-    [0, 1, 0],
-    [0, 0, 1]
-  ])
+  // let a = new Matrix([
+  //   [1, 0, 0],
+  //   [0, 1, 0],
+  //   [0, 0, 1]
+  // ])
 
-  let b = new Matrix([
-    [-4.5, 7, -1.5],
-    [-2, 4, -1],
-    [1.5, -2, 0.5]
-  ])
+  // let b = new Matrix([
+  //   [-4.5, 7, -1.5],
+  //   [-2, 4, -1],
+  //   [1.5, -2, 0.5]
+  // ])
 
-  a.inverse().print()
+  // a.inverse().print()
 
 })();
