@@ -2,9 +2,13 @@
   <video id="video" width="200" height="200"></video>
   <button id="btn">拍照</button>
   <canvas alt="" id="canvas"></canvas>
-  <script>
+  <script type="module">
+    import { BPNet, Matrix, toFixed, canvasToMatrix } from './infers.esm.js'
+
+    console.log(canvasToMatrix)
     let video = document.getElementById('video')
     let btn = document.getElementById('btn')
+    /** @type HTMLCanvasElement*/
     let canvas = document.getElementById('canvas')
 
     navigator.mediaDevices.getUserMedia({
@@ -23,19 +27,22 @@
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
 
       let tmp = ctx.getImageData(0, 0, canvas.width, canvas.height)
-
+      console.log(tmp)
+      console.log(canvasToMatrix(tmp))
       let d = ctx.createImageData(200, 200)
 
       for (let i = 0; i < 200 * 200; i++) {
         let k = i * 4
+        // console.log(k)
         let red = tmp.data[k]
+        let green = tmp.data[k + 1]
+        let blue = tmp.data[k + 2]
         d.data[k] = red
-        // d.data[k + 1] = red
-        // d.data[k + 2] = red
+        d.data[k + 1] = green
+        d.data[k + 2] = blue
         d.data[k + 3] = 255
       }
       ctx.putImageData(d, 0, 0)
-
     })
 
   </script>

@@ -65,7 +65,7 @@ function backPropagation(data: ReturnType<typeof forwardPropagation>) {
 function train() {
   var xs = [0, 1, 1, 1, 0, 1, 0, 1, 0, 1]
 
-  for (let i = 0; i < 50000; i++) {
+  for (let i = 0; i < 10000; i++) {
     let data = forwardPropagation(xs)
     backPropagation(data)
     let ys = data.ys

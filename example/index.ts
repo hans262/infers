@@ -12,8 +12,8 @@ import { Matrix } from '../src'
   // xor()
   // iris()
   // saveIris()
-  rnn()
-  // rnn2()
+  // rnn()
+  rnn2()
   // gru()
   // run()
   // cnn()
@@ -33,5 +33,4 @@ import { Matrix } from '../src'
   // ])
 
   // a.inverse().print()
-
 })();

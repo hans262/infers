@@ -66,3 +66,18 @@ export function afd(x: number, af?: ActivationFunction) {
       return 1
   }
 }
+
+export function canvasToMatrix(d: ImageData) {
+  let m = Matrix.generate(d.width, d.height, 0)
+
+  for (let i = 0; i < d.height; i++) {
+    for (let j = 0; j < d.width * 4; j++) {
+      let k = i + j * 4
+      let red = d.data[k]
+      let green = d.data[k + 1]
+      let blue = d.data[k + 2]
+      m.update(i, j, red)
+    }
+  }
+  return m
+}
