@@ -67,17 +67,21 @@ export function afd(x: number, af?: ActivationFunction) {
   }
 }
 
-export function canvasToMatrix(d: ImageData) {
-  let m = Matrix.generate(d.width, d.height, 0)
+export enum Channel { r, g, b, a }
 
+/**
+ * ImageData转Matrix
+ */
+export function imageDataToMatrix(d: ImageData, ch: keyof typeof Channel) {
+  let channel = Channel[ch]
+  let n: number[][] = []
   for (let i = 0; i < d.height; i++) {
-    for (let j = 0; j < d.width * 4; j++) {
-      let k = i + j * 4
-      let red = d.data[k]
-      let green = d.data[k + 1]
-      let blue = d.data[k + 2]
-      m.update(i, j, red)
+    let m: number[] = []
+    for (let j = 0; j < d.width; j++) {
+      let k = (i * d.width + j) * 4
+      m.push(d.data[k] + channel)
     }
+    n.push(m)
   }
-  return m
+  return new Matrix(n)
 }

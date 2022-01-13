@@ -30,7 +30,7 @@
     "type": "git",
     "url": "git+https://github.com/ounana/infers.git"
   },
-  "author": "ounana",
+  "author": "Hans",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^26.0.20",
